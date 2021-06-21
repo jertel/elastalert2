@@ -2,6 +2,7 @@ import json
 
 from unittest import mock
 import pytest
+import os
 from requests import RequestException
 
 from elastalert.alerters.teams import MsTeamsAlerter
@@ -38,6 +39,45 @@ def test_ms_teams():
     }
     mock_post_request.assert_called_once_with(
         rule['ms_teams_webhook_url'],
+        data=mock.ANY,
+        headers={'content-type': 'application/json'},
+        proxies=None
+    )
+    assert expected_data == json.loads(mock_post_request.call_args_list[0][1]['data'])
+
+
+@mock.patch.dict(os.environ, {"TEST_RULE_1_MS_TEAMS_WEBHOOK_URL": "http://test.webhook.url"})
+def test_env_ms_teams_webhook_url():
+    rule = {
+        'ms_teams_env_prefix': 'TEST_RULE_1',
+        'name': 'Test Rule',
+        'type': 'any',
+        'ms_teams_alert_summary': 'Alert from ElastAlert',
+        'alert_subject': 'Cool subject',
+        'alert': []
+    }
+
+    rules_loader = FileRulesLoader({})
+    rules_loader.load_modules(rule)
+    alert = MsTeamsAlerter(rule)
+    match = {
+        '@timestamp': '2016-01-01T00:00:00',
+        'somefield': 'foobarbaz'
+    }
+    with mock.patch('requests.post') as mock_post_request:
+        alert.alert([match])
+
+    expected_data = {
+        '@type': 'MessageCard',
+        '@context': 'http://schema.org/extensions',
+        'summary': rule['ms_teams_alert_summary'],
+        'title': rule['alert_subject'],
+        'text': BasicMatchString(rule, match).__str__()
+    }
+
+    webhookUrl = os.environ.get('TEST_RULE_1_MS_TEAMS_WEBHOOK_URL', None)
+    mock_post_request.assert_called_once_with(
+        webhookUrl,
         data=mock.ANY,
         headers={'content-type': 'application/json'},
         proxies=None
@@ -117,6 +157,44 @@ def test_ms_teams_proxy():
         data=mock.ANY,
         headers={'content-type': 'application/json'},
         proxies={'https': rule['ms_teams_proxy']}
+    )
+    assert expected_data == json.loads(mock_post_request.call_args_list[0][1]['data'])
+
+
+@mock.patch.dict(os.environ, {"TEST_RULE_1_MS_TEAMS_PROXY": "https://test.proxy.url"})
+def test_env_ms_teams_proxy():
+    rule = {
+        'ms_teams_env_prefix': 'TEST_RULE_1',
+        'name': 'Test Rule',
+        'type': 'any',
+        'ms_teams_webhook_url': 'http://test.webhook.url',
+        'ms_teams_alert_summary': 'Alert from ElastAlert',
+        'alert_subject': 'Cool subject',
+        'alert': []
+    }
+    rules_loader = FileRulesLoader({})
+    rules_loader.load_modules(rule)
+    alert = MsTeamsAlerter(rule)
+    match = {
+        '@timestamp': '2016-01-01T00:00:00',
+        'somefield': 'foobarbaz'
+    }
+    with mock.patch('requests.post') as mock_post_request:
+        alert.alert([match])
+
+    expected_data = {
+        '@type': 'MessageCard',
+        '@context': 'http://schema.org/extensions',
+        'summary': rule['ms_teams_alert_summary'],
+        'title': rule['alert_subject'],
+        'text': BasicMatchString(rule, match).__str__()
+    }
+    proxyHost = os.environ.get('TEST_RULE_1_MS_TEAMS_PROXY', None)
+    mock_post_request.assert_called_once_with(
+        rule['ms_teams_webhook_url'],
+        data=mock.ANY,
+        headers={'content-type': 'application/json'},
+        proxies={'https': proxyHost}
     )
     assert expected_data == json.loads(mock_post_request.call_args_list[0][1]['data'])
 

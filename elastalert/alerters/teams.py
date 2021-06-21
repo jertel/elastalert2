@@ -1,5 +1,6 @@
 import json
 import requests
+import os
 
 from elastalert.alerts import Alerter, DateTimeEncoder
 from elastalert.util import EAException, elastalert_logger
@@ -12,10 +13,30 @@ class MsTeamsAlerter(Alerter):
 
     def __init__(self, rule):
         super(MsTeamsAlerter, self).__init__(rule)
-        self.ms_teams_webhook_url = self.rule.get('ms_teams_webhook_url', None)
-        if isinstance(self.ms_teams_webhook_url, str):
-            self.ms_teams_webhook_url = [self.ms_teams_webhook_url]
-        self.ms_teams_proxy = self.rule.get('ms_teams_proxy', None)
+
+        teams_settings = {'ms_teams_webhook_url': None,
+                          'ms_teams_proxy': None}
+
+        teams_settings['ms_teams_webhook_url'] = self.rule.get('ms_teams_webhook_url', None)
+        teams_settings['ms_teams_proxy'] = self.rule.get('ms_teams_proxy', None)
+
+        # Optional overwrite the settings using environment variable values
+        self.ms_teams_env_prefix = self.rule.get('ms_teams_env_prefix', None)
+        if self.ms_teams_env_prefix is not None:
+            webhookUrl = os.environ.get(self.ms_teams_env_prefix + '_MS_TEAMS_WEBHOOK_URL')
+            if webhookUrl is not None:
+                teams_settings['ms_teams_webhook_url'] = webhookUrl
+
+            webhookProxy = os.environ.get(self.ms_teams_env_prefix + '_MS_TEAMS_PROXY')
+            if webhookProxy is not None:
+                teams_settings['ms_teams_proxy'] = webhookProxy
+
+        self.ms_teams_webhook_url = None
+        if isinstance(teams_settings['ms_teams_webhook_url'], str):
+            self.ms_teams_webhook_url = [teams_settings['ms_teams_webhook_url']]
+
+        self.ms_teams_proxy = teams_settings['ms_teams_proxy']
+
         self.ms_teams_alert_summary = self.rule.get('ms_teams_alert_summary', 'ElastAlert Message')
         self.ms_teams_alert_fixed_width = self.rule.get('ms_teams_alert_fixed_width', False)
         self.ms_teams_theme_color = self.rule.get('ms_teams_theme_color', '')
