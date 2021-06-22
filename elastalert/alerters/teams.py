@@ -9,13 +9,12 @@ from requests.exceptions import RequestException
 
 class MsTeamsAlerter(Alerter):
     """ Creates a Microsoft Teams Conversation Message for each alert """
-    required_options = frozenset(['ms_teams_webhook_url'])
+    required_options = frozenset([])
 
     def __init__(self, rule):
         super(MsTeamsAlerter, self).__init__(rule)
 
-        teams_settings = {'ms_teams_webhook_url': None,
-                          'ms_teams_proxy': None}
+        teams_settings = {}
 
         self.ms_teams_webhook_url = None
         teams_settings['ms_teams_webhook_url'] = self.rule.get('ms_teams_webhook_url', None)
