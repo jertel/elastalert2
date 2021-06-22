@@ -2252,8 +2252,10 @@ Optional:
 
 Example usage::
 
-  // Environment variables set in the system
+  // Environment variables set in the system - it is possible to use a list of urls here
   MY_PREFIX_MS_TEAMS_WEBHOOK_URL="https://mysite.webhook.office.com/webhookb2/SOME_UUID@SOME_UUID/IncomingWebhook/SOME_ID/SOME_UUID"
+  // or like this using a list separated by comma
+  MY_PREFIX_MS_TEAMS_WEBHOOK_URL="https://mysite.webhook.office.com/webhookb2/SOME_UUID@SOME_UUID/IncomingWebhook/SOME_ID/SOME_UUID, https://mysite.webhook.office.com/webhookb2/SOME_UUID@SOME_UUID/IncomingWebhook/SOME_ID/SOME_UUID"
   MY_PREFIX_ms_teams_proxy="127.0.0.1"
 
   alert:

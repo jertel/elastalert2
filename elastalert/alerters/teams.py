@@ -17,21 +17,24 @@ class MsTeamsAlerter(Alerter):
         teams_settings = {'ms_teams_webhook_url': None,
                           'ms_teams_proxy': None}
 
+        self.ms_teams_webhook_url = None
         teams_settings['ms_teams_webhook_url'] = self.rule.get('ms_teams_webhook_url', None)
         teams_settings['ms_teams_proxy'] = self.rule.get('ms_teams_proxy', None)
 
-        # Optional overwrite the settings using environment variable values
+        # Optional: overwrite the settings using environment variable values
         self.ms_teams_env_prefix = self.rule.get('ms_teams_env_prefix', None)
         if self.ms_teams_env_prefix is not None:
             webhookUrl = os.environ.get(self.ms_teams_env_prefix + '_MS_TEAMS_WEBHOOK_URL')
             if webhookUrl is not None:
-                teams_settings['ms_teams_webhook_url'] = webhookUrl
+                print(webhookUrl)
+                teams_settings['ms_teams_webhook_url'] = webhookUrl.replace(' ', '').split(',')
+                self.ms_teams_webhook_url = teams_settings['ms_teams_webhook_url']
+                print(self.ms_teams_webhook_url)
 
             webhookProxy = os.environ.get(self.ms_teams_env_prefix + '_MS_TEAMS_PROXY')
             if webhookProxy is not None:
                 teams_settings['ms_teams_proxy'] = webhookProxy
 
-        self.ms_teams_webhook_url = None
         if isinstance(teams_settings['ms_teams_webhook_url'], str):
             self.ms_teams_webhook_url = [teams_settings['ms_teams_webhook_url']]
 

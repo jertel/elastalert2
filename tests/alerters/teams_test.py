@@ -75,9 +75,47 @@ def test_env_ms_teams_webhook_url():
         'text': BasicMatchString(rule, match).__str__()
     }
 
-    webhookUrl = os.environ.get('TEST_RULE_1_MS_TEAMS_WEBHOOK_URL', None)
     mock_post_request.assert_called_once_with(
-        webhookUrl,
+        'http://test.webhook.url',
+        data=mock.ANY,
+        headers={'content-type': 'application/json'},
+        proxies=None
+    )
+    assert expected_data == json.loads(mock_post_request.call_args_list[0][1]['data'])
+
+
+@mock.patch.dict(os.environ, {"TEST_RULE_1_MS_TEAMS_WEBHOOK_URL": "http://test.webhook.url, http://test1.webhook.url, http://test2.webhook.url"})
+def test_env_multiple_ms_teams_webhook_url():
+    rule = {
+        'ms_teams_env_prefix': 'TEST_RULE_1',
+        'name': 'Test Rule',
+        'type': 'any',
+        'ms_teams_alert_summary': 'Alert from ElastAlert',
+        'alert_subject': 'Cool subject',
+        'alert': []
+    }
+
+    rules_loader = FileRulesLoader({})
+    rules_loader.load_modules(rule)
+    alert = MsTeamsAlerter(rule)
+    match = {
+        '@timestamp': '2016-01-01T00:00:00',
+        'somefield': 'foobarbaz'
+    }
+    with mock.patch('requests.post') as mock_post_request:
+        alert.alert([match])
+
+    expected_data = {
+        '@type': 'MessageCard',
+        '@context': 'http://schema.org/extensions',
+        'summary': rule['ms_teams_alert_summary'],
+        'title': rule['alert_subject'],
+        'text': BasicMatchString(rule, match).__str__()
+    }
+
+    webhookUrl = ['http://test.webhook.url', 'http://test1.webhook.url', 'http://test2.webhook.url']
+    mock_post_request.assert_called_with(
+        webhookUrl[2],
         data=mock.ANY,
         headers={'content-type': 'application/json'},
         proxies=None
