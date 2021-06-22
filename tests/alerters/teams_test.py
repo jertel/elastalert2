@@ -84,7 +84,9 @@ def test_env_ms_teams_webhook_url():
     assert expected_data == json.loads(mock_post_request.call_args_list[0][1]['data'])
 
 
-@mock.patch.dict(os.environ, {"TEST_RULE_1_MS_TEAMS_WEBHOOK_URL": "http://test.webhook.url, http://test1.webhook.url, http://test2.webhook.url"})
+@mock.patch.dict(os.environ, {
+    "TEST_RULE_1_MS_TEAMS_WEBHOOK_URL": "http://test.webhook.url, http://test1.webhook.url, http://test2.webhook.url"
+})
 def test_env_multiple_ms_teams_webhook_url():
     rule = {
         'ms_teams_env_prefix': 'TEST_RULE_1',
