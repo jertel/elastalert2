@@ -3,6 +3,7 @@
 .coverage
 .idea/*
 .cache/
+.vscode/
 __pycache__/
 *.pyc
 virtualenv_run/
