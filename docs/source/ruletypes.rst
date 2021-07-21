@@ -2780,6 +2780,73 @@ Example With SMS usage::
     twilio_auth_token: "abcdefghijklmnopqrstuvwxyz012345"
     twilio_account_sid: "ABCDEFGHIJKLMNOPQRSTUVWXYZ01234567"
 
+Wechat
+~~~~~~~~
+
+Wechat will send notification with a application. The body of the notification is formatted the same as with other alerters. See: https://work.weixin.qq.com/api/doc/90000/90135/90236
+
+Required:
+
+``wechat_corp_id``:  Wechat corp id.
+
+``wechat_agent_id``: The wechat agent id you are going to send the message.
+
+``wechat_secret``:  The wechat agent secret.
+
+Optional:
+
+``wechat_to_party`` & ``wechat_to_user`` & ``wechat_to_tag``: There must be one.
+
+``wechat_msgtype``: Wechat msgtype, default to ``text``. ``textcard``, ``markdown``.
+
+``wechat_textcard_url``: Wechat textcard url while ``wechat_msgtype`` is ``textcard``, default to ``null_url``.
+
+``wechat_enable_duplicate_check``: ``enable_duplicate_check``, default to ``0``.
+
+``wechat_duplicate_check_interval``: ``duplicate_check_interval``, default to ``1800``.
+
+``wechat_proxy``: HTTP proxy.
+
+``wechat_proxy_login``: HTTP proxy login.
+
+``wechat_proxy_pass``: HTTP proxy pass.
+
+
+wechat_msgtype textcard Required:
+
+``wechat_textcard_url``: The title of a textcard button..
+
+
+Example msgtype : text::
+
+    alert:
+      - "wechat"
+    wechat_corp_id: "a_corp_id"
+    wechat_secret: "a_secret"
+    wechat_agent_id: "a_agent_id"
+    wechat_to_user: "user1|user2|user3"
+
+Example msgtype : textcard::
+
+    alert:
+      - "wechat"
+    wechat_corp_id: "a_corp_id"
+    wechat_secret: "a_secret"
+    wechat_agent_id: "a_agent_id"
+    wechat_to_user: "@all"
+    wechat_msgtype: "textcard"
+    wechat_textcard_url: "http://{your_kibana_url}"
+
+Example msgtype : markdown::
+
+    alert:
+      - "wechat"
+    wechat_corp_id: "a_corp_id"
+    wechat_secret: "a_secret"
+    wechat_agent_id: "a_agent_id"
+    wechat_to_tag: "tag1"
+    wechat_msgtype: "markdown"
+
 Zabbix
 ~~~~~~
 
