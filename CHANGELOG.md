@@ -9,6 +9,71 @@
 ## Other changes
 - None
 
+
+# 2.x.x
+
+## Breaking changes
+- None
+
+## New features
+- [Wechat] Add support for wechat alerter - [#355](https://github.com/jertel/elastalert2/pull/355) - @daiwei233
+
+## Other changes
+- [Tests] Add test code. Changed ubuntu version of Dockerfile-test from latest to 21.10. - [#354](https://github.com/jertel/elastalert2/pull/354) - @nsano-rururu
+- Remove Python 2.x compatibility code - [#354](https://github.com/jertel/elastalert2/pull/354) - @nsano-rururu
+
+
+# 2.1.2
+## Breaking changes
+- None
+
+## New features
+- [Rocket.Chat] Add support for generating Kibana Discover URLs to Rocket.Chat alerter - [#260](https://github.com/jertel/elastalert2/pull/260) - @nsano-rururu
+- [Jinja] Provide rule key/values as possible Jinja data inputs - [#281](https://github.com/jertel/elastalert2/pull/281) - @mrfroggg
+- [Kubernetes] Add securityContext and podSecurityContext to Helm chart - [#289](https://github.com/jertel/elastalert2/pull/289) - @lepouletsuisse
+- [Rocket.Chat] Add options: rocket_chat_ca_certs, rocket_chat_ignore_ssl_errors, rocket_chat_timeout - [#302](https://github.com/jertel/elastalert2/pull/302) - @nsano-rururu
+- [Jinja] Favor match keys over colliding rule keys when resolving Jinja vars; also add alert_text_jinja unit test - [#311](https://github.com/jertel/elastalert2/pull/311) - @mrfroggg
+- [Opsgenie] Added possibility to specify source and entity attrs - [#315](https://github.com/jertel/elastalert2/pull/315) - @konstantin-kornienko
+- [ServiceNow] Add support for `servicenow_impact` and `servicenow_urgency` parameters for ServiceNow alerter - [#316](https://github.com/jertel/elastalert2/pull/316) - @randolph-esnet
+- [Jinja] Add Jinja support to alert_subject - [#318](https://github.com/jertel/elastalert2/pull/318) - @mrfroggg
+@lepouletsuisse
+- Metrics will now include time_taken, representing the execution duration of the rule - [#324](https://github.com/jertel/elastalert2/pull/324) - @JeffAshton
+
+## Other changes
+- [Prometheus] Continue fix for prometheus wrapper writeback function signature - [#256](https://github.com/jertel/elastalert2/pull/256) - @greut
+- [Stomp] Improve exception handling in alerter - [#261](https://github.com/jertel/elastalert2/pull/261) - @nsano-rururu
+- [AWS] Improve exception handling in Amazon SES and SNS alerters - [#264](https://github.com/jertel/elastalert2/pull/264) - @nsano-rururu
+- [Docs] Clarify documentation for starting ElastAlert 2 - [#265](https://github.com/jertel/elastalert2/pull/265) - @ferozsalam
+- Add exception handling for unsupported operand type - [#266](https://github.com/jertel/elastalert2/pull/266) - @nsano-rururu
+- [Docs] Improve documentation for Python build requirements - [#267](https://github.com/jertel/elastalert2/pull/267) - @nsano-rururu
+- [DataDog] Correct alerter logging - [#268](https://github.com/jertel/elastalert2/pull/268) - @nsano-rururu
+- [Docs] Correct parameter code documentation for main ElastAlert runner - [#269](https://github.com/jertel/elastalert2/pull/269) - @ferozsalam
+- [Command] alerter will now fail during init instead of during alert if given invalid command setting - [#270](https://github.com/jertel/elastalert2/pull/270) - @nsano-rururu
+- [Docs] Consolidate all examples into a new examples/ sub folder - [#271](https://github.com/jertel/elastalert2/pull/271) - @ferozsalam
+- [TheHive] Add example rule with Kibana Discover URL and query values in alert text - [#276](https://github.com/jertel/elastalert2/pull/276) - @markus-nclose
+- Upgrade pytest-xdist from 2.2.1 to 2.3.0; clarify HTTPS support in docs; Add additional logging - [#283](https://github.com/jertel/elastalert2/pull/283) - @nsano-rururu
+- [Tests] Add more alerter test coverage - [#284](https://github.com/jertel/elastalert2/pull/284) - @nsano-rururu
+- [Tests] Improve structure and placement of test-related files in project tree - [#287](https://github.com/jertel/elastalert2/pull/287) - @ferozsalam
+- Only attempt to adjust timezone if timezone is set to a non-empty string - [#288](https://github.com/jertel/elastalert2/pull/288) - @ferozsalam
+- [Kubernetes] Deprecated `podSecurityPolicy` feature in Helm Chart as [it's deprecated in Kubernetes 1.21](https://kubernetes.io/blog/2021/04/06/podsecuritypolicy-deprecation-past-present-and-future/) - [#289](https://github.com/jertel/elastalert2/pull/289) - @lepouletsuisse
+- [Slack] Fix slack_channel_override schema - [#291](https://github.com/jertel/elastalert2/pull/291) - @JeffAshton
+- [Rocket.Chat] Fix rocket_chat_channel_override schema - [#293](https://github.com/jertel/elastalert2/pull/293) - @nsano-rururu
+- [Tests] Increase code coverage - [#294](https://github.com/jertel/elastalert2/pull/294) - @nsano-rururu
+- [Docs] Added Kibana Discover sample - [#295](https://github.com/jertel/elastalert2/pull/295) - @nsano-rururu
+- [AWS] Remove deprecated boto_profile setting - [#299](https://github.com/jertel/elastalert2/pull/299) - @nsano-rururu
+- [Slack] Correct slack_alert_fields schema definition - [#300](https://github.com/jertel/elastalert2/pull/300) - @nsano-rururu
+- [Tests] Correct code coverage to eliminate warnings - [#301](https://github.com/jertel/elastalert2/pull/301) - @nsano-rururu
+- Eliminate unnecessary calls to Elasticsearch - [#303](https://github.com/jertel/elastalert2/pull/303) - @JeffAshton
+- [Zabbix] Fix timezone parsing - [#304](https://github.com/jertel/elastalert2/pull/304) - @JeffAshton
+- Improve logging of scheduler - [#305](https://github.com/jertel/elastalert2/pull/305) - @JeffAshton
+- [Jinja] Update Jinja from 2.11.3 to 3.0.1; Improve handling of colliding variables - [#311](https://github.com/jertel/elastalert2/pull/311) - @mrfroggg
+- [TheHive] Force observable artifacts to be strings - [#313](https://github.com/jertel/elastalert2/pull/313) - @pandvan
+- Upgrade pylint from <2.9 to <2.10 - [#314](https://github.com/jertel/elastalert2/pull/314) - @nsano-rururu
+- [ChatWork] Enforce character limit - [#319](https://github.com/jertel/elastalert2/pull/319) - @nsano-rururu
+- [LineNotify] Enforce character limit - [#320](https://github.com/jertel/elastalert2/pull/320) - @nsano-rururu
+- [Discord] Remove trailing backticks from alert body - [#321](https://github.com/jertel/elastalert2/pull/321) - @nsano-rururu
+- Redirecting warnings to logging module - [#325](https://github.com/jertel/elastalert2/pull/325) - @JeffAshton
+
 # 2.1.1
 
 ## Breaking changes
@@ -54,7 +119,7 @@
 # 2.1.0
 
 ## Breaking changes
-- TheHive alerter refactoring - [#142](https://github.com/jertel/elastalert2/pull/142) - @ferozsalam  
+- TheHive alerter refactoring - [#142](https://github.com/jertel/elastalert2/pull/142) - @ferozsalam
   - See the updated documentation for changes required to alert formatting
 - Dockerfile refactor for performance and size improvements - [#102](https://github.com/jertel/elastalert2/pull/102) - @jgregmac
 	- Dockerfile base image changed from `python/alpine` to `python/slim-buster` to take advantage of pre-build python wheels, accelerate build times, and reduce image size. If you have customized an image, based on jertel/elastalert2, you may need to make adjustments.
@@ -66,7 +131,7 @@
 ## New features
 - Support for multiple rules directories and fix `..data` Kubernetes/Openshift recursive directories in FileRulesLoader [#157](https://github.com/jertel/elastalert2/pull/157) - @mrfroggg
 - Support environment variable substition in yaml files - [#149](https://github.com/jertel/elastalert2/pull/149) - @archfz
-- Update schema.yaml and enhance documentation for Email alerter - [#144](https://github.com/jertel/elastalert2/pull/144) - @nsano-rururu 
+- Update schema.yaml and enhance documentation for Email alerter - [#144](https://github.com/jertel/elastalert2/pull/144) - @nsano-rururu
 - Default Email alerter to use port 25, and require http_post_url for HTTP Post alerter - [#143](https://github.com/jertel/elastalert2/pull/143) - @nsano-rururu
 - Support extra message features for Slack and Mattermost - [#140](https://github.com/jertel/elastalert2/pull/140) - @nsano-rururu
 - Support a footer in alert text - [#133](https://github.com/jertel/elastalert2/pull/133) - @nsano-rururu
@@ -106,3 +171,4 @@
 - Container images are now built and published via GitHub actions instead of relying on DockerHub's automated builds.
 - Update PIP library description and Helm chart description to be consistent.
 - Continue updates to change references from _ElastAlert_ to _ElastAlert 2_
+
