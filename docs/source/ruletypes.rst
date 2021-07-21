@@ -2811,10 +2811,7 @@ Optional:
 
 ``wechat_proxy_pass``: HTTP proxy pass.
 
-
-wechat_msgtype textcard Required:
-
-``wechat_textcard_url``: The title of a textcard button..
+``wechat_textcard_url``: The url of a textcard button..
 
 
 Example msgtype : text::
