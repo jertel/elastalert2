@@ -311,6 +311,11 @@ properties:
   dingtalk_single_url: {type: string}
   dingtalk_btn_orientation: {type: string}
 
+  ### Wechat
+  wechat_corp_id: {type: string}
+  wechat_secret: {type: string}
+  wechat_agent_id: {type: integer}
+  
   ## Discord
   discord_webhook_url: {type: string}
   discord_emoji_title: {type: string}
