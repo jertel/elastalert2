@@ -2803,7 +2803,7 @@ Optional:
 
 ``wechat_enable_duplicate_check``: ``enable_duplicate_check``, defaults to ``0``.
 
-``wechat_duplicate_check_interval``: ``duplicate_check_interval``, opsgenie_default_receipients to ``1800``.
+``wechat_duplicate_check_interval``: ``duplicate_check_interval``, defaults to ``1800``.
 
 ``wechat_proxy``: HTTP proxy.
 
