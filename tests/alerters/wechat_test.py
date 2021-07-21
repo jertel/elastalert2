@@ -40,10 +40,10 @@ def test_wechat_getinfo():
 def test_wechat_required_error(wechat_corp_id, wechat_secret, wechat_agent_id, expected_data):
     try:
         rule = {
-            'name': 'Test DingTalk Rule',
+            'name': 'Test Wechat Rule',
             'type': 'any',
             'alert': [],
-            'alert_subject': 'Test DingTalk'
+            'alert_subject': 'Test Wechat'
         }
 
         if wechat_corp_id != '':

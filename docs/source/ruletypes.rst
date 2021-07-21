@@ -2793,17 +2793,17 @@ Required:
 
 ``wechat_secret``:  The wechat agent secret.
 
+``wechat_to_party`` & ``wechat_to_user`` & ``wechat_to_tag``: One of wechat_to_party, wechat_to_user, or wechat_to_tag.
+
 Optional:
 
-``wechat_to_party`` & ``wechat_to_user`` & ``wechat_to_tag``: There must be one.
-
-``wechat_msgtype``: Wechat msgtype, default to ``text``. ``textcard``, ``markdown``.
+``wechat_msgtype``: Wechat msgtype, defaults to ``text``. ``textcard``, ``markdown``.
 
 ``wechat_textcard_url``: Wechat textcard url while ``wechat_msgtype`` is ``textcard``, default to ``null_url``.
 
-``wechat_enable_duplicate_check``: ``enable_duplicate_check``, default to ``0``.
+``wechat_enable_duplicate_check``: ``enable_duplicate_check``, defaults to ``0``.
 
-``wechat_duplicate_check_interval``: ``duplicate_check_interval``, default to ``1800``.
+``wechat_duplicate_check_interval``: ``duplicate_check_interval``, opsgenie_default_receipients to ``1800``.
 
 ``wechat_proxy``: HTTP proxy.
 
