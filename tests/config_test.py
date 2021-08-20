@@ -197,3 +197,21 @@ def test_config_loads_logging2(caplog):
     user, level, message = caplog.record_tuples[0]
     assert expected1 in message
     assert expected2 in message
+
+
+def test_config_loads_include_yaml():
+    os.environ['ELASTIC_PASS'] = 'password_from_env'
+    dir_path = os.path.dirname(os.path.realpath(__file__))
+
+    test_args = mock.Mock()
+    test_args.config = dir_path + '/example.config.pyyaml-include.yaml'
+    test_args.rule = None
+    test_args.debug = False
+    test_args.es_debug_trace = None
+
+    conf = load_conf(test_args)
+
+    assert conf['include_from_file_seq'][0] == 'a'
+    assert conf['include_from_file_seq'][1] == 'b'
+    assert conf['include_from_file_seq'][2] == 'c'
+    assert conf['include_from_file_map']['test'] == 'pass'
