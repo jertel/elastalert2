@@ -17,5 +17,5 @@ writeback_index: elastalert_status
 alert_time_limit:
   days: 2
 
-include_from_file_seq: !include /home/elastalert/tests/example.config.pyyaml-include.target.seq.yaml
-include_from_file_map: !include /home/elastalert/tests/example.config.pyyaml-include.target.map.yaml
+include_from_file_seq: !include example.config.pyyaml-include.target.seq.yaml
+include_from_file_map: !include example.config.pyyaml-include.target.map.yaml
