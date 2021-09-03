@@ -56,6 +56,3 @@ slack_username_override: "ElastAlert"
 
 # Alert body only cointains a title and text
 alert_text_type: alert_text_only
-
-# Link to BitSensor Kibana Dashboard
-use_kibana4_dashboard: "https://dev.securely.ai/app/kibana#/dashboard/37739d80-a95c-11e9-b5ba-33a34ca252fb"
