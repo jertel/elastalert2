@@ -63,7 +63,6 @@ Additional rule types and alerts can be easily imported or written. (See :ref:`W
 
 In addition to this basic usage, there are many other features that make alerts more useful:
 
-- Alerts link to Kibana dashboards
 - Aggregate counts for arbitrary fields
 - Combine alerts into periodic reports
 - Separate alerts by using a unique key field

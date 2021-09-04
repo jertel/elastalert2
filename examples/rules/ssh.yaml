@@ -35,11 +35,10 @@ include:
 
 include_match_in_root: true
 
-alert_subject: "SSH abuse on <{}> | <{}|Show Dashboard>"
+alert_subject: "SSH abuse on <{}>"
 alert_subject_args:
   - host.hostname
-  - kibana_link
-
+ 
 alert_text: |-
   An attack on {} is detected.
   The attacker looks like:
