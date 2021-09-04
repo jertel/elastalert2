@@ -13,7 +13,7 @@
 # 2.x.x
 
 ## Breaking changes
-- None
+- Removed settings related to kibana dashboard - [#447](https://github.com/jertel/elastalert2/pull/447) - @nsano-rururu
 
 ## New features
 - Added support for markdown style formatting of aggregation tables - [#415](https://github.com/jertel/elastalert2/pull/415) - @Neuro-HSOC
