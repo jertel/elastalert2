@@ -7,6 +7,7 @@ import logging
 import os
 import random
 import signal
+import pyshorteners
 import sys
 import threading
 import time
@@ -1591,7 +1592,8 @@ class ElastAlerter(object):
                 matches[0]['kibana_link'] = kb_link
 
         if rule.get('generate_kibana_discover_url'):
-            kb_link = generate_kibana_discover_url(rule, matches[0])
+            shortener = pyshorteners.Shortener()
+            kb_link = shortener.tinyurl.short(generate_kibana_discover_url(rule, matches[0]))
             if kb_link:
                 matches[0]['kibana_discover_url'] = kb_link
 

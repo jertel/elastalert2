@@ -38,6 +38,7 @@ setup(
         'jsonschema>=3.0.2',
         'prison>=0.1.2',
         'prometheus_client>=0.10.1',
+        'pyshorteners==1.0.1',
         'py-zabbix>=1.1.3',
         'python-dateutil>=2.6.0,<2.9.0',
         'PyYAML>=5.1',

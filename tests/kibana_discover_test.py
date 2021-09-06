@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 from datetime import timedelta
+
+import pyshorteners
 import pytest
 
 from elastalert.kibana_discover import generate_kibana_discover_url
@@ -36,6 +38,11 @@ def test_generate_kibana_discover_url_with_kibana_5x_and_6x(kibana_version):
         + '%29'  # app end
     )
     assert url == expectedUrl
+
+    expectedUrl2 = 'https://tinyurl.com/yjtst5hj'
+    shortener = pyshorteners.Shortener()
+    kb_link = shortener.tinyurl.short(url)
+    assert kb_link == expectedUrl2
 
 
 @pytest.mark.parametrize("kibana_version", [
@@ -85,6 +92,11 @@ def test_generate_kibana_discover_url_with_kibana_7x(kibana_version):
         + '%29'  # app end
     )
     assert url == expectedUrl
+
+    expectedUrl2 = 'https://tinyurl.com/yexu4nwb'
+    shortener = pyshorteners.Shortener()
+    kb_link = shortener.tinyurl.short(url)
+    assert kb_link == expectedUrl2
 
 
 def test_generate_kibana_discover_url_with_missing_kibana_discover_version():
@@ -182,6 +194,11 @@ def test_generate_kibana_discover_url_with_kibana_discover_app_url_env_substitut
     )
     assert url == expectedUrl
 
+    expectedUrl2 = 'https://tinyurl.com/yjtst5hj'
+    shortener = pyshorteners.Shortener()
+    kb_link = shortener.tinyurl.short(url)
+    assert kb_link == expectedUrl2
+
 
 def test_generate_kibana_discover_url_with_from_timedelta():
     url = generate_kibana_discover_url(
@@ -214,6 +231,11 @@ def test_generate_kibana_discover_url_with_from_timedelta():
         + '%29'  # app end
     )
     assert url == expectedUrl
+
+    expectedUrl2 = 'https://tinyurl.com/yh6gcb9b'
+    shortener = pyshorteners.Shortener()
+    kb_link = shortener.tinyurl.short(url)
+    assert kb_link == expectedUrl2
 
 
 def test_generate_kibana_discover_url_with_from_timedelta_and_timeframe():
@@ -249,6 +271,11 @@ def test_generate_kibana_discover_url_with_from_timedelta_and_timeframe():
     )
     assert url == expectedUrl
 
+    expectedUrl2 = 'https://tinyurl.com/yzgman6j'
+    shortener = pyshorteners.Shortener()
+    kb_link = shortener.tinyurl.short(url)
+    assert kb_link == expectedUrl2
+
 
 def test_generate_kibana_discover_url_with_to_timedelta():
     url = generate_kibana_discover_url(
@@ -281,6 +308,11 @@ def test_generate_kibana_discover_url_with_to_timedelta():
         + '%29'  # app end
     )
     assert url == expectedUrl
+
+    expectedUrl2 = 'https://tinyurl.com/yedpxxeg'
+    shortener = pyshorteners.Shortener()
+    kb_link = shortener.tinyurl.short(url)
+    assert kb_link == expectedUrl2
 
 
 def test_generate_kibana_discover_url_with_to_timedelta_and_timeframe():
@@ -316,6 +348,11 @@ def test_generate_kibana_discover_url_with_to_timedelta_and_timeframe():
     )
     assert url == expectedUrl
 
+    expectedUrl2 = 'https://tinyurl.com/yf42bm4o'
+    shortener = pyshorteners.Shortener()
+    kb_link = shortener.tinyurl.short(url)
+    assert kb_link == expectedUrl2
+
 
 def test_generate_kibana_discover_url_with_timeframe():
     url = generate_kibana_discover_url(
@@ -349,6 +386,11 @@ def test_generate_kibana_discover_url_with_timeframe():
     )
     assert url == expectedUrl
 
+    expectedUrl2 = 'https://tinyurl.com/yeflakdl'
+    shortener = pyshorteners.Shortener()
+    kb_link = shortener.tinyurl.short(url)
+    assert kb_link == expectedUrl2
+
 
 def test_generate_kibana_discover_url_with_custom_columns():
     url = generate_kibana_discover_url(
@@ -381,6 +423,11 @@ def test_generate_kibana_discover_url_with_custom_columns():
         + '%29'  # app end
     )
     assert url == expectedUrl
+
+    expectedUrl2 = 'https://tinyurl.com/yfnpwn6m'
+    shortener = pyshorteners.Shortener()
+    kb_link = shortener.tinyurl.short(url)
+    assert kb_link == expectedUrl2
 
 
 def test_generate_kibana_discover_url_with_single_filter():
@@ -432,6 +479,11 @@ def test_generate_kibana_discover_url_with_single_filter():
         + '%29'  # app end
     )
     assert url == expectedUrl
+
+    expectedUrl2 = 'https://tinyurl.com/yg5gdh5a'
+    shortener = pyshorteners.Shortener()
+    kb_link = shortener.tinyurl.short(url)
+    assert kb_link == expectedUrl2
 
 
 def test_generate_kibana_discover_url_with_multiple_filters():
@@ -486,6 +538,11 @@ def test_generate_kibana_discover_url_with_multiple_filters():
         + '%29'  # app end
     )
     assert url == expectedUrl
+
+    expectedUrl2 = 'https://tinyurl.com/yjss8vyv'
+    shortener = pyshorteners.Shortener()
+    kb_link = shortener.tinyurl.short(url)
+    assert kb_link == expectedUrl2
 
 
 def test_generate_kibana_discover_url_with_int_query_key():
@@ -546,6 +603,11 @@ def test_generate_kibana_discover_url_with_int_query_key():
         + '%29'  # app end
     )
     assert url == expectedUrl
+
+    expectedUrl2 = 'https://tinyurl.com/yjlqo2mw'
+    shortener = pyshorteners.Shortener()
+    kb_link = shortener.tinyurl.short(url)
+    assert kb_link == expectedUrl2
 
 
 def test_generate_kibana_discover_url_with_str_query_key():
@@ -609,6 +671,11 @@ def test_generate_kibana_discover_url_with_str_query_key():
     )
     assert url == expectedUrl
 
+    expectedUrl2 = 'https://tinyurl.com/yflkjzlw'
+    shortener = pyshorteners.Shortener()
+    kb_link = shortener.tinyurl.short(url)
+    assert kb_link == expectedUrl2
+
 
 def test_generate_kibana_discover_url_with_null_query_key_value():
     url = generate_kibana_discover_url(
@@ -659,6 +726,11 @@ def test_generate_kibana_discover_url_with_null_query_key_value():
     )
     assert url == expectedUrl
 
+    expectedUrl2 = 'https://tinyurl.com/yhlypltw'
+    shortener = pyshorteners.Shortener()
+    kb_link = shortener.tinyurl.short(url)
+    assert kb_link == expectedUrl2
+
 
 def test_generate_kibana_discover_url_with_missing_query_key_value():
     url = generate_kibana_discover_url(
@@ -707,6 +779,11 @@ def test_generate_kibana_discover_url_with_missing_query_key_value():
         + '%29'  # app end
     )
     assert url == expectedUrl
+
+    expectedUrl2 = 'https://tinyurl.com/yhlypltw'
+    shortener = pyshorteners.Shortener()
+    kb_link = shortener.tinyurl.short(url)
+    assert kb_link == expectedUrl2
 
 
 def test_generate_kibana_discover_url_with_compound_query_key():
@@ -796,6 +873,11 @@ def test_generate_kibana_discover_url_with_compound_query_key():
     )
     assert url == expectedUrl
 
+    expectedUrl2 = 'https://tinyurl.com/yf6qvw8s'
+    shortener = pyshorteners.Shortener()
+    kb_link = shortener.tinyurl.short(url)
+    assert kb_link == expectedUrl2
+
 
 def test_generate_kibana_discover_url_with_filter_and_query_key():
     url = generate_kibana_discover_url(
@@ -872,3 +954,8 @@ def test_generate_kibana_discover_url_with_filter_and_query_key():
         + '%29'  # app end
     )
     assert url == expectedUrl
+
+    expectedUrl2 = 'https://tinyurl.com/yjcw97fk'
+    shortener = pyshorteners.Shortener()
+    kb_link = shortener.tinyurl.short(url)
+    assert kb_link == expectedUrl2
