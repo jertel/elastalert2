@@ -8,6 +8,7 @@
 
 ## Other changes
 - [Docs] Add missing documentation of the `aggregation_alert_time_compared_with_timestamp_field` option. - [#1588](https://github.com/jertel/elastalert2/pull/1588) - @nicolasnovelli
+- Fix linter error reporting about return type assignation in `elastalert/test_rule.py`. - [#1594](https://github.com/jertel/elastalert2/pull/1594) - @thican
 
 # 2.22.0
 
