@@ -91,7 +91,7 @@ def test_generate_kibana_discover_url_with_kibana_7x(kibana_version):
 def test_generate_kibana_discover_url_with_absolute_kinbana_discover_app_url():
     url = generate_kibana_discover_url(
         rule={
-            'kibana_url': 'http://elasticsearch.test.org:9200/',
+            'kibana_url': 'http://elasticsearch.test.org:9200/_plugin/kibana/',
             'kibana_discover_app_url': 'http://kibana.test.org:5601/app/discover#/',
             'kibana_discover_version': '7.15',
             'kibana_discover_index_pattern_id': '006eb191-2ffc-4269-a176-d1377f476a45',
@@ -185,7 +185,6 @@ def test_generate_kibana_discover_url_with_relative_path_kinbana_discover_app_ur
         + '%29'  # app end
     )
     assert url == expectedUrl
-
 
 
 def test_generate_kibana_discover_url_with_missing_kibana_discover_version():
