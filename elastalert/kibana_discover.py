@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 # flake8: noqa
 import datetime
-import logging
 import json
 import os.path
 import prison
@@ -20,14 +19,17 @@ kibana7_versions = frozenset(['7.0', '7.1', '7.2', '7.3', '7.4', '7.5', '7.6', '
 def generate_kibana_discover_url(rule, match):
     ''' Creates a link for a kibana discover app. '''
 
-    discover_app_url = rule.get('kibana_discover_app_url')
-    if not discover_app_url:
+    relative_discover_app_url = rule.get('kibana_discover_app_url')
+    if not relative_discover_app_url:
         elastalert_logger.warning(
             'Missing kibana_discover_app_url for rule %s' % (
                 rule.get('name', '<MISSING NAME>')
             )
         )
         return None
+
+    kibana_base_url = rule.get('kibana_url')
+    discover_app_url = urllib.parse.urljoin(kibana_base_url, relative_discover_app_url)
 
     kibana_version = rule.get('kibana_discover_version')
     if not kibana_version:
