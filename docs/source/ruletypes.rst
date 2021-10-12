@@ -544,9 +544,15 @@ be uploaded to the kibana-int index as a temporary dashboard. (Optional, boolean
 kibana_url
 ^^^^^^^^^^
 
-``kibana_url``: The url to access Kibana. This will be used if ``generate_kibana_link`` or
-``use_kibana_dashboard`` is true. If not specified, a URL will be constructed using ``es_host`` and ``es_port``.
-(Optional, string, default ``http://<es_host>:<es_port>/_plugin/kibana/``)
+``kibana_url``: The base url of the Kibana application. If not specified, a URL will be constructed using ``es_host``
+and ``es_port``. (Optional, string, default ``http://<es_host>:<es_port>/_plugin/kibana/``)
+
+This value will be used if one of the following conditions are met:
+
+- ``generate_kibana_link`` is true
+- ``use_kibana_dashboard`` is true
+- ``use_kibana4_dashboard`` is true
+- ``generate_kibana_discover_url`` is true and ``kibana_discover_app_url`` is a relative path
 
 use_kibana_dashboard
 ^^^^^^^^^^^^^^^^^^^^
