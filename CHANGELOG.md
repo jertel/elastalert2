@@ -16,6 +16,7 @@
 
 ## New features
 - [Alertmanager] Added support for Alertmanager - [#503](https://github.com/jertel/elastalert2/pull/503) - @nsano-rururu
+- Added support for relative Kibana discover urls [#504](https://github.com/jertel/elastalert2/pull/504) - @JeffAshton
 
 ## Other changes
 - [Docs] Add exposed metrics documentation - [#498](https://github.com/jertel/elastalert2/pull/498) - @thisisxgp
