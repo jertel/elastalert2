@@ -70,24 +70,9 @@ def test_tencentsms_template_parm(tencent_sms_template_parm, expected_data):
 
 @pytest.mark.parametrize('key, val, expected_data', [
     (
-        'tencent_sms_secret_id',
+        'tencent_sms_to_number',
         '',
         'Missing required option(s): tencent_sms_secret_id'
-    ),
-    (
-        'tencent_sms_secret_key',
-        '',
-        'Missing required option(s): tencent_sms_secret_key'
-    ),
-    (
-        'tencent_sms_template_id',
-        '',
-        'Missing required option(s): tencent_sms_template_id'
-    ),
-    (
-        'tencent_sms_sdk_appid',
-        '',
-        'Missing required option(s): tencent_sms_sdk_appid'
     ),
 ])
 def test_tencentsms_required_error(key, val, expected_data):

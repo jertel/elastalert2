@@ -20,11 +20,7 @@ class TencentSMSAlerter(Alerter):
     # of the options. Otherwise, ElastAlert 2 will throw an exception
     # when trying to load the rule.
     required_options = frozenset([
-        'tencent_sms_secret_id',
-        'tencent_sms_secret_key',
-        'tencent_sms_sdk_appid',
         'tencent_sms_to_number',
-        'tencent_sms_template_id',
     ])
 
     def __init__(self, *args):
