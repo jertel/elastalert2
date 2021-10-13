@@ -22,6 +22,7 @@
 - [Tests] Fix rules_test.py - [#499](https://github.com/jertel/elastalert2/pull/499) - @nsano-rururu
 - Upgrade to Python 3.10 and Sphinx 4.2.0 - [#501](https://github.com/jertel/elastalert2/pull/501) - @jertel
 - max_scrolling_count now has a default value of 990 to avoid stack overflow crashes - [#509](https://github.com/jertel/elastalert2/pull/509) - @jertel
+- Tencent SMS Multiple rules only use the same secret appid template  - [#510](https://github.com/jertel/elastalert2/pull/510) - @liuxingjun
 
 # 2.2.2
 
