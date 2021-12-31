@@ -620,6 +620,13 @@ properties:
   slack_author_icon: {type: string}
   slack_msg_pretext: {type: string}
 
+  # SlackSDK
+  slacksdk_channel_id: *arrayOfString
+  slacksdk_msg_color: {type: string}
+  slacksdk_thread_text: {type: string}
+  slacksdk_kibana_button: {type: boolean}
+  slacksdk_kibana_button_text: {type: string}
+
   ### Splunk On-Call (Formerly VictorOps)
   victorops_api_key: {type: string}
   victorops_routing_key: {type: string}

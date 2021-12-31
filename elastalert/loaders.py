@@ -44,6 +44,7 @@ from elastalert.alerters.mattermost import MattermostAlerter
 from elastalert.alerters.opsgenie import OpsGenieAlerter
 from elastalert.alerters.pagerduty import PagerDutyAlerter
 from elastalert.alerters.slack import SlackAlerter
+from elastalert.alerters.slacksdk import SlackSdkAlerter
 from elastalert.alerters.sns import SnsAlerter
 from elastalert.alerters.teams import MsTeamsAlerter
 from elastalert.alerters.zabbix import ZabbixAlerter
@@ -107,6 +108,7 @@ class RulesLoader(object):
         'sns': SnsAlerter,
         'ms_teams': MsTeamsAlerter,
         'slack': SlackAlerter,
+        'slacksdk': SlackSdkAlerter,
         'mattermost': MattermostAlerter,
         'pagerduty': PagerDutyAlerter,
         'exotel': elastalert.alerters.exotel.ExotelAlerter,
@@ -472,6 +474,9 @@ class RulesLoader(object):
                 rule["jinja_template"] = self.jinja_environment.get_or_select_template(jinja_template_path)
             else:
                 rule["jinja_template"] = Template(str(rule.get('alert_text', '')))
+        
+        if rule.get('slacksdk_thread_text') != None:
+            rule["thread_jinja_template"] = Template(str(rule.get('slacksdk_thread_text', '')))
 
     def load_modules(self, rule, args=None):
         """ Loads things that could be modules. Enhancements, alerts and rule type. """

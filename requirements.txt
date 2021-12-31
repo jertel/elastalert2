@@ -23,3 +23,4 @@ twilio>=6.0.0,<6.58
 tencentcloud-sdk-python>=3.0.484
 jsonpointer>=2.1
 tzlocal==2.1
+slack-sdk>=3.13
