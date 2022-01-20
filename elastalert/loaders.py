@@ -300,6 +300,23 @@ class RulesLoader(object):
         except jsonschema.ValidationError as e:
             raise EAException("Invalid Rule file: %s\n%s" % (filename, e))
 
+        # Set defaults, copy defaults from config.yaml
+        for key, val in list(self.base_config.items()):
+            rule.setdefault(key, val)
+        rule.setdefault('name', os.path.splitext(filename)[0])
+        rule.setdefault('realert', datetime.timedelta(seconds=0))
+        rule.setdefault('aggregation', datetime.timedelta(seconds=0))
+        rule.setdefault('query_delay', datetime.timedelta(seconds=0))
+        rule.setdefault('timestamp_field', '@timestamp')
+        rule.setdefault('filter', [])
+        rule.setdefault('timestamp_type', 'iso')
+        rule.setdefault('timestamp_format', '%Y-%m-%dT%H:%M:%SZ')
+        rule.setdefault('_source_enabled', True)
+        rule.setdefault('use_local_time', True)
+        rule.setdefault('description', "")
+        rule.setdefault('jinja_root_name', "_data")
+        rule.setdefault('query_timezone', "")
+
         try:
             # Set all time based parameters
             if 'timeframe' in rule:
@@ -333,23 +350,6 @@ class RulesLoader(object):
                 rule['kibana_discover_to_timedelta'] = datetime.timedelta(**rule['kibana_discover_to_timedelta'])
         except (KeyError, TypeError) as e:
             raise EAException('Invalid time format used: %s' % e)
-
-        # Set defaults, copy defaults from config.yaml
-        for key, val in list(self.base_config.items()):
-            rule.setdefault(key, val)
-        rule.setdefault('name', os.path.splitext(filename)[0])
-        rule.setdefault('realert', datetime.timedelta(seconds=0))
-        rule.setdefault('aggregation', datetime.timedelta(seconds=0))
-        rule.setdefault('query_delay', datetime.timedelta(seconds=0))
-        rule.setdefault('timestamp_field', '@timestamp')
-        rule.setdefault('filter', [])
-        rule.setdefault('timestamp_type', 'iso')
-        rule.setdefault('timestamp_format', '%Y-%m-%dT%H:%M:%SZ')
-        rule.setdefault('_source_enabled', True)
-        rule.setdefault('use_local_time', True)
-        rule.setdefault('description', "")
-        rule.setdefault('jinja_root_name', "_data")
-        rule.setdefault('query_timezone', "")
 
         # Set timestamp_type conversion function, used when generating queries and processing hits
         rule['timestamp_type'] = rule['timestamp_type'].strip().lower()
