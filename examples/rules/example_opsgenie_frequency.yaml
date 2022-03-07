@@ -71,8 +71,6 @@ type: frequency
 # Index to search, wildcard supported
 index: logstash-*
 
-#doc_type: "golog"
-
 # (Required, frequency specific)
 # Alert when this many documents matching the query occur within a timeframe
 num_events: 50
@@ -85,7 +83,7 @@ timeframe:
 # (Required)
 # A list of Elasticsearch filters used for find events
 # These filters are joined with AND and nested in a filtered query
-# For more info: http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/query-dsl.html
+# For more info: https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl.html
 filter:
 - query:
     query_string:

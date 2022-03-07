@@ -39,7 +39,6 @@ test_rule = {'es_host': 'test_host',
              'filter': [{'term': {'key': 'value'}}],
              'alert': 'email',
              'use_count_query': True,
-             'doc_type': 'blsh',
              'email': 'test@test.test',
              'aggregation': {'hours': 2},
              'include': ['comparekey', '@timestamp']}
@@ -170,6 +169,32 @@ def test_load_inline_alert_rule():
         assert isinstance(test_rule_copy['alert'][1], EmailAlerter)
         assert 'foo@bar.baz' in test_rule_copy['alert'][0].rule['email']
         assert 'baz@foo.bar' in test_rule_copy['alert'][1].rule['email']
+
+
+def test_load_inline_alert_rule_with_jinja():
+    rules_loader = FileRulesLoader(test_config)
+    test_rule_copy = copy.deepcopy(test_rule)
+    test_rule_copy['alert'] = [
+        {
+            'email': {
+                'alert_text_type': 'alert_text_jinja',
+                'alert_text': '{{ myjinjavar }}'
+            }
+        },
+        {
+            'email': {
+                'alert_text': 'hello'
+            }
+        }
+    ]
+    test_config_copy = copy.deepcopy(test_config)
+    with mock.patch.object(rules_loader, 'get_yaml') as mock_open:
+        mock_open.side_effect = [test_config_copy, test_rule_copy]
+        rules_loader.load_modules(test_rule_copy)
+        assert isinstance(test_rule_copy['alert'][0], EmailAlerter)
+        assert isinstance(test_rule_copy['alert'][1], EmailAlerter)
+        assert 'jinja_template' in test_rule_copy['alert'][0].rule
+        assert 'jinja_template' not in test_rule_copy['alert'][1].rule
 
 
 def test_file_rules_loader_get_names_recursive():
@@ -411,36 +436,6 @@ def test_name_inference():
     test_rule_copy.pop('name')
     rules_loader.load_options(test_rule_copy, test_config, 'msmerc woz ere.yaml')
     assert test_rule_copy['name'] == 'msmerc woz ere'
-
-
-def test_raises_on_bad_generate_kibana_filters():
-    test_rule['generate_kibana_link'] = True
-    bad_filters = [[{'not': {'terms': {'blah': 'blah'}}}],
-                   [{'terms': {'blah': 'blah'}}],
-                   [{'query': {'not_querystring': 'this:that'}}],
-                   [{'query': {'wildcard': 'this*that'}}],
-                   [{'blah': 'blah'}]]
-    good_filters = [[{'term': {'field': 'value'}}],
-                    [{'not': {'term': {'this': 'that'}}}],
-                    [{'not': {'query': {'query_string': {'query': 'this:that'}}}}],
-                    [{'query': {'query_string': {'query': 'this:that'}}}],
-                    [{'range': {'blah': {'from': 'a', 'to': 'b'}}}],
-                    [{'not': {'range': {'blah': {'from': 'a', 'to': 'b'}}}}]]
-
-    # Test that all the good filters work, but fail with a bad filter added
-    for good in good_filters:
-        test_config_copy = copy.deepcopy(test_config)
-        rules_loader = FileRulesLoader(test_config_copy)
-
-        test_rule_copy = copy.deepcopy(test_rule)
-        test_rule_copy['filter'] = good
-        with mock.patch.object(rules_loader, 'get_yaml') as mock_open:
-            mock_open.return_value = test_rule_copy
-            rules_loader.load_configuration('blah', test_config)
-            for bad in bad_filters:
-                test_rule_copy['filter'] = good + bad
-                with pytest.raises(EAException):
-                    rules_loader.load_configuration('blah', test_config)
 
 
 def test_kibana_discover_from_timedelta():

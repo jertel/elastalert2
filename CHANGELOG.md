@@ -12,13 +12,50 @@
 # 2.x.x
 
 ## Breaking changes
+- Add support for Elasticsearch 8, remove support for Elasticsearch 6 and below - [#744](https://github.com/jertel/elastalert2/pull/744) - @ferozsalam, @jertel, and @nsano-rururu
+  WARNING! Read the [ES 8 upgrade notes](https://elastalert2.readthedocs.io/en/latest/recipes/faq.html#does-elastalert-2-support-elasticsearch-8) BEFORE upgrading your cluster to Elasticsearch 8. Failure to do so can result in your cluster no longer starting and unable to rollback to 7.x.
+- Kibana dashboard integration has been removed, as it only was supported with older versions of Elasticsearch and Kibana. Per the above breaking change those older versions are no longer supported by ElastAlert 2.
+- Dockerfile refactor for app home and user home to be the same directory (/opt/elastalert/). Before app home is /opt/elastalert/ and user home is /opt/elastalert/elastalert. After app home and user home are the same /opt/elastalert/ - [#656](https://github.com/jertel/elastalert2/pull/656)
+
+## New features
+- [MS Teams] Kibana Discover URL and Facts - [#660](https://github.com/jertel/elastalert2/pull/660) - @thib12
+- Add support for Kibana 7.17 for Kibana Discover - [#695](https://github.com/jertel/elastalert2/pull/695) - @nsano-rururu
+- Added a fixed name metric_agg_value to MetricAggregationRule match_body - [#697](https://github.com/jertel/elastalert2/pull/697) - @iamxeph
+
+## Other changes
+- Load Jinja template when loading an alert - [#654](https://github.com/jertel/elastalert2/pull/654) - @thib12
+- Upgrade tox 3.24.4 to 3.24.5 - [#655](https://github.com/jertel/elastalert2/pull/655) - @nsano-rururu
+- Upgrade sphinx 4.3.2 to 4.4.0 - [#661](https://github.com/jertel/elastalert2/pull/661) - @nsano-rururu
+- [Docs] Fix Running Docker container - [#674](https://github.com/jertel/elastalert2/pull/674) - @nsano-rururu 
+- [Exotel] Added exotel_message_body to schema.yaml - [#685](https://github.com/jertel/elastalert2/pull/685) - @nsano-rururu
+- Upgrade Pytest 6.2.5 to 7.0.0 - [#696](https://github.com/jertel/elastalert2/pull/696) - @nsano-rururu
+- python-dateutil version specification change - [#704](https://github.com/jertel/elastalert2/pull/704) - @nsano-rururu
+- Update minimum versions for third-party dependencies in requirements.txt and setup.py - [#705](https://github.com/jertel/elastalert2/pull/705) - @nsano-rururu
+- [Docs] Document updates for Alerts and email addresses etc - [#706](https://github.com/jertel/elastalert2/pull/706) - @nsano-rururu
+- [Docs] Update of RuleType Configuration Cheat Sheet - [#707](https://github.com/jertel/elastalert2/pull/707) - @nsano-rururu
+- Upgrade Pytest 7.0.0 to 7.0.1 - [#710](https://github.com/jertel/elastalert2/pull/710) - @nsano-rururu
+- Fixing jira_transition_to schema bug. Change property type from boolean to string - [#721](https://github.com/jertel/elastalert2/pull/721) - @toxisch
+- Begin Elasticsearch 8 support - ElastAlert 2 now supports setup with fresh ES 8 instances, and works with some alert types - [#731](https://github.com/jertel/elastalert2/pull/731) - @ferozsalam
+- Enable dynamic setting of rules volume in helm chart - [#732](https://github.com/jertel/elastalert2/pull/732) - @ChrisFraun
+- Do not install tests via pip install - [#733](https://github.com/jertel/elastalert2/pull/733) - @buzzdeee
+- [Docs] Add Elasticsearch 8 support documentation - [#735](https://github.com/jertel/elastalert2/pull/735) - @ferozsalam
+- Remove download_dashboard - [#740](https://github.com/jertel/elastalert2/pull/740) - @nsano-rururu
+- [Docs] Added documentation for metric|spike aggregation rule types for percentiles - [e682ea8](https://github.com/jertel/elastalert2/commit/e682ea8113bf9f413b6339e6803b5262881f2b30)- @jertel
+- [Jira] Add support for Jira authentication via Personal Access Token - [#750](https://github.com/jertel/elastalert2/pull/750) - @buzzdeee
+- [Docs] Update docs Negation, and, or - [#754](https://github.com/jertel/elastalert2/pull/754) - @nsano-rururu
+- Remove call to `print` from elastalert.py - [#755](https://github.com/jertel/elastalert2/pull/755) - @ferozsalam
+- [Docs] Added dingtalk_proxy, dingtalk_proxy_login, dingtalk_proxy_pass to docs - [#756](https://github.com/jertel/elastalert2/pull/756) - @nsano-rururu
+
+# 2.3.0
+
+## Breaking changes
 - [Kubernetes] The helm chart repository has changed. The new repository is located at https://jertel.github.io/elastalert2/. This was necessary due to the previous chart museum hosting service, Bonzai Cloud, terminating it's chart hosting service on January 21, 2022. - @jertel
 
 ## New features
 - Add metric_agg_script to MetricAggregationRule [#558](https://github.com/jertel/elastalert2/pull/558) - @dequis
-- [Alertmanager]Add support for basic authentication - [#575](https://github.com/jertel/elastalert2/pull/575) - @nsano-rururu
+- [Alertmanager] Add support for basic authentication - [#575](https://github.com/jertel/elastalert2/pull/575) - @nsano-rururu
 - Add support for Kibana 7.16 for Kibana Discover - [#612](https://github.com/jertel/elastalert2/pull/612) - @nsano-rururu
-- [MS Teams]Add support for verify SSL certificate - [#628](https://github.com/jertel/elastalert2/pull/628) - @nsano-rururu
+- [MS Teams] Add support for disabling verification of SSL certificate - [#628](https://github.com/jertel/elastalert2/pull/628) - @nsano-rururu
 
 ## Other changes
 - sphinx 4.2.0 to 4.3.0 and tzlocal==2.1 - [#561](https://github.com/jertel/elastalert2/pull/561) - @nsano-rururu
@@ -31,6 +68,9 @@
 - sphinx 4.3.1 to 4.3.2 - [#618](https://github.com/jertel/elastalert2/pull/618) - @nsano-rururu
 - Remove unused parameter boto-profile - [#622](https://github.com/jertel/elastalert2/pull/622) - @nsano-rururu
 - [Docs] Include Docker example; add additional FAQs - [#623](https://github.com/jertel/elastalert2/pull/623) - @nsano-rururu
+- Add support for URL shortening with Kibana 7.16+ - [#633](https://github.com/jertel/elastalert2/pull/633) - @jertel
+- [example] URL correction of information about Elasticsearch - [#642](https://github.com/jertel/elastalert2/pull/642) - @nsano-rururu
+- pylint 2.11.1 to 2.12.2 - [#651](https://github.com/jertel/elastalert2/pull/651) - @nsano-rururu
 
 # 2.2.3
 
@@ -225,7 +265,7 @@
 ## New features
 - Support for multiple rules directories and fix `..data` Kubernetes/Openshift recursive directories in FileRulesLoader [#157](https://github.com/jertel/elastalert2/pull/157) - @mrfroggg
 - Support environment variable substition in yaml files - [#149](https://github.com/jertel/elastalert2/pull/149) - @archfz
-- Update schema.yaml and enhance documentation for Email alerter - [#144](https://github.com/jertel/elastalert2/pull/144) - @nsano-rururu 
+- Update schema.yaml and enhance documentation for Email alerter - [#144](https://github.com/jertel/elastalert2/pull/144) - @nsano-rururu
 - Default Email alerter to use port 25, and require http_post_url for HTTP Post alerter - [#143](https://github.com/jertel/elastalert2/pull/143) - @nsano-rururu
 - Support extra message features for Slack and Mattermost - [#140](https://github.com/jertel/elastalert2/pull/140) - @nsano-rururu
 - Support a footer in alert text - [#133](https://github.com/jertel/elastalert2/pull/133) - @nsano-rururu

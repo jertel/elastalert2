@@ -60,21 +60,11 @@ Rule Configuration Cheat Sheet
 +--------------------------------------------------------------+           |
 | ``description`` (string, default empty string)               |           |
 +--------------------------------------------------------------+           |
-| ``generate_kibana_link`` (boolean, default False)            |           |
-+--------------------------------------------------------------+           |
-| ``use_kibana_dashboard`` (string, no default)                |           |
-+--------------------------------------------------------------+           |
 | ``kibana_url`` (string, default from es_host)                |           |
 +--------------------------------------------------------------+           |
 | ``kibana_username`` (string, no default)                     |           |
 +--------------------------------------------------------------+           |
 | ``kibana_password`` (string, no default)                     |           |
-+--------------------------------------------------------------+           |
-| ``use_kibana4_dashboard`` (string, no default)               |           |
-+--------------------------------------------------------------+           |
-| ``kibana4_start_timedelta`` (time, default: 10 min)          |           |
-+--------------------------------------------------------------+           |
-| ``kibana4_end_timedelta`` (time, default: 10 min)            |           |
 +--------------------------------------------------------------+           |
 | ``generate_kibana_discover_url`` (boolean, default False)    |           |
 +--------------------------------------------------------------+           |
@@ -153,67 +143,107 @@ Rule Configuration Cheat Sheet
 
 |
 
-+----------------------------------------------------+--------+-----------+-----------+--------+-----------+-------+----------+--------+-----------+
-|      RULE TYPE                                     |   Any  | Blacklist | Whitelist | Change | Frequency | Spike | Flatline |New_term|Cardinality|
-+====================================================+========+===========+===========+========+===========+=======+==========+========+===========+
-| ``compare_key`` (list of strs, no default)         |        |    Req    |   Req     |  Req   |           |       |          |        |           |
-+----------------------------------------------------+--------+-----------+-----------+--------+-----------+-------+----------+--------+-----------+
-|``blacklist`` (list of strs, no default)            |        |    Req    |           |        |           |       |          |        |           |
-+----------------------------------------------------+--------+-----------+-----------+--------+-----------+-------+----------+--------+-----------+
-|``whitelist`` (list of strs, no default)            |        |           |   Req     |        |           |       |          |        |           |
-+----------------------------------------------------+--------+-----------+-----------+--------+-----------+-------+----------+--------+-----------+
-| ``ignore_null`` (boolean, no default)              |        |           |   Req     |  Req   |           |       |          |        |           |
-+----------------------------------------------------+--------+-----------+-----------+--------+-----------+-------+----------+--------+-----------+
-| ``query_key`` (string or list, no default)         |   Opt  |           |           |   Req  |    Opt    |  Opt  |   Opt    |  Req   |  Opt      |
-+----------------------------------------------------+--------+-----------+-----------+--------+-----------+-------+----------+--------+-----------+
-| ``aggregation_key`` (string, no default)           |   Opt  |           |           |        |           |       |          |        |           |
-+----------------------------------------------------+--------+-----------+-----------+--------+-----------+-------+----------+--------+-----------+
-| ``summary_table_fields`` (list, no default)        |   Opt  |           |           |        |           |       |          |        |           |
-+----------------------------------------------------+--------+-----------+-----------+--------+-----------+-------+----------+--------+-----------+
-| ``timeframe`` (time, no default)                   |        |           |           |   Opt  |    Req    |  Req  |   Req    |        |  Req      |
-+----------------------------------------------------+--------+-----------+-----------+--------+-----------+-------+----------+--------+-----------+
-| ``num_events`` (int, no default)                   |        |           |           |        |    Req    |       |          |        |           |
-+----------------------------------------------------+--------+-----------+-----------+--------+-----------+-------+----------+--------+-----------+
-| ``attach_related`` (boolean, no default)           |        |           |           |        |    Opt    |       |          |        |           |
-+----------------------------------------------------+--------+-----------+-----------+--------+-----------+-------+----------+--------+-----------+
-|``use_count_query`` (boolean, no default)           |        |           |           |        |     Opt   | Opt   | Opt      |        |           |
-|                                                    |        |           |           |        |           |       |          |        |           |
-|``doc_type`` (string, no default)                   |        |           |           |        |           |       |          |        |           |
-+----------------------------------------------------+--------+-----------+-----------+--------+-----------+-------+----------+--------+-----------+
-|``use_terms_query`` (boolean, no default)           |        |           |           |        |     Opt   | Opt   |          | Opt    |           |
-|                                                    |        |           |           |        |           |       |          |        |           |
-|``doc_type`` (string, no default)                   |        |           |           |        |           |       |          |        |           |
-|                                                    |        |           |           |        |           |       |          |        |           |
-|``query_key`` (string or list, no default)          |        |           |           |        |           |       |          |        |           |
-|                                                    |        |           |           |        |           |       |          |        |           |
-|``terms_size`` (int, default 50)                    |        |           |           |        |           |       |          |        |           |
-+----------------------------------------------------+--------+-----------+-----------+--------+-----------+-------+----------+--------+-----------+
-| ``spike_height`` (int, no default)                 |        |           |           |        |           |   Req |          |        |           |
-+----------------------------------------------------+--------+-----------+-----------+--------+-----------+-------+----------+--------+-----------+
-|``spike_type`` ([up|down|both], no default)         |        |           |           |        |           |   Req |          |        |           |
-+----------------------------------------------------+--------+-----------+-----------+--------+-----------+-------+----------+--------+-----------+
-|``alert_on_new_data`` (boolean, default False)      |        |           |           |        |           |   Opt |          |        |           |
-+----------------------------------------------------+--------+-----------+-----------+--------+-----------+-------+----------+--------+-----------+
-|``threshold_ref`` (int, no default)                 |        |           |           |        |           |   Opt |          |        |           |
-+----------------------------------------------------+--------+-----------+-----------+--------+-----------+-------+----------+--------+-----------+
-|``threshold_cur`` (int, no default)                 |        |           |           |        |           |   Opt |          |        |           |
-+----------------------------------------------------+--------+-----------+-----------+--------+-----------+-------+----------+--------+-----------+
-|``threshold`` (int, no default)                     |        |           |           |        |           |       |    Req   |        |           |
-+----------------------------------------------------+--------+-----------+-----------+--------+-----------+-------+----------+--------+-----------+
-|``fields`` (string or list, no default)             |        |           |           |        |           |       |          | Req    |           |
-+----------------------------------------------------+--------+-----------+-----------+--------+-----------+-------+----------+--------+-----------+
-|``terms_window_size`` (time, default 30 days)       |        |           |           |        |           |       |          | Opt    |           |
-+----------------------------------------------------+--------+-----------+-----------+--------+-----------+-------+----------+--------+-----------+
-|``window_step_size`` (time, default 1 day)          |        |           |           |        |           |       |          | Opt    |           |
-+----------------------------------------------------+--------+-----------+-----------+--------+-----------+-------+----------+--------+-----------+
-|``alert_on_missing_fields`` (boolean, default False)|        |           |           |        |           |       |          | Opt    |           |
-+----------------------------------------------------+--------+-----------+-----------+--------+-----------+-------+----------+--------+-----------+
-|``cardinality_field`` (string, no default)          |        |           |           |        |           |       |          |        |  Req      |
-+----------------------------------------------------+--------+-----------+-----------+--------+-----------+-------+----------+--------+-----------+
-|``max_cardinality`` (boolean, no default)           |        |           |           |        |           |       |          |        |  Opt      |
-+----------------------------------------------------+--------+-----------+-----------+--------+-----------+-------+----------+--------+-----------+
-|``min_cardinality`` (boolean, no default)           |        |           |           |        |           |       |          |        |  Opt      |
-+----------------------------------------------------+--------+-----------+-----------+--------+-----------+-------+----------+--------+-----------+
++-------------------------------------------------------+--------+-----------+-----------+--------+-----------+-------+----------+--------+-----------+------------------+-----------------+----------------+
+|      RULE TYPE                                        |   Any  | Blacklist | Whitelist | Change | Frequency | Spike | Flatline |New_term|Cardinality|Metric Aggregation|Spike Aggregation|Percentage Match|
++=======================================================+========+===========+===========+========+===========+=======+==========+========+===========+==================+=================+================+
+| ``compare_key`` (list of strs, no default)            |        |    Req    |   Req     |  Req   |           |       |          |        |           |                  |                 |                |
++-------------------------------------------------------+--------+-----------+-----------+--------+-----------+-------+----------+--------+-----------+------------------+-----------------+----------------+
+|``blacklist`` (list of strs, no default)               |        |    Req    |           |        |           |       |          |        |           |                  |                 |                |
++-------------------------------------------------------+--------+-----------+-----------+--------+-----------+-------+----------+--------+-----------+------------------+-----------------+----------------+
+|``whitelist`` (list of strs, no default)               |        |           |   Req     |        |           |       |          |        |           |                  |                 |                |
++-------------------------------------------------------+--------+-----------+-----------+--------+-----------+-------+----------+--------+-----------+------------------+-----------------+----------------+
+| ``ignore_null`` (boolean, default False)              |        |           |   Req     |  Req   |           |       |          |        |           |                  |                 |                |
++-------------------------------------------------------+--------+-----------+-----------+--------+-----------+-------+----------+--------+-----------+------------------+-----------------+----------------+
+| ``query_key`` (string or list, no default)            |   Opt  |           |           |   Req  |    Opt    |  Opt  |   Opt    |  Req   |  Opt      |  Opt             |  Opt            |  Opt           |
++-------------------------------------------------------+--------+-----------+-----------+--------+-----------+-------+----------+--------+-----------+------------------+-----------------+----------------+
+| ``aggregation_key`` (string, no default)              |   Opt  |           |           |        |           |       |          |        |           |                  |                 |                |
++-------------------------------------------------------+--------+-----------+-----------+--------+-----------+-------+----------+--------+-----------+------------------+-----------------+----------------+
+| ``summary_table_fields`` (list, no default)           |   Opt  |           |           |        |           |       |          |        |           |                  |                 |                |
++-------------------------------------------------------+--------+-----------+-----------+--------+-----------+-------+----------+--------+-----------+------------------+-----------------+----------------+
+| ``timeframe`` (time, no default)                      |        |           |           |   Opt  |    Req    |  Req  |   Req    |        |  Req      |                  |  Req            |                |
++-------------------------------------------------------+--------+-----------+-----------+--------+-----------+-------+----------+--------+-----------+------------------+-----------------+----------------+
+| ``num_events`` (int, no default)                      |        |           |           |        |    Req    |       |          |        |           |                  |                 |                |
++-------------------------------------------------------+--------+-----------+-----------+--------+-----------+-------+----------+--------+-----------+------------------+-----------------+----------------+
+| ``attach_related`` (boolean, default False)           |        |           |           |        |    Opt    |       |          |        |           |                  |                 |                |
++-------------------------------------------------------+--------+-----------+-----------+--------+-----------+-------+----------+--------+-----------+------------------+-----------------+----------------+
+|``use_count_query`` (boolean, default False)           |        |           |           |        |     Opt   | Opt   | Opt      |        |           |                  |                 |                |
++-------------------------------------------------------+--------+-----------+-----------+--------+-----------+-------+----------+--------+-----------+------------------+-----------------+----------------+
+|``use_terms_query`` (boolean, default False)           |        |           |           |        |     Opt   | Opt   |          | Opt    |           |                  |                 |                |
+|                                                       |        |           |           |        |           |       |          |        |           |                  |                 |                |
+|``query_key`` (string or list, no default)             |        |           |           |        |           |       |          |        |           |                  |                 |                |
+|                                                       |        |           |           |        |           |       |          |        |           |                  |                 |                |
+|``terms_size`` (int, default 50)                       |        |           |           |        |           |       |          |        |           |                  |                 |                |
++-------------------------------------------------------+--------+-----------+-----------+--------+-----------+-------+----------+--------+-----------+------------------+-----------------+----------------+
+| ``spike_height`` (int, no default)                    |        |           |           |        |           |   Req |          |        |           |                  |  Req            |                |
++-------------------------------------------------------+--------+-----------+-----------+--------+-----------+-------+----------+--------+-----------+------------------+-----------------+----------------+
+|``spike_type`` ([up|down|both], no default)            |        |           |           |        |           |   Req |          |        |           |                  |  Req            |                |
++-------------------------------------------------------+--------+-----------+-----------+--------+-----------+-------+----------+--------+-----------+------------------+-----------------+----------------+
+|``alert_on_new_data`` (boolean, default False)         |        |           |           |        |           |   Opt |          |        |           |                  |                 |                |
++-------------------------------------------------------+--------+-----------+-----------+--------+-----------+-------+----------+--------+-----------+------------------+-----------------+----------------+
+|``threshold_ref`` (int, no default)                    |        |           |           |        |           |   Opt |          |        |           |                  |                 |                |
++-------------------------------------------------------+--------+-----------+-----------+--------+-----------+-------+----------+--------+-----------+------------------+-----------------+----------------+
+|``threshold_ref`` (number, no default)                 |        |           |           |        |           |       |          |        |           |                  |  Opt            |                |
++-------------------------------------------------------+--------+-----------+-----------+--------+-----------+-------+----------+--------+-----------+------------------+-----------------+----------------+
+|``threshold_cur`` (int, no default)                    |        |           |           |        |           |   Opt |          |        |           |                  |                 |                |
++-------------------------------------------------------+--------+-----------+-----------+--------+-----------+-------+----------+--------+-----------+------------------+-----------------+----------------+
+|``threshold_cur`` (number, no default)                 |        |           |           |        |           |       |          |        |           |                  |  Opt            |                |
++-------------------------------------------------------+--------+-----------+-----------+--------+-----------+-------+----------+--------+-----------+------------------+-----------------+----------------+
+|``threshold`` (int, no default)                        |        |           |           |        |           |       |    Req   |        |           |                  |                 |                |
++-------------------------------------------------------+--------+-----------+-----------+--------+-----------+-------+----------+--------+-----------+------------------+-----------------+----------------+
+|``fields`` (string or list, no default)                |        |           |           |        |           |       |          | Req    |           |                  |                 |                |
++-------------------------------------------------------+--------+-----------+-----------+--------+-----------+-------+----------+--------+-----------+------------------+-----------------+----------------+
+|``terms_window_size`` (time, default 30 days)          |        |           |           |        |           |       |          | Opt    |           |                  |                 |                |
++-------------------------------------------------------+--------+-----------+-----------+--------+-----------+-------+----------+--------+-----------+------------------+-----------------+----------------+
+|``window_step_size`` (time, default 1 day)             |        |           |           |        |           |       |          | Opt    |           |                  |                 |                |
++-------------------------------------------------------+--------+-----------+-----------+--------+-----------+-------+----------+--------+-----------+------------------+-----------------+----------------+
+|``alert_on_missing_field`` (boolean, default False)    |        |           |           |        |           |       |          | Opt    |           |                  |                 |                |
++-------------------------------------------------------+--------+-----------+-----------+--------+-----------+-------+----------+--------+-----------+------------------+-----------------+----------------+
+|``cardinality_field`` (string, no default)             |        |           |           |        |           |       |          |        |  Req      |                  |                 |                |
++-------------------------------------------------------+--------+-----------+-----------+--------+-----------+-------+----------+--------+-----------+------------------+-----------------+----------------+
+|``max_cardinality`` (boolean, default False)           |        |           |           |        |           |       |          |        |  Opt      |                  |                 |                |
++-------------------------------------------------------+--------+-----------+-----------+--------+-----------+-------+----------+--------+-----------+------------------+-----------------+----------------+
+|``min_cardinality`` (boolean, default False)           |        |           |           |        |           |       |          |        |  Opt      |                  |                 |                |
++-------------------------------------------------------+--------+-----------+-----------+--------+-----------+-------+----------+--------+-----------+------------------+-----------------+----------------+
+|``metric_agg_key`` (string, no default)                |        |           |           |        |           |       |          |        |           |  Req             |                 |                |
++-------------------------------------------------------+--------+-----------+-----------+--------+-----------+-------+----------+--------+-----------+------------------+-----------------+----------------+
+|``metric_agg_type`` (no default,                       |        |           |           |        |           |       |          |        |           |  Req             |  Req            |                |
+|                                                       |        |           |           |        |           |       |          |        |           |                  |                 |                |
+|([min|max|avg|sum|cardinality|value_count|percentiles])|        |           |           |        |           |       |          |        |           |                  |                 |                |
++-------------------------------------------------------+--------+-----------+-----------+--------+-----------+-------+----------+--------+-----------+------------------+-----------------+----------------+
+|``metric_agg_script`` (no default)                     |        |           |           |        |           |       |          |        |           |  Opt             |  Opt            |                |
++-------------------------------------------------------+--------+-----------+-----------+--------+-----------+-------+----------+--------+-----------+------------------+-----------------+----------------+
+|``percentile_range`` ++required if percentiles is used |        |           |           |        |           |       |          |        |           |  Req++           |  Req++          |                |
++-------------------------------------------------------+--------+-----------+-----------+--------+-----------+-------+----------+--------+-----------+------------------+-----------------+----------------+
+|``max_threshold`` (number, no default)                 |        |           |           |        |           |       |          |        |           |  Opt             |                 |                |
+|                                                       |        |           |           |        |           |       |          |        |           |                  |                 |                |
+|``min_threshold`` (number, no default)                 |        |           |           |        |           |       |          |        |           |                  |                 |                |
+|                                                       |        |           |           |        |           |       |          |        |           |                  |                 |                |
+|Requires at least one of the two options               |        |           |           |        |           |       |          |        |           |                  |                 |                |
++-------------------------------------------------------+--------+-----------+-----------+--------+-----------+-------+----------+--------+-----------+------------------+-----------------+----------------+
+|``min_doc_count`` (int, default 1)                     |        |           |           |        |           |       |          |        |           |   Opt            |   Opt           |                |
++-------------------------------------------------------+--------+-----------+-----------+--------+-----------+-------+----------+--------+-----------+------------------+-----------------+----------------+
+|``use_run_every_query_size`` (boolean, default False)  |        |           |           |        |           |       |          |        |           |   Opt            |                 |   Opt          |
++-------------------------------------------------------+--------+-----------+-----------+--------+-----------+-------+----------+--------+-----------+------------------+-----------------+----------------+
+|``allow_buffer_time_overlap`` (boolean, default False) |        |           |           |        |           |       |          |        |           |   Opt            |                 |   Opt          |
++-------------------------------------------------------+--------+-----------+-----------+--------+-----------+-------+----------+--------+-----------+------------------+-----------------+----------------+
+|``bucket_interval`` (time, no default)                 |        |           |           |        |           |       |          |        |           |   Opt            |                 |   Opt          |
+|                                                       |        |           |           |        |           |       |          |        |           |                  |                 |                |
+|``sync_bucket_interval`` (boolean, default False)      |        |           |           |        |           |       |          |        |           |                  |                 |                |
++-------------------------------------------------------+--------+-----------+-----------+--------+-----------+-------+----------+--------+-----------+------------------+-----------------+----------------+
+|``metric_format_string`` (string, no default)          |        |           |           |        |           |       |          |        |           |   Opt            |                 |                |
++-------------------------------------------------------+--------+-----------+-----------+--------+-----------+-------+----------+--------+-----------+------------------+-----------------+----------------+
+|``match_bucket_filter`` (no default)                   |        |           |           |        |           |       |          |        |           |                  |                 |  Req           |
++-------------------------------------------------------+--------+-----------+-----------+--------+-----------+-------+----------+--------+-----------+------------------+-----------------+----------------+
+|``min_percentage`` (int, no default)                   |        |           |           |        |           |       |          |        |           |                  |                 |  Req           |
+|                                                       |        |           |           |        |           |       |          |        |           |                  |                 |                |
+|``max_percentage`` (int, no default)                   |        |           |           |        |           |       |          |        |           |                  |                 |                |
+|                                                       |        |           |           |        |           |       |          |        |           |                  |                 |                |
+|Requires at least one of the two options               |        |           |           |        |           |       |          |        |           |                  |                 |                |
++-------------------------------------------------------+--------+-----------+-----------+--------+-----------+-------+----------+--------+-----------+------------------+-----------------+----------------+
+|``percentage_format_string`` (string, no default)      |        |           |           |        |           |       |          |        |           |                  |                 |   Opt          |
++-------------------------------------------------------+--------+-----------+-----------+--------+-----------+-------+----------+--------+-----------+------------------+-----------------+----------------+
+|``min_denominator`` (int, default 0)                   |        |           |           |        |           |       |          |        |           |                  |                 |   Opt          |
++-------------------------------------------------------+--------+-----------+-----------+--------+-----------+-------+----------+--------+-----------+------------------+-----------------+----------------+
 
 Common Configuration Options
 ============================
@@ -550,27 +580,13 @@ description
 ``description``: text describing the purpose of rule. (Optional, string, default empty string)
 Can be referenced in custom alerters to provide context as to why a rule might trigger.
 
-generate_kibana_link
-^^^^^^^^^^^^^^^^^^^^
-
-``generate_kibana_link``: This option is for Kibana 3 only.
-If true, ElastAlert 2 will generate a temporary Kibana dashboard and include a link to it in alerts. The dashboard
-consists of an events over time graph and a table with ``include`` fields selected in the table. If the rule uses ``query_key``, the
-dashboard will also contain a filter for the ``query_key`` of the alert. The dashboard schema will
-be uploaded to the kibana-int index as a temporary dashboard. (Optional, boolean, default False)
-
 kibana_url
 ^^^^^^^^^^
 
 ``kibana_url``: The base url of the Kibana application. If not specified, a URL will be constructed using ``es_host``
 and ``es_port``.
 
-This value will be used if one of the following conditions are met:
-
-- ``generate_kibana_link`` is true
-- ``use_kibana_dashboard`` is true
-- ``use_kibana4_dashboard`` is true
-- ``generate_kibana_discover_url`` is true and ``kibana_discover_app_url`` is a relative path
+This value will be used if ``generate_kibana_discover_url`` is true and ``kibana_discover_app_url`` is a relative path
 
 (Optional, string, default ``http://<es_host>:<es_port>/_plugin/kibana/``)
 
@@ -589,38 +605,6 @@ kibana_password
 This value is only used if ``shorten_kibana_discover_url`` is true.
 
 (Optional, string, no default)
-
-use_kibana_dashboard
-^^^^^^^^^^^^^^^^^^^^
-
-``use_kibana_dashboard``: The name of a Kibana 3 dashboard to link to. Instead of generating a dashboard from a template,
-ElastAlert 2 can use an existing dashboard. It will set the time range on the dashboard to around the match time,
-upload it as a temporary dashboard, add a filter to the ``query_key`` of the alert if applicable,
-and put the url to the dashboard in the alert. (Optional, string, no default)
-
-use_kibana4_dashboard
-^^^^^^^^^^^^^^^^^^^^^
-
-``use_kibana4_dashboard``: A link to a Kibana 4 dashboard. For example, "https://kibana.example.com/#/dashboard/My-Dashboard".
-This will set the time setting on the dashboard from the match time minus the timeframe, to 10 minutes after the match time.
-Note that this does not support filtering by ``query_key`` like Kibana 3.  This value can use `$VAR` and `${VAR}` references
-to expand environment variables.
-
-kibana4_start_timedelta
-^^^^^^^^^^^^^^^^^^^^^^^
-
-``kibana4_start_timedelta``: Defaults to 10 minutes. This option allows you to specify the start time for the generated kibana4 dashboard.
-This value is added in front of the event. For example,
-
-``kibana4_start_timedelta: minutes: 2``
-
-kibana4_end_timedelta
-^^^^^^^^^^^^^^^^^^^^^
-
-``kibana4_end_timedelta``: Defaults to 10 minutes. This option allows you to specify the end time for the generated kibana4 dashboard.
-This value is added in back of the event. For example,
-
-``kibana4_end_timedelta: minutes: 2``
 
 generate_kibana_discover_url
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -689,9 +673,8 @@ kibana_discover_version
 
 The currently supported versions of Kibana Discover are:
 
-- `5.6`
-- `6.0`, `6.1`, `6.2`, `6.3`, `6.4`, `6.5`, `6.6`, `6.7`, `6.8`
-- `7.0`, `7.1`, `7.2`, `7.3`, `7.4`, `7.5`, `7.6`, `7.7`, `7.8`, `7.9`, `7.10`, `7.11`, `7.12`, `7.13`, `7.14`, `7.15`, `7.16`
+- `7.0`, `7.1`, `7.2`, `7.3`, `7.4`, `7.5`, `7.6`, `7.7`, `7.8`, `7.9`, `7.10`, `7.11`, `7.12`, `7.13`, `7.14`, `7.15`, `7.16`, `7.17`
+- `8.0`
 
 ``kibana_discover_version: '7.15'``
 
@@ -700,6 +683,8 @@ kibana_discover_index_pattern_id
 
 ``kibana_discover_index_pattern_id``: The id of the index pattern to link to in the Kibana Discover application.
 These ids are usually generated and can be found in url of the index pattern management page, or by exporting its saved object.
+
+In this documentation all references of "index pattern" refer to the similarly named concept in Kibana 8 called "data view".
 
 Example export of an index pattern's saved object:
 
@@ -1060,12 +1045,10 @@ Optional:
 
 ``use_count_query``: If true, ElastAlert 2 will poll Elasticsearch using the count api, and not download all of the matching documents. This is
 useful is you care only about numbers and not the actual data. It should also be used if you expect a large number of query hits, in the order
-of tens of thousands or more. ``doc_type`` must be set to use this.
-
-``doc_type``: Specify the ``_type`` of document to search for. This must be present if ``use_count_query`` or ``use_terms_query`` is set.
+of tens of thousands or more.
 
 ``use_terms_query``: If true, ElastAlert 2 will make an aggregation query against Elasticsearch to get counts of documents matching
-each unique value of ``query_key``. This must be used with ``query_key`` and ``doc_type``. This will only return a maximum of ``terms_size``,
+each unique value of ``query_key``. This must be used with ``query_key``. This will only return a maximum of ``terms_size``,
 default 50, unique terms.
 
 ``terms_size``: When used with ``use_terms_query``, this is the maximum number of terms returned per query. Default is 50.
@@ -1195,12 +1178,10 @@ cause alerts. Baseline is established after ``timeframe`` has elapsed twice sinc
 
 ``use_count_query``: If true, ElastAlert 2 will poll Elasticsearch using the count api, and not download all of the matching documents. This is
 useful is you care only about numbers and not the actual data. It should also be used if you expect a large number of query hits, in the order
-of tens of thousands or more. ``doc_type`` must be set to use this.
-
-``doc_type``: Specify the ``_type`` of document to search for. This must be present if ``use_count_query`` or ``use_terms_query`` is set.
+of tens of thousands or more. 
 
 ``use_terms_query``: If true, ElastAlert 2 will make an aggregation query against Elasticsearch to get counts of documents matching
-each unique value of ``query_key``. This must be used with ``query_key`` and ``doc_type``. This will only return a maximum of ``terms_size``,
+each unique value of ``query_key``. This must be used with ``query_key``. This will only return a maximum of ``terms_size``,
 default 50, unique terms.
 
 ``terms_size``: When used with ``use_terms_query``, this is the maximum number of terms returned per query. Default is 50.
@@ -1222,12 +1203,10 @@ Optional:
 
 ``use_count_query``: If true, ElastAlert 2 will poll Elasticsearch using the count api, and not download all of the matching documents. This is
 useful is you care only about numbers and not the actual data. It should also be used if you expect a large number of query hits, in the order
-of tens of thousands or more. ``doc_type`` must be set to use this.
-
-``doc_type``: Specify the ``_type`` of document to search for. This must be present if ``use_count_query`` or ``use_terms_query`` is set.
+of tens of thousands or more.
 
 ``use_terms_query``: If true, ElastAlert 2 will make an aggregation query against Elasticsearch to get counts of documents matching
-each unique value of ``query_key``. This must be used with ``query_key`` and ``doc_type``. This will only return a maximum of ``terms_size``,
+each unique value of ``query_key``. This must be used with ``query_key``. This will only return a maximum of ``terms_size``,
 default 50, unique terms.
 
 ``terms_size``: When used with ``use_terms_query``, this is the maximum number of terms returned per query. Default is 50.
@@ -1320,16 +1299,17 @@ This rule requires:
 ``metric_agg_key``: This is the name of the field over which the metric value will be calculated. The underlying type of this field must be
 supported by the specified aggregation type.  If using a scripted field via ``metric_agg_script``, this is the name for your scripted field
 
-``metric_agg_type``: The type of metric aggregation to perform on the ``metric_agg_key`` field. This must be one of 'min', 'max', 'avg',
-'sum', 'cardinality', 'value_count'.
+``metric_agg_type``: The type of metric aggregation to perform on the ``metric_agg_key`` field. This must be one of 'min', 'max', 'avg', 'sum', 'cardinality', 'value_count', 'percentiles'. Note, if `percentiles` is used, then ``percentile_range`` must also be specified.
 
-``doc_type``: Specify the ``_type`` of document to search for.
+.. note:: When Metric Aggregation has a match, match_body includes an aggregated value that triggered the match so that you can use that on an alert. The value is named based on ``metric_agg_key`` and ``metric_agg_type``. For example, if you set ``metric_agg_key`` to 'system.cpu.total.norm.pct' and ``metric_agg_type`` to 'avg', the name of the value is 'metric_system.cpu.total.norm.pct_avg'. Because of this naming rule, you might face conflicts with jinja2 template, and when that happens, you also can use 'metric_agg_value' from match_body instead.
 
 This rule also requires at least one of the two following options:
 
 ``max_threshold``: If the calculated metric value is greater than this number, an alert will be triggered. This threshold is exclusive.
 
 ``min_threshold``: If the calculated metric value is less than this number, an alert will be triggered. This threshold is exclusive.
+
+``percentile_range``: An integer specifying the percentage value to aggregate against. Must be specified if ``metric_agg_type`` is set to ``percentiles``. See https://www.elastic.co/guide/en/elasticsearch/reference/current/search-aggregations-metrics-percentile-aggregation.html for more information.
 
 Optional:
 
@@ -1380,8 +1360,7 @@ This rule requires:
 ``metric_agg_key``: This is the name of the field over which the metric value will be calculated. The underlying type of this field must be
 supported by the specified aggregation type.  If using a scripted field via ``metric_agg_script``, this is the name for your scripted field
 
-``metric_agg_type``: The type of metric aggregation to perform on the ``metric_agg_key`` field. This must be one of 'min', 'max', 'avg',
-'sum', 'cardinality', 'value_count'.
+``metric_agg_type``: The type of metric aggregation to perform on the ``metric_agg_key`` field. This must be one of 'min', 'max', 'avg', 'sum', 'cardinality', 'value_count', 'percentiles'. Note, if `percentiles` is used, then ``percentile_range`` must also be specified.
 
 ``spike_height``: The ratio of the metric value in the last ``timeframe`` to the previous ``timeframe`` that when hit
 will trigger an alert.
@@ -1393,6 +1372,8 @@ higher. 'Down' meaning the reference metric value is ``spike_height`` higher tha
 window will span from present to one hour ago, and the 'reference' window will span from one hour ago to two hours ago. The rule
 will not be active until the time elapsed from the first event is at least two timeframes. This is to prevent an alert being triggered
 before a baseline rate has been established. This can be overridden using ``alert_on_new_data``.
+
+``percentile_range``: An integer specifying the percentage value to aggregate against. Must be specified if ``metric_agg_type`` is set to ``percentiles``. See https://www.elastic.co/guide/en/elasticsearch/reference/current/search-aggregations-metrics-percentile-aggregation.html for more information.
 
 Optional:
 
@@ -1427,9 +1408,7 @@ This rule requires:
 ``match_bucket_filter``: ES filter DSL. This defines a filter for the match bucket, which should match a subset of the documents returned by the
 main query filter.
 
-``doc_type``: Specify the ``_type`` of document to search for.
-
-This rule also requires at least one of the two following options:
+ssThis rule also requires at least one of the two following options:
 
 ``min_percentage``: If the percentage of matching documents is less than this number, an alert will be triggered.
 
@@ -1471,8 +1450,39 @@ or
 .. code-block:: yaml
 
     alert:
-    - email
-    - jira
+      - alerta
+      - alertmanager
+      - chatwork
+      - command
+      - datadog
+      - debug
+      - dingtalk
+      - discord
+      - email
+      - exotel
+      - gitter
+      - googlechat
+      - hivealerter
+      - jira
+      - linenotify
+      - mattermost
+      - ms_teams
+      - opsgenie
+      - pagerduty
+      - pagertree
+      - post
+      - post2
+      - rocketchat
+      - servicenow
+      - ses
+      - slack
+      - sns
+      - stomp
+      - telegram
+      - tencent_sms
+      - twilio
+      - victorops
+      - zabbix
 
 Options for each alerter can either defined at the top level of the YAML file, or nested within the alert name, allowing for different settings
 for multiple of the same alerter. For example, consider sending multiple emails, but with different 'To' and 'From' fields:
@@ -1760,6 +1770,18 @@ AWS SES requires one option:
 
 ``ses_email``: An address or list of addresses to sent the alert to.
 
+single address example::
+
+  ses_email: "one@domain"
+
+or
+
+multiple address example::
+
+  ses_email:
+    - "one@domain"
+    - "two@domain"
+
 ``ses_from_addr``: This sets the From header in the email.
 
 Optional:
@@ -1776,7 +1798,31 @@ Optional:
 
 ``ses_cc``: This adds the CC emails to the list of recipients. By default, this is left empty.
 
+single address example::
+
+  ses_cc: "one@domain"
+
+or
+
+multiple address example::
+
+  ses_cc:
+    - "one@domain"
+    - "two@domain"
+
 ``ses_bcc``: This adds the BCC emails to the list of recipients but does not show up in the email message. By default, this is left empty.
+
+single address example::
+
+  ses_bcc: "one@domain"
+
+or
+
+multiple address example::
+
+  ses_bcc:
+    - "one@domain"
+    - "two@domain"
 
 Example When not using aws_profile usage::
 
@@ -2016,6 +2062,14 @@ Example msgtype : action_card::
     dingtalk_btn_orientation: "0"
     dingtalk_btns: [{"title": "a", "actionURL": "https://xxxx1.xxx"}, {"title": "b", "actionURL": "https://xxxx2.xxx"}]
 
+Optional:
+
+``dingtalk_proxy``: By default ElastAlert 2 will not use a network proxy to send notifications to Dingtalk. Set this option using ``hostname:port`` if you need to use a proxy. only supports https.
+
+``dingtalk_proxy_login``: The Dingtalk proxy auth username.
+
+``dingtalk_proxy_pass``: The Dingtalk proxy auth username.
+
 Discord
 ~~~~~~~
 
@@ -2061,6 +2115,18 @@ This alert requires one additional option:
 
 ``email``: An address or list of addresses to sent the alert to.
 
+single address example::
+
+  email: "one@domain"
+
+or
+
+multiple address example::
+
+  email:
+    - "one@domain"
+    - "two@domain"
+
 Optional:
 
 ``email_from_field``: Use a field from the document that triggered the alert as the recipient. If the field cannot be found,
@@ -2098,7 +2164,31 @@ by the smtp server.
 
 ``cc``: This adds the CC emails to the list of recipients. By default, this is left empty.
 
+single address example::
+
+  cc: "one@domain"
+
+or
+
+multiple address example::
+
+  cc:
+    - "one@domain"
+    - "two@domain"
+
 ``bcc``: This adds the BCC emails to the list of recipients but does not show up in the email message. By default, this is left empty.
+
+single address example::
+
+  bcc: "one@domain"
+
+or
+
+multiple address example::
+
+  bcc:
+    - "one@domain"
+    - "two@domain"
 
 ``email_format``: If set to 'html', the email's MIME type will be set to HTML, and HTML content should correctly render. If you use this,
 you need to put your own HTML into ``alert_text`` and use ``alert_text_type: alert_text_jinja`` Or ``alert_text_type: alert_text_only``.
@@ -2272,8 +2362,8 @@ Jira
 ~~~~
 
 The Jira alerter will open a ticket on Jira whenever an alert is triggered. You must have a service account for ElastAlert 2 to connect with.
-The credentials of the service account are loaded from a separate file. The ticket number will be written to the alert pipeline, and if it
-is followed by an email alerter, a link will be included in the email.
+The credentials of the service account are loaded from a separate file. Credentials can either be username and password or the Personal Access Token.
+The ticket number will be written to the alert pipeline, and if it is followed by an email alerter, a link will be included in the email.
 
 This alert requires four additional options:
 
@@ -2285,11 +2375,17 @@ This alert requires four additional options:
 
 ``jira_account_file``: The path to the file which contains Jira account credentials.
 
-For an example Jira account file, see ``examples/rules/jira_acct.yaml``. The account file is also yaml formatted and must contain two fields:
+  For an example Jira account file, see ``examples/rules/jira_acct.yaml``. The account file is a YAML formatted file. 
 
-``user``: The username.
+  When using user/password authentication, the Jira account file must contain two fields:
 
-``password``: The password.
+  ``user``: The username to authenticate with Jira.
+
+  ``password``: The password to authenticate with Jira.
+
+  When using a Personal Access Token, the Jira account file must contain a single field:
+
+  ``apikey``: The Personal Access Token for authenticating with Jira.
 
 Optional:
 
@@ -2499,6 +2595,42 @@ Optional:
 ``ms_teams_proxy``: By default ElastAlert 2 will not use a network proxy to send notifications to MS Teams. Set this option using ``hostname:port`` if you need to use a proxy. only supports https.
 
 ``ms_teams_alert_fixed_width``: By default this is ``False`` and the notification will be sent to MS Teams as-is. Teams supports a partial Markdown implementation, which means asterisk, underscore and other characters may be interpreted as Markdown. Currenlty, Teams does not fully implement code blocks. Setting this attribute to ``True`` will enable line by line code blocks. It is recommended to enable this to get clearer notifications in Teams.
+
+``ms_teams_alert_facts``: You can add additional facts to your MS Teams alerts using this field. Specify the title using `name` and a value for the field using `value`.
+
+Example ms_teams_alert_facts::
+
+    ms_teams_alert_facts:
+      - name: Host
+        value: monitor.host
+      - name: Status
+        value: monitor.status
+      - name: Zone
+        value: beat.name
+
+``ms_teams_attach_kibana_discover_url``: Enables the attachment of the ``kibana_discover_url`` to the MS Teams notification. The config ``generate_kibana_discover_url`` must also be ``True`` in order to generate the url. Defaults to ``False``.
+
+``ms_teams_kibana_discover_title``: The title of the Kibana Discover url attachment. Defaults to ``Discover in Kibana``.
+
+Example ms_teams_attach_kibana_discover_url, ms_teams_kibana_discover_title::
+
+    # (Required)
+    generate_kibana_discover_url: True
+    kibana_discover_app_url: "http://localhost:5601/app/discover#/"
+    kibana_discover_index_pattern_id: "4babf380-c3b1-11eb-b616-1b59c2feec54"
+    kibana_discover_version: "7.15"
+
+    # (Optional)
+    kibana_discover_from_timedelta:
+      minutes: 10
+    kibana_discover_to_timedelta:
+      minutes: 10
+
+    # (Required)
+    ms_teams_attach_kibana_discover_url: True
+
+    # (Optional)
+    ms_teams_kibana_discover_title: "Discover in Kibana"
 
 ``ms_teams_ca_certs``: Set this option to ``True`` if you want to validate the SSL certificate.
 
@@ -2760,7 +2892,7 @@ The ServiceNow alerter will create a ne Incident in ServiceNow. The body of the 
 
 The alerter requires the following options:
 
-``servicenow_rest_url``: The ServiceNow RestApi url, this will look like https://developer.servicenow.com/dev.do#!/reference/api/orlando/rest/c_TableAPI#r_TableAPI-POST
+``servicenow_rest_url``: The ServiceNow RestApi url, this will look like `TableAPI <https://developer.servicenow.com/dev.do#!/reference/api/orlando/rest/c_TableAPI#r_TableAPI-POST>`_.
 
 ``username``: The ServiceNow Username to access the api.
 

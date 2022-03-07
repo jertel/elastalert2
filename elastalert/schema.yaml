@@ -46,6 +46,17 @@ definitions:
     type: array
     items: *slackField
 
+  msTeamsFact: &msTeamsFact
+    type: object
+    additionalProperties: false
+    properties:
+      name: {type: string}
+      value: {type: string}
+
+  arrayOfMsTeamsFacts: &arrayOfMsTeamsFacts
+    type: array
+    items: *msTeamsFact
+
   mattermostField: &mattermostField
     type: object
     additionalProperties: false
@@ -100,7 +111,6 @@ oneOf:
       num_events: {type: integer}
       timeframe: *timeframe
       use_count_query: {type: boolean}
-      doc_type: {type: string}
       use_terms_query: {type: boolean}
       terms_size: {type: integer}
       attach_related: {type: boolean}
@@ -113,7 +123,6 @@ oneOf:
       spike_type: {enum: ["up", "down", "both"]}
       timeframe: *timeframe
       use_count_query: {type: boolean}
-      doc_type: {type: string}
       use_terms_query: {type: boolean}
       terms_size: {type: integer}
       alert_on_new_data: {type: boolean}
@@ -129,7 +138,6 @@ oneOf:
       metric_agg_type: {enum: ["min", "max", "avg", "sum", "cardinality", "value_count", "percentiles"]}
       timeframe: *timeframe
       use_count_query: {type: boolean}
-      doc_type: {type: string}
       use_terms_query: {type: boolean}
       terms_size: {type: integer}
       alert_on_new_data: {type: boolean}
@@ -145,7 +153,6 @@ oneOf:
       timeframe: *timeframe
       threshold: {type: integer}
       use_count_query: {type: boolean}
-      doc_type: {type: string}
 
   - title: New Term
     required: []
@@ -222,22 +229,16 @@ properties:
   priority: {type: integer}
 
   filter :
-    type: [array, object]
+    type: array
     items: *filter
-    additionalProperties: false
-    properties:
-        download_dashboard: {type: string}
 
   include: {type: array, items: {type: string}}
   top_count_keys: {type: array, items: {type: string}}
   top_count_number: {type: integer}
   raw_count_keys: {type: boolean}
-  generate_kibana_link: {type: boolean}
-  kibana_dashboard: {type: string}
   kibana_url: {type: string, format: uri}
   kibana_username: {type: string}
   kibana_password: {type: string}
-  use_kibana_dashboard: {type: string}
   use_local_time: {type: boolean}
   custom_pretty_ts_format: {type: string}
   match_enhancements: {type: array, items: {type: string}}
@@ -256,7 +257,7 @@ properties:
   generate_kibana_discover_url: {type: boolean}
   shorten_kibana_discover_url: {type: boolean}
   kibana_discover_app_url: {type: string}
-  kibana_discover_version: {type: string, enum: ['7.16', '7.15', '7.14', '7.13', '7.12', '7.11', '7.10', '7.9', '7.8', '7.7', '7.6', '7.5', '7.4', '7.3', '7.2', '7.1', '7.0', '6.8', '6.7', '6.6', '6.5', '6.4', '6.3', '6.2', '6.1', '6.0', '5.6']}
+  kibana_discover_version: {type: string, enum: ['8.0', '7.17', '7.16', '7.15', '7.14', '7.13', '7.12', '7.11', '7.10', '7.9', '7.8', '7.7', '7.6', '7.5', '7.4', '7.3', '7.2', '7.1', '7.0']}
   kibana_discover_index_pattern_id: {type: string, minLength: 1}
   kibana_discover_columns: {type: array, items: {type: string, minLength: 1}, minItems: 1}
   kibana_discover_from_timedelta: *timedelta
@@ -426,6 +427,7 @@ properties:
   exotel_auth_token: {type: string}
   exotel_to_number: {type: string}
   exotel_from_number: {type: string}
+  exotel_message_body: {type: string}
 
   ### Gitter
   gitter_webhook_url: {type: string}
@@ -473,7 +475,7 @@ properties:
   jira_bump_not_in_statuses: *arrayOfString
   jira_bump_in_statuses: *arrayOfString
   jira_bump_only: {type: boolean}
-  jira_transition_to: {type: boolean}
+  jira_transition_to: {type: string}
   jira_bump_after_inactivity: {type: number}
 
   ### Line Notify
@@ -508,6 +510,9 @@ properties:
   ms_teams_theme_color: {type: string}
   ms_teams_proxy: {type: string}
   ms_teams_alert_fixed_width: {type: boolean}
+  ms_teams_alert_facts: *arrayOfMsTeamsFacts
+  ms_teams_attach_kibana_discover_url: {type: boolean}
+  ms_teams_kibana_discover_title: {type: string}
   ms_teams_ca_certs: {type: boolean}
   ms_teams_ignore_ssl_errors: {type: boolean}
 

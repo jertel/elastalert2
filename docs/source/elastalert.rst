@@ -66,7 +66,7 @@ Additional rule types and alerts can be easily imported or written. (See :ref:`W
 
 In addition to this basic usage, there are many other features that make alerts more useful:
 
-- Alerts link to Kibana dashboards
+- Alerts link to Kibana Discover searches
 - Aggregate counts for arbitrary fields
 - Combine alerts into periodic reports
 - Separate alerts by using a unique key field
@@ -209,6 +209,18 @@ rule will no longer be run until either ElastAlert 2 restarts or the rule file h
 ``notify_email``: An email address, or list of email addresses, to which notification emails will be sent. Currently,
 only an uncaught exception will send a notification email. The from address, SMTP host, and reply-to header can be set
 using ``from_addr``, ``smtp_host``, and ``email_reply_to`` options, respectively. By default, no emails will be sent.
+
+single address example::
+
+    notify_email: "one@domain"
+
+or
+
+multiple address example::
+
+    notify_email:
+        - "one@domain"
+        - "two@domain"
 
 ``from_addr``: The address to use as the from header in email notifications.
 This value will be used for email alerts as well, unless overwritten in the rule config. The default value
