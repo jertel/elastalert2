@@ -406,8 +406,7 @@ ElastAlert 2 does not have a network API. There is no listening port. You can mo
 I've set `ssl_show_warn` but it doesn't seem to work.
 ==========
 
-Currently ElastAlert 2 uses elasticserarch-py 7.0.0, but the target parameters are the parameters that can be used from elasticserarch-py 7.5.0.
-In the future, we will end support for elasticsearch in the past and raise elasticserarch-py to 7.5.0 or later.
+Now supported as of ElastAlert 2.4.0.
 
 How to write a query filter for phrases containing spaces?
 ==========
@@ -452,3 +451,30 @@ following manual steps are required (note the important WARNING below):
 * Restart ElastAlert 2.
 
 WARNING: Failure to remove the old ElastAlert indices can result in a non-working Elasticsearch cluster. This is because the ElastAlert indices contain deprecated features and the Elasticsearch 8 upgrade logic is currently flawed and does not correctly handle this situation. The Elasticsearch GitHub repository contains [more information](https://github.com/elastic/elasticsearch/issues/84199) on this problem.
+
+Support multiple sns_topic_arn in Alert Amazon SNS(Simple Notification Service)?
+==========
+
+example
+
+```
+alert:
+ - sns:
+      sns_topic_arn: "aws-topic1"
+ - sns:
+      sns_topic_arn: "aws-topic2"
+```
+
+Support multiple telegram_room_id in Alert Telegram?
+==========
+
+example
+
+```
+alert:
+ - telegram:
+      telegram_room_id: "AAA"
+ - telegram:
+      telegram_room_id: "BBB"
+telegram_bot_token: "XXX"
+```
