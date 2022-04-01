@@ -375,9 +375,12 @@ def build_es_conn_config(conf):
 
     if os.environ.get('ES_USERNAME'):
         parsed_conf['es_username'] = os.environ.get('ES_USERNAME')
-        parsed_conf['es_password'] = os.environ.get('ES_PASSWORD')
     elif 'es_username' in conf:
         parsed_conf['es_username'] = conf['es_username']
+
+    if os.environ.get('ES_PASSWORD'):
+        parsed_conf['es_password'] = os.environ.get('ES_PASSWORD')
+    elif 'es_password' in conf:
         parsed_conf['es_password'] = conf['es_password']
 
     if os.environ.get('ES_API_KEY'):

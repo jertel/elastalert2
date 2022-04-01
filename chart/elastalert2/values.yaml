@@ -25,7 +25,7 @@ image:
   # docker image
   repository: jertel/elastalert2
   # docker image tag
-  tag: 2.3.0
+  tag: 2.4.0
   pullPolicy: IfNotPresent
   pullSecret: ""
 
@@ -224,6 +224,11 @@ affinity: {}
 #     value: "infra_worker"
 #     effect: "NoSchedule"
 tolerations: []
+
+# Optional automatic SMTP mail server credential management.
+# smtp_auth:
+#   username: ""
+#   password: ""
 
 extraVolumes: []
   # - name: smtp-auth

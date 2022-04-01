@@ -12,6 +12,22 @@
 # 2.x.x
 
 ## Breaking changes
+
+## New features
+- Add support for Kibana 8.1 for Kibana Discover - [#763](https://github.com/jertel/elastalert2/pull/763) - @nsano-rururu
+
+## Other changes
+- [Docs] Update FAQ ssl_show_warn - [#764](https://github.com/jertel/elastalert2/pull/764) - @nsano-rururu
+- [Docs] Update FAQ telegram and Amazon SNS - [#765](https://github.com/jertel/elastalert2/pull/765) - @nsano-rururu
+- Upgrade Pytest 7.0.1 to 7.1.1 - [#776](https://github.com/jertel/elastalert2/pull/776) - @nsano-rururu
+- [Kubernetes] Add support for automatic SMTP mail server credential management - [#780](https://github.com/jertel/elastalert2/pull/780) - @lusson-luo
+- Upgrade sphinx 4.4.0 to 4.5.0 - [#782](https://github.com/jertel/elastalert2/pull/782) - @nsano-rururu
+- Upgrade pylint 2.12.2 to 2.13.2 - [#783](https://github.com/jertel/elastalert2/pull/783) - @nsano-rururu
+- Upgrade jinja2 3.0.3 to 3.1.1 - [#784](https://github.com/jertel/elastalert2/pull/784) - @nsano-rururu
+
+# 2.4.0
+
+## Breaking changes
 - Add support for Elasticsearch 8, remove support for Elasticsearch 6 and below - [#744](https://github.com/jertel/elastalert2/pull/744) - @ferozsalam, @jertel, and @nsano-rururu
   WARNING! Read the [ES 8 upgrade notes](https://elastalert2.readthedocs.io/en/latest/recipes/faq.html#does-elastalert-2-support-elasticsearch-8) BEFORE upgrading your cluster to Elasticsearch 8. Failure to do so can result in your cluster no longer starting and unable to rollback to 7.x.
 - Kibana dashboard integration has been removed, as it only was supported with older versions of Elasticsearch and Kibana. Per the above breaking change those older versions are no longer supported by ElastAlert 2.

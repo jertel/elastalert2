@@ -9,6 +9,7 @@ virtualenv_run/
 *.egg-info/
 dist/
 venv/
+.venv/
 env/
 docs/build/
 build/
