@@ -22,15 +22,12 @@ class BigQueryRowCount(BaseEnhancement):
             
     def check_match(self, match):
         """Check that the document has all expected fields before proceeding"""
-        if "gcp" not in match:
+        try:
+            tmp_table_id = match["gcp"]["audit"]["bigquery"]["tmp_table_id"]
+            if tmp_table_id != "":
+                return True
+        except:
             return False
-        if "audit" not in match["gcp"]:
-            return False
-        if "bigquery" not in match["gcp"]["audit"]:
-            return False
-        if "tmp_table_id" not in match["gcp"]["audit"]["bigquery"]:
-            return False
-        return True
 
     def search_row_count(self, table_id, es):
         index = "_all"
