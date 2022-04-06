@@ -22,5 +22,8 @@ class DropIntruderIOIP(BaseEnhancement):
         ]
 
         for range in ranges:
-            if ipaddress.ip_address(match["source"]["ip"]) in ipaddress.ip_network(range):
-                raise DropMatchException()
+            try:
+                if ipaddress.ip_address(match["source"]["ip"]) in ipaddress.ip_network(range):
+                    raise DropMatchException()
+            except Exception as e:
+                util.elastalert_logger.error(e)
