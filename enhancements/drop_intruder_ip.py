@@ -1,8 +1,6 @@
 import ipaddress
-from math import exp
 from elastalert.enhancements import BaseEnhancement, DropMatchException
 from elastalert import util
-
 
 class DropIntruderIOIP(BaseEnhancement):
     # This enhancement ensures we don't alert on Intruder.IO IP's
