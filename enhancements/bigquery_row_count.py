@@ -35,7 +35,6 @@ class BigQueryRowCount(BaseEnhancement):
 
     def search_row_count(self, tmp_table_id, es):
         index = "_all"
-        # TODO: Return only one document
         query = {
             "query": {
                 "bool": {
@@ -44,7 +43,11 @@ class BigQueryRowCount(BaseEnhancement):
                         { "exists": { "field": "gcp.audit.bigquery.output_row_count" }}
                     ]
                 }
-            }
+            },
+            "sort": [
+                { "@timestamp": { "order": "desc" } }
+            ],
+            "size": 1
         }
         results = es.search(index=index, body=query)
         try:
