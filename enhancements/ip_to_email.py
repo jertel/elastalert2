@@ -17,7 +17,6 @@ class IP2EmailSearchLink(BaseEnhancement):
                 ip = match["source"]["ip"]
                 users = self.search_ip(ip, es_client)
                 match["users"] = ",".join(users)
-                self.search_ip(ip, es_client)
             else:
                 util.elastalert_logger.info(
                     "source.ip not present in results! Skipping."
