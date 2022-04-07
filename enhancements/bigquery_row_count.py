@@ -14,6 +14,7 @@ class BigQueryRowCount(BaseEnhancement):
             tmp_table_id = match["gcp"]["audit"]["bigquery"]["tmp_table_id"]
             row_count = self.search_row_count(tmp_table_id, es_client)
             es_client.close()
+            match["row_count"] = row_count
 
             # Filter out all exports that are smaller than 1000 rows 
             if int(row_count) < 1000:
@@ -26,7 +27,8 @@ class BigQueryRowCount(BaseEnhancement):
             tmp_table_id = match["gcp"]["audit"]["bigquery"]["tmp_table_id"]
             if tmp_table_id != "":
                 return True
-        except:
+        except Exception as e:
+            util.elastalert_logger.error(e)
             return False
 
     def search_row_count(self, table_id, es):
