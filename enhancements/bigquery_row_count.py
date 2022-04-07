@@ -45,5 +45,6 @@ class BigQueryRowCount(BaseEnhancement):
             }
         }
         results = es.search(index=index, body=query)
+        print(results)
 
         return results["hits"]["hits"][0]["gcp"]["audit"]["bigquery"]["output_row_count"]
