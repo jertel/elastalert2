@@ -45,7 +45,9 @@ class BigQueryRowCount(BaseEnhancement):
             }
         }
         results = es.search(index=index, body=query)
-        util.elastalert_logger.warning(results)
+        try:
+            row_count = results["hits"]["hits"][0]["_source"]["gcp"]["audit"]["bigquery"]["output_row_count"]
+        except:
+            row_count = "0"
 
-
-        return results["hits"]["hits"][0]["gcp"]["audit"]["bigquery"]["output_row_count"]
+        return row_count
