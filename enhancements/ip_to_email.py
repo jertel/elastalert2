@@ -26,8 +26,20 @@ class IP2EmailSearchLink(BaseEnhancement):
     def search_ip(self, ip, es):
         index = "_all"
         query = {
-            "query": {"match": {"source.ip": ip}, "exists": {"field": "user.email"}}
+            "query": {
+                "bool": {
+                    "must": [
+                        {"exists": {"field": "user.email"}},
+                        {
+                            "match": {
+                                "source.ip": ip
+                            },
+                        },
+                    ]
+                }
+            }
         }
+
         results = es.search(index=index, body=query)
         users = []
 
