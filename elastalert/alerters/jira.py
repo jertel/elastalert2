@@ -117,6 +117,7 @@ class JiraAlerter(Alerter):
             raise EAException("Error connecting to Jira: %s" % (str(e)[:1024])).with_traceback(sys.exc_info()[2])
 
         self.set_priority()
+        self.set_duedate()
 
     def set_priority(self):
         try:
@@ -124,6 +125,16 @@ class JiraAlerter(Alerter):
                 self.jira_args['priority'] = {'id': self.priority_ids[self.priority]}
         except KeyError:
             elastalert_logger.error("Priority %s not found. Valid priorities are %s" % (self.priority, list(self.priority_ids.keys())))
+
+    def set_duedate(self):
+        now = datetime.datetime.now()
+        delta = 0
+        if now.weekday() == 6:
+            delta = -1
+        elif now.weekday() == 0:
+            delta = 1
+
+        self.jira_args['duedate'] = (datetime.datetime.now() - datetime.timedelta(days=delta)).strftime('%Y-%m-%d')
 
     def reset_jira_args(self):
         self.jira_args = {'project': {'key': self.project},
@@ -148,6 +159,7 @@ class JiraAlerter(Alerter):
             self.jira_args['assignee'] = {'name': self.assignee}
 
         self.set_priority()
+        self.set_duedate()
 
     def set_jira_arg(self, jira_field, value, fields):
         # Remove the jira_ part.  Convert underscores to spaces
@@ -197,7 +209,7 @@ class JiraAlerter(Alerter):
         # Handle non-array types
         else:
             # Simple string types
-            if arg_type in ['string', 'date', 'datetime']:
+            if arg_type in ['string', 'date', 'datetime', 'account']:
                 # Special case for custom types (the Jira metadata says that these are strings, but
                 # in reality, they are required to be provided as an object.
                 if 'custom' in field['schema'] and field['schema']['custom'] in self.custom_string_types_with_special_handling:
