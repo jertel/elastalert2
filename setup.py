@@ -32,6 +32,7 @@ setup(
     packages=find_packages(exclude=["tests"]),
     package_data={'elastalert': ['schema.yaml', 'es_mappings/**/*.json']},
     install_requires=[
+        'aiohttp>=3.8.1',
         'apscheduler>=3.8.1,<4.0',
         'aws-requests-auth>=0.4.3',
         'sortedcontainers>=2.4.0',

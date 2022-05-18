@@ -12,6 +12,8 @@ import sys
 
 from unittest import mock
 
+import slack
+
 from elastalert.config import load_conf
 from elastalert.elastalert import ElastAlerter
 from elastalert.util import EAException
@@ -19,6 +21,8 @@ from elastalert.util import elasticsearch_client
 from elastalert.util import lookup_es_key
 from elastalert.util import ts_now
 from elastalert.util import ts_to_dt
+
+from pprint import pprint
 
 logging.getLogger().setLevel(logging.INFO)
 logging.getLogger('elasticsearch').setLevel(logging.WARNING)
@@ -457,7 +461,10 @@ class MockElastAlerter(object):
         else:
             # Temporarily remove the jinja_template, if it exists, to avoid deepcopy issues
             template = rule_yaml.get("jinja_template")
+            slacksdk_thread_text = rule_yaml.get("thread_jinja_template")
+
             rule_yaml["jinja_template"] = None
+            rule_yaml["thread_jinja_template"] = None
 
             # Copy the rule object without the template in it
             copied_rule = copy.deepcopy(rule_yaml)
@@ -465,6 +472,7 @@ class MockElastAlerter(object):
             # Set the template back onto the original rule object and the newly copied object
             rule_yaml["jinja_template"] = template
             copied_rule["jinja_template"] = template
+            rule_yaml["thread_jinja_template"] = slacksdk_thread_text
 
             hits = self.test_file(copied_rule)
             if hits and self.args.formatted_output:
