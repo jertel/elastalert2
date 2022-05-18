@@ -8,7 +8,7 @@ from setuptools import setup
 base_dir = os.path.dirname(__file__)
 setup(
     name='elastalert2',
-    version='2.4.0',
+    version='2.5.0',
     description='Automated rule-based alerting for Elasticsearch',
     long_description=open('README.md').read(),
     long_description_content_type="text/markdown",
@@ -41,7 +41,7 @@ setup(
         'envparse>=0.2.0',
         'exotel>=0.1.5',
         'jira>=3.1.1',
-        'Jinja2==3.1.1',
+        'Jinja2==3.1.2',
         'jsonschema>=4.4.0',
         'prison>=0.2.1',
         'prometheus_client>=0.13.1',
@@ -49,7 +49,7 @@ setup(
         'python-dateutil>=2.8.2',
         'PyYAML>=6.0',
         'requests>=2.27.1',
-        'stomp.py>=8.0.0',
+        'stomp.py>=8.0.1',
         'texttable>=1.6.4',
         'twilio==6.57.0',
         'cffi>=1.15.0',

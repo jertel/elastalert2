@@ -17,7 +17,7 @@ class MsTeamsAlerter(Alerter):
         if isinstance(self.ms_teams_webhook_url, str):
             self.ms_teams_webhook_url = [self.ms_teams_webhook_url]
         self.ms_teams_proxy = self.rule.get('ms_teams_proxy', None)
-        self.ms_teams_alert_summary = self.rule.get('ms_teams_alert_summary', 'ElastAlert Message')
+        self.ms_teams_alert_summary = self.rule.get('ms_teams_alert_summary', None)
         self.ms_teams_alert_fixed_width = self.rule.get('ms_teams_alert_fixed_width', False)
         self.ms_teams_theme_color = self.rule.get('ms_teams_theme_color', '')
         self.ms_teams_ca_certs = self.rule.get('ms_teams_ca_certs')
@@ -36,14 +36,17 @@ class MsTeamsAlerter(Alerter):
         alert_facts = []
         for arg in self.ms_teams_alert_facts:
             arg = copy.copy(arg)
-            arg['value'] = lookup_es_key(matches[0], arg['value'])
+            matched_value = lookup_es_key(matches[0], arg['value'])
+            arg['value'] = matched_value if matched_value is not None else arg['value']
             alert_facts.append(arg)
         return alert_facts
 
     def alert(self, matches):
         body = self.create_alert_body(matches)
-
         body = self.format_body(body)
+
+        title = self.create_title(matches)
+        summary = title if self.ms_teams_alert_summary is None else self.ms_teams_alert_summary
         # post to Teams
         headers = {'content-type': 'application/json'}
 
@@ -59,8 +62,8 @@ class MsTeamsAlerter(Alerter):
         payload = {
             '@type': 'MessageCard',
             '@context': 'http://schema.org/extensions',
-            'summary': self.ms_teams_alert_summary,
-            'title': self.create_title(matches),
+            'summary': summary ,
+            'title': title,
             'sections': [{'text': body}],
         }
 

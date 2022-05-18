@@ -234,9 +234,9 @@ Rule Configuration Cheat Sheet
 +-------------------------------------------------------+--------+-----------+-----------+--------+-----------+-------+----------+--------+-----------+------------------+-----------------+----------------+
 |``match_bucket_filter`` (no default)                   |        |           |           |        |           |       |          |        |           |                  |                 |  Req           |
 +-------------------------------------------------------+--------+-----------+-----------+--------+-----------+-------+----------+--------+-----------+------------------+-----------------+----------------+
-|``min_percentage`` (int, no default)                   |        |           |           |        |           |       |          |        |           |                  |                 |  Req           |
+|``min_percentage`` (number, no default)                |        |           |           |        |           |       |          |        |           |                  |                 |  Req           |
 |                                                       |        |           |           |        |           |       |          |        |           |                  |                 |                |
-|``max_percentage`` (int, no default)                   |        |           |           |        |           |       |          |        |           |                  |                 |                |
+|``max_percentage`` (number, no default)                |        |           |           |        |           |       |          |        |           |                  |                 |                |
 |                                                       |        |           |           |        |           |       |          |        |           |                  |                 |                |
 |Requires at least one of the two options               |        |           |           |        |           |       |          |        |           |                  |                 |                |
 +-------------------------------------------------------+--------+-----------+-----------+--------+-----------+-------+----------+--------+-----------+------------------+-----------------+----------------+
@@ -674,7 +674,7 @@ kibana_discover_version
 The currently supported versions of Kibana Discover are:
 
 - `7.0`, `7.1`, `7.2`, `7.3`, `7.4`, `7.5`, `7.6`, `7.7`, `7.8`, `7.9`, `7.10`, `7.11`, `7.12`, `7.13`, `7.14`, `7.15`, `7.16`, `7.17`
-- `8.0`, `8.1`
+- `8.0`, `8.1`, `8.2`
 
 ``kibana_discover_version: '7.15'``
 
@@ -2329,7 +2329,7 @@ Required:
 
 Optional:
 
-``http_post2_payload``: List of keys:values to use for the payload of the HTTP Post. You can use {{ field }} (Jinja2 template) in the key and the value to reference any field in the matched events (works for nested fields). If not defined, all the Elasticsearch keys will be sent.  Ex: `"description_{{ my_field }}": "Type: {{ type }}\\nSubject: {{ title }}"`
+``http_post2_payload``: List of keys:values to use for the payload of the HTTP Post. You can use {{ field }} (Jinja2 template) in the key and the value to reference any field in the matched events (works for nested ES fields and nested payload keys). If not defined, all the Elasticsearch keys will be sent. Ex: `"description_{{ my_field }}": "Type: {{ type }}\\nSubject: {{ title }}"`.
 
 ``http_post2_raw_fields``: List of keys:values to use as the content of the POST. Example - ip:clientip will map the value from the clientip field of Elasticsearch to JSON key named ip. This field overwrite the keys with the same name in `http_post2_payload`.
 
@@ -2588,7 +2588,7 @@ menu in your channel and configure an Incoming Webhook, then copy the resulting 
 
 Optional:
 
-``ms_teams_alert_summary``: Summary should be configured according to `MS documentation <https://docs.microsoft.com/en-us/outlook/actionable-messages/card-reference>`_, although it seems not displayed by Teams currently, defaults to ``ElastAlert Message``.
+``ms_teams_alert_summary``: MS Teams use this value for notification title, defaults to `Alert Subject <https://elastalert2.readthedocs.io/en/latest/ruletypes.html#alert-subject>`_. You can set this value with arbitrary text if you don't want to use the default.
 
 ``ms_teams_theme_color``: By default the alert will be posted without any color line. To add color, set this attribute to a HTML color value e.g. ``#ff0000`` for red.
 
@@ -2596,7 +2596,7 @@ Optional:
 
 ``ms_teams_alert_fixed_width``: By default this is ``False`` and the notification will be sent to MS Teams as-is. Teams supports a partial Markdown implementation, which means asterisk, underscore and other characters may be interpreted as Markdown. Currenlty, Teams does not fully implement code blocks. Setting this attribute to ``True`` will enable line by line code blocks. It is recommended to enable this to get clearer notifications in Teams.
 
-``ms_teams_alert_facts``: You can add additional facts to your MS Teams alerts using this field. Specify the title using `name` and a value for the field using `value`.
+``ms_teams_alert_facts``: You can add additional facts to your MS Teams alerts using this field. Specify the title using `name` and a value for the field or arbitrary text using `value`. 
 
 Example ms_teams_alert_facts::
 
@@ -2605,8 +2605,8 @@ Example ms_teams_alert_facts::
         value: monitor.host
       - name: Status
         value: monitor.status
-      - name: Zone
-        value: beat.name
+      - name: What to do
+        value: Page your boss
 
 ``ms_teams_attach_kibana_discover_url``: Enables the attachment of the ``kibana_discover_url`` to the MS Teams notification. The config ``generate_kibana_discover_url`` must also be ``True`` in order to generate the url. Defaults to ``False``.
 
@@ -2640,7 +2640,6 @@ Example usage::
 
     alert:
       - "ms_teams"
-    ms_teams_alert_summary: "Alert"
     ms_teams_theme_color: "#6600ff"
     ms_teams_webhook_url: "MS Teams Webhook URL"
 
@@ -3090,8 +3089,6 @@ The alerter requires the following options:
 
 Optional:
 
-``stomp_ssl``: Connect the STOMP host using TLS, defaults to ``False``.
-
 ``stomp_destination``: The STOMP destination to use, defaults to ``/queue/ALERT``
 
 The stomp_destination field depends on the broker, the /queue/ALERT example is the nomenclature used by ActiveMQ. Each broker has its own logic.
@@ -3325,6 +3322,8 @@ Required:
 
 ``zbx_sender_port``: The port where zabbix server is listenning, defaults to ``10051``.
 
+``zbx_host_from_field``: This field allows to specify ``zbx_host`` value from the available terms. Defaults to ``False``.
+
 ``zbx_host``: This field setup the host in zabbix that receives the value sent by ElastAlert 2.
 
 ``zbx_key``: This field setup the key in the host that receives the value sent by ElastAlert 2.
@@ -3337,3 +3336,17 @@ Example usage::
     zbx_sender_port: 10051
     zbx_host: "test001"
     zbx_key: "sender_load1"
+
+To specify ``zbx_host`` depending on the available elasticsearch field, zabbix alerter has ``zbx_host_from_field`` option.
+
+Example usage::
+
+    alert:
+      - "zabbix"
+    zbx_sender_host: "zabbix-server"
+    zbx_sender_port: 10051
+    zbx_host_from_field: True 
+    zbx_host: "hostname"
+    zbx_key: "sender_load1"
+
+where ``hostname`` is the available elasticsearch field.

@@ -399,11 +399,27 @@ def test_ms_teams_alert_facts():
         'ms_teams_alert_facts': [
             {
                 'name': 'Host',
-                'value': 'somefield',
+                'value': 'somefield'
             },
             {
                 'name': 'Sensors',
-                'value': '@timestamp',
+                'value': '@timestamp'
+            },
+            {
+                'name': 'Speed',
+                'value': 'vehicle.speed'
+            },
+            {
+                'name': 'Boolean',
+                'value': 'boolean'
+            },
+            {
+                'name': 'Blank',
+                'value': 'blank'
+            },
+            {
+                'name': 'Arbitrary Text Name',
+                'value': 'Arbitrary Text Value'
             }
         ],
         'alert_subject': 'Cool subject',
@@ -414,8 +430,14 @@ def test_ms_teams_alert_facts():
     alert = MsTeamsAlerter(rule)
     match = {
         '@timestamp': '2016-01-01T00:00:00',
-        'somefield': 'foobarbaz'
+        'somefield': 'foobarbaz',
+        'vehicle': {
+            'speed': 0,
+        },
+        'boolean': False,
+        'blank': ''
     }
+
     with mock.patch('requests.post') as mock_post_request:
         alert.alert([match])
 
@@ -430,7 +452,52 @@ def test_ms_teams_alert_facts():
                 'facts': [
                     {'name': 'Host', 'value': 'foobarbaz'},
                     {'name': 'Sensors', 'value': '2016-01-01T00:00:00'},
+                    {'name': 'Speed', 'value': 0},
+                    {'name': 'Boolean', 'value': False},
+                    {'name': 'Blank', 'value': ''},
+                    {'name': 'Arbitrary Text Name', 'value': 'Arbitrary Text Value'}
                 ],
+            }
+        ],
+    }
+
+    mock_post_request.assert_called_once_with(
+        rule['ms_teams_webhook_url'],
+        data=mock.ANY,
+        headers={'content-type': 'application/json'},
+        proxies=None,
+        verify=True
+    )
+    assert expected_data == json.loads(mock_post_request.call_args_list[0][1]['data'])
+
+
+def test_ms_teams_alert_summary_none():
+    rule = {
+        'name': 'Test Rule',
+        'type': 'any',
+        'ms_teams_webhook_url': 'http://test.webhook.url',
+        'alert_subject': 'Cool subject',
+        'alert': []
+    }
+    rules_loader = FileRulesLoader({})
+    rules_loader.load_modules(rule)
+    alert = MsTeamsAlerter(rule)
+    match = {
+        '@timestamp': '2016-01-01T00:00:00',
+        'somefield': 'foobarbaz'
+    }
+
+    with mock.patch('requests.post') as mock_post_request:
+        alert.alert([match])
+
+    expected_data = {
+        '@type': 'MessageCard',
+        '@context': 'http://schema.org/extensions',
+        'summary': rule['alert_subject'],
+        'title': rule['alert_subject'],
+        'sections': [
+            {
+                'text': BasicMatchString(rule, match).__str__()
             }
         ],
     }

@@ -1,20 +1,26 @@
-# Template
+# 2.TBD.TBD
 
 ## Breaking changes
 - None
 
 ## New features
-- TBD - [#000](https://github.com/jertel/elastalert2/pull/000) - @some_elastic_contributor_tbd
-
-## Other changes
 - None
 
-# 2.x.x
+## Other changes
+- Upgrade stomp 8.0.0 to 8.0.1 - [#832](https://github.com/jertel/elastalert2/pull/832) - @jertel
+- Add support for Kibana 8.2 for Kibana Discover, Upgrade Pytest 7.1.1 to 7.1.2, Upgrade pylint 2.13.5 to 2.13.8, Upgrade Jinja2 3.1.1 to 3.1.2 - [#840](https://github.com/jertel/elastalert2/pull/840) - @nsano-rururu
+
+# 2.5.0
 
 ## Breaking changes
+- Remove Simple Alerter - [#793](https://github.com/jertel/elastalert2/pull/793) - @nsano-rururu
 
 ## New features
 - Add support for Kibana 8.1 for Kibana Discover - [#763](https://github.com/jertel/elastalert2/pull/763) - @nsano-rururu
+- [MS Teams] Add arbitrary text value support for Facts - [#790](https://github.com/jertel/elastalert2/pull/790) - @iamxeph
+- [MS Teams] Use alert_subject as ms_teams_alert_summary if ms_teams_alert_summary is not set - [#802](https://github.com/jertel/elastalert2/pull/802) - @iamxeph
+- [Mattermost] List support for mattermost_channel_override - [#809](https://github.com/jertel/elastalert2/pull/809) - @nsano-rururu
+- [Zabbix] Add the ability to specify `zbx_host` from available elasticsearch field - [#820](https://github.com/jertel/elastalert2/pull/820) - @timeforplanb123
 
 ## Other changes
 - [Docs] Update FAQ ssl_show_warn - [#764](https://github.com/jertel/elastalert2/pull/764) - @nsano-rururu
@@ -24,6 +30,17 @@
 - Upgrade sphinx 4.4.0 to 4.5.0 - [#782](https://github.com/jertel/elastalert2/pull/782) - @nsano-rururu
 - Upgrade pylint 2.12.2 to 2.13.2 - [#783](https://github.com/jertel/elastalert2/pull/783) - @nsano-rururu
 - Upgrade jinja2 3.0.3 to 3.1.1 - [#784](https://github.com/jertel/elastalert2/pull/784) - @nsano-rururu
+- Update schema.yaml(Alertmanager, Spike, Flatline, New Term, Metric Aggregation, Percentage Match) - [#789](https://github.com/jertel/elastalert2/pull/789) - @nsano-rururu
+- Upgrade pylint 2.13.2 to 2.13.3 - [#792](https://github.com/jertel/elastalert2/pull/792) - @nsano-rururu
+- Upgrade pylint 2.13.3 to 2.13.4 - [#801](https://github.com/jertel/elastalert2/pull/801) - @nsano-rururu
+- Fix SpikeRule - [#804](https://github.com/jertel/elastalert2/pull/804) - @nsano-rururu
+- [Kubernetes] Add scanSubdirectories (defaults to true) as an option in Helm Chart - [#805](https://github.com/jertel/elastalert2/pull/805) - @louzadod
+- Upgrade pylint 2.13.4 to 2.13.5 - [#808](https://github.com/jertel/elastalert2/pull/808) - @nsano-rururu
+- Update documentation on Cloud ID support - [#810](https://github.com/jertel/elastalert2/pull/810) - @ferozsalam
+- Upgrade tox 3.24.5 to 3.25.0 - [#813](https://github.com/jertel/elastalert2/pull/813) - @nsano-rururu
+- [Kubernetes] Add support to specify rules directory - [#816](https://github.com/jertel/elastalert2/pull/816) @SBe
+- Fix HTTP POST 2 alerter for nested payload keys - [#823](https://github.com/jertel/elastalert2/pull/823) - @lepouletsuisse
+- [Kubernetes] Expose prometheus metrics to kubernetes pod service discovery mechanism - [#827](https://github.com/jertel/elastalert2/pull/827) - @PedroMSantosD
 
 # 2.4.0
 
