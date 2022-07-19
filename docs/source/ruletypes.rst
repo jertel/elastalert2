@@ -562,7 +562,7 @@ where X is 5 by default, or ``top_count_number`` if it exists.
 For example, if ``num_events`` is 100, and ``top_count_keys`` is ``- "username"``, the alert will say how many of the 100 events
 have each username, for the top 5 usernames. When this is computed, the time range used is from ``timeframe`` before the most recent event
 to 10 minutes past the most recent event. Because ElastAlert 2 uses an aggregation query to compute this, it will attempt to use the
-field name plus ".raw" to count unanalyzed terms. To turn this off, set ``raw_count_keys`` to false.
+field name plus ".keyword" to count unanalyzed terms. To turn this off, set ``raw_count_keys`` to false.
 
 top_count_number
 ^^^^^^^^^^^^^^^^
@@ -572,7 +572,7 @@ top_count_number
 raw_count_keys
 ^^^^^^^^^^^^^^
 
-``raw_count_keys``: If true, all fields in ``top_count_keys`` will have ``.raw`` appended to them. (Optional, boolean, default true)
+``raw_count_keys``: If true, all fields in ``top_count_keys`` will have ``.keyword`` appended to them.  This used to be ".raw" in older Elasticsearch versions, but the setting name `raw_count_keys` was left as-is to avoid breaking existing installations. (Optional, boolean, default true)
 
 description
 ^^^^^^^^^^^
@@ -674,7 +674,7 @@ kibana_discover_version
 The currently supported versions of Kibana Discover are:
 
 - `7.0`, `7.1`, `7.2`, `7.3`, `7.4`, `7.5`, `7.6`, `7.7`, `7.8`, `7.9`, `7.10`, `7.11`, `7.12`, `7.13`, `7.14`, `7.15`, `7.16`, `7.17`
-- `8.0`, `8.1`, `8.2`
+- `8.0`, `8.1`, `8.2`, `8.3`
 
 ``kibana_discover_version: '7.15'``
 
@@ -1256,10 +1256,10 @@ that if a new term appears but there are at least 50 terms which appear more fre
 
   When using use_terms_query, make sure that the field you are using is not analyzed. If it is, the results of each terms
   query may return tokens rather than full values. ElastAlert 2 will by default turn on use_keyword_postfix, which attempts
-  to use the non-analyzed version (.keyword or .raw) to gather initial terms. These will not match the partial values and
+  to use the non-analyzed version (.keyword) to gather initial terms. These will not match the partial values and
   result in false positives.
 
-``use_keyword_postfix``: If true, ElastAlert 2 will automatically try to add .keyword (ES5+) or .raw to the fields when making an
+``use_keyword_postfix``: If true, ElastAlert 2 will automatically try to add .keyword to the fields when making an
 initial query. These are non-analyzed fields added by Logstash. If the field used is analyzed, the initial query will return
 only the tokenized values, potentially causing false positives. Defaults to true.
 
@@ -1737,7 +1737,7 @@ Optional:
 
 ``alertmanager_ca_certs``: Set this option to ``True`` if you want to validate the SSL certificate.
 
-``alertmanager_ignore_ssl_errors``: By default ElastAlert 2 will verify SSL certificate. Set this option to ``False`` if you want to ignore SSL errors.
+``alertmanager_ignore_ssl_errors``: By default ElastAlert 2 will verify SSL certificate. Set this option to ``True`` if you want to ignore SSL errors.
 
 ``alertmanager_timeout``: You can specify a timeout value, in seconds, for making communicating with Alertmanager. The default is 10. If a timeout occurs, the alert will be retried next time ElastAlert 2 cycles.
 
@@ -2304,7 +2304,7 @@ Optional:
 
 ``http_post_ca_certs``: Set this option to ``True`` if you want to validate the SSL certificate.
 
-``http_post_ignore_ssl_errors``: By default ElastAlert 2 will verify SSL certificate. Set this option to ``False`` if you want to ignore SSL errors.
+``http_post_ignore_ssl_errors``: By default ElastAlert 2 will verify SSL certificate. Set this option to ``True`` if you want to ignore SSL errors.
 
 Example usage::
 
@@ -2343,7 +2343,7 @@ Optional:
 
 ``http_post2_ca_certs``: Set this option to ``True`` if you want to validate the SSL certificate.
 
-``http_post2_ignore_ssl_errors``: By default ElastAlert 2 will verify SSL certificate. Set this option to ``False`` if you want to ignore SSL errors.
+``http_post2_ignore_ssl_errors``: By default ElastAlert 2 will verify SSL certificate. Set this option to ``True`` if you want to ignore SSL errors.
 
 Example usage::
 
@@ -2504,7 +2504,7 @@ Optional:
 
 ``mattermost_proxy``: By default ElastAlert 2 will not use a network proxy to send notifications to Mattermost. Set this option using ``hostname:port`` if you need to use a proxy. only supports https.
 
-``mattermost_ignore_ssl_errors``: By default ElastAlert 2 will verify SSL certificate. Set this option to ``False`` if you want to ignore SSL errors.
+``mattermost_ignore_ssl_errors``: By default ElastAlert 2 will verify SSL certificate. Set this option to ``True`` if you want to ignore SSL errors.
 
 ``mattermost_username_override``: By default Mattermost will use your username when posting to the channel. Use this option to change it (free text).
 
@@ -2634,7 +2634,7 @@ Example ms_teams_attach_kibana_discover_url, ms_teams_kibana_discover_title::
 
 ``ms_teams_ca_certs``: Set this option to ``True`` if you want to validate the SSL certificate.
 
-``ms_teams_ignore_ssl_errors``: By default ElastAlert 2 will verify SSL certificate. Set this option to ``False`` if you want to ignore SSL errors.
+``ms_teams_ignore_ssl_errors``: By default ElastAlert 2 will verify SSL certificate. Set this option to ``True`` if you want to ignore SSL errors.
 
 Example usage::
 
@@ -2823,7 +2823,7 @@ ElastAlert 2 rule. Any Apple emoji can be used, see http://emojipedia.org/apple/
 
 ``rocket_chat_ca_certs``: Set this option to ``True`` if you want to validate the SSL certificate.
 
-``rocket_chat_ignore_ssl_errors``: By default ElastAlert 2 will verify SSL certificate. Set this option to ``False`` if you want to ignore SSL errors.
+``rocket_chat_ignore_ssl_errors``: By default ElastAlert 2 will verify SSL certificate. Set this option to ``True`` if you want to ignore SSL errors.
 
 ``rocket_chat_timeout``: You can specify a timeout value, in seconds, for making communicating with Rocket.Chat. The default is 10. If a timeout occurs, the alert will be retried next time ElastAlert 2 cycles.
 
@@ -2983,7 +2983,7 @@ Example slack_alert_fields::
         value: beat.name
         short: true
 
-``slack_ignore_ssl_errors``: By default ElastAlert 2 will verify SSL certificate. Set this option to ``False`` if you want to ignore SSL errors.
+``slack_ignore_ssl_errors``: By default ElastAlert 2 will verify SSL certificate. Set this option to ``True`` if you want to ignore SSL errors.
 
 ``slack_title``: Sets a title for the message, this shows up as a blue text at the start of the message
 
@@ -3225,12 +3225,16 @@ using the first matched record, before checking the rule. If neither matches, th
 will be used directly.
 
 ``hive_observable_data_mapping``: If needed, matched data fields can be mapped to TheHive
-observable types using the same syntax as ``tags``, described above. The algorithm used to populate
-the observable value is also the same, including the behaviour for aggregated alerts.
+observable types using the same syntax as ``customFields``, described above. The algorithm used to populate
+the observable value is similar to the one used to populate the ``tags``, including the behaviour for aggregated alerts.
+The tlp, message, and tags fields are optional for each observable. If not specified, the tlp field is given a default value of 2.
 
 ``hive_proxies``: Proxy configuration.
 
 ``hive_verify``: Whether or not to enable SSL certificate validation. Defaults to False.
+
+``description_args``: can be used to call rule and match fileds in the description of the alert in TheHive
+``description_missing_value``: Text to replace any match field not found when formating the ``description``. Defaults to ``<MISSING VALUE>``.
 
 Example usage::
 
@@ -3253,7 +3257,8 @@ Example usage::
       severity: 2
       status: 'New'
       source: 'elastalert'
-      description: 'Sample description'
+      description_args: [ name, description]
+      description: '{0} : {1}'
       tags: ['tag1', 'tag2']
       title: 'Title'
       tlp: 3
@@ -3261,7 +3266,12 @@ Example usage::
 
     hive_observable_data_mapping:
       - domain: agent.hostname
+        tlp: 1
+        tags: ['tag1', 'tag2']
+        message: 'agent hostname'
       - domain: response.domain
+        tlp: 2
+        tags: ['tag3']
       - ip: client.ip
 
 Twilio

@@ -1,6 +1,21 @@
 # 2.TBD.TBD
 
 ## Breaking changes
+- When using HTTP POST 2, it is no longer necessary to pre-escape strings (should they contain control chars) from events in elastic search which are replaced by the jinja2 template.
+
+- [Kubernetes] [Breaking] Reconfigure metrics to follow prometheus operator nomenclature. `metrics` value, now control the addition of metrics endpoint (command argument), the creation of a service to expose the metrics endpoint and the (optional) creation of prometheus-operator objects: serviceMonitor and prometheurRules to match implementations of other charts. The labels of the chart have been modified, so you'll need to uninstall and reinstall the chart for the upgrade to work. - [#902](https://github.com/jertel/elastalert2/pull/902) - @PedroMSantosD
+
+## New features
+- [Kubernetes] Chart is now able to create a service for the metrics, and optional  prometheus-operator custom resources serviceMonitor and  prometheusRule. - [#902](https://github.com/jertel/elastalert2/pull/902) - @PedroMSantosD
+
+## Other changes
+- Upgrade pylint 2.13.8 to 2.14.3, Upgrade sphinx 4.5.0 to 5.0.2 - [#891](https://github.com/jertel/elastalert2/pull/891) - @nsano-rururu
+- Add support for Kibana 8.3 for Kibana Discover - [#897](https://github.com/jertel/elastalert2/pull/897) - @nsano-rururu
+- Fix internal json decode error in HTTP POST 2 if values from ES event contain control chars (e.g. newline) and are used in the jinja2 template - [#898](https://github.com/jertel/elastalert2/pull/898) - @ddurham2
+
+# 2.5.1
+
+## Breaking changes
 - None
 
 ## New features
@@ -9,6 +24,10 @@
 ## Other changes
 - Upgrade stomp 8.0.0 to 8.0.1 - [#832](https://github.com/jertel/elastalert2/pull/832) - @jertel
 - Add support for Kibana 8.2 for Kibana Discover, Upgrade Pytest 7.1.1 to 7.1.2, Upgrade pylint 2.13.5 to 2.13.8, Upgrade Jinja2 3.1.1 to 3.1.2 - [#840](https://github.com/jertel/elastalert2/pull/840) - @nsano-rururu
+- Add the possibility to use rule and match fields in the description of TheHive alerts - [#855](https://github.com/jertel/elastalert2/pull/855) - @luffynextgen
+- Fix missing colon on schema.yml and add unit test on it - [#866](https://github.com/jertel/elastalert2/pull/866) - @Isekai-Seikatsu
+- Add the possibility to use tags, message and tlp level in TheHive observables [#873](https://github.com/jertel/elastalert2/pull/873) - @luffynextgen
+- Support OpenSearch 2.x - [#880](https://github.com/jertel/elastalert2/pull/880) - @jertel
 
 # 2.5.0
 

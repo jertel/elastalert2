@@ -80,7 +80,7 @@ elastalert2 container image on `Docker Hub <https://hub.docker.com/r/jertel/elas
 
 Be aware that the ``latest`` tag of the image represents the latest commit into
 the master branch. If you prefer to upgrade more slowly you will need utilize a
-versioned tag, such as ``2.5.0`` instead, or ``2`` if you are comfortable with
+versioned tag, such as ``2.5.1`` instead, or ``2`` if you are comfortable with
 always using the latest released version of ElastAlert 2.
 
 A properly configured config.yaml file must be mounted into the container during
@@ -204,7 +204,7 @@ As a Python package
 Requirements
 ------------
 
-- Elasticsearch 7.x or 8.x
+- Elasticsearch 7.x or 8.x, or OpenSearch 1.x or 2.x
 - ISO8601 or Unix timestamped data
 - Python 3.10. Require OpenSSL 1.1.1 or newer.
 - pip
