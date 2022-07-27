@@ -16,6 +16,7 @@ class GoogleChatAlerter(Alerter):
         self.googlechat_webhook_url = self.rule.get('googlechat_webhook_url', None)
         if isinstance(self.googlechat_webhook_url, str):
             self.googlechat_webhook_url = [self.googlechat_webhook_url]
+        self.googlechat_proxy = self.rule.get('googlechat_proxy', None)
         self.googlechat_format = self.rule.get('googlechat_format', 'basic')
         self.googlechat_header_title = self.rule.get('googlechat_header_title', None)
         self.googlechat_header_subtitle = self.rule.get('googlechat_header_subtitle', None)
@@ -75,6 +76,7 @@ class GoogleChatAlerter(Alerter):
         return {'text': body}
 
     def alert(self, matches):
+        proxies = {'https': self.googlechat_proxy} if self.googlechat_proxy else None
         # Format message
         if self.googlechat_format == 'card':
             message = self.create_card(matches)
@@ -85,7 +87,7 @@ class GoogleChatAlerter(Alerter):
         headers = {'content-type': 'application/json'}
         for url in self.googlechat_webhook_url:
             try:
-                response = requests.post(url, data=json.dumps(message), headers=headers)
+                response = requests.post(url, data=json.dumps(message), headers=headers, proxies=proxies)
                 response.raise_for_status()
             except RequestException as e:
                 raise EAException("Error posting to google chat: {}".format(e))
