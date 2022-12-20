@@ -4,7 +4,7 @@
 - None
 
 ## New features
-- None
+- Add `slack_webhook_url_env` option to store `slack_webhook_url` in environment variables
 
 ## Other changes
 - [Docs] Clarify Jira Cloud authentication configuration - [94f7e8c](https://github.com/jertel/elastalert2/commit/94f7e8cc98d59a00349e3b23acd8a8549c80dbc8) - @jertel

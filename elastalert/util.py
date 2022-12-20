@@ -415,6 +415,11 @@ def build_es_conn_config(conf):
 
     if 'es_url_prefix' in conf:
         parsed_conf['es_url_prefix'] = conf['es_url_prefix']
+    
+    if 'slack_webhook_url_env' in conf:
+        parsed_conf['slack_webhook_url'] = os.environ.get(slack_webhook_url_env)    
+    elif 'slack_webhook_url' in conf:
+        parsed_conf['slack_webhook_url'] = conf['slack_webhook_url']
 
     return parsed_conf
 

@@ -3025,6 +3025,8 @@ and copy the resulting URL. You can use a list of URLs to send to multiple chann
 
 Optional:
 
+``slack_webhook_url_env``: The name of the environment variable that specifies slack_webhook_url. May be very useful when sending messages to different channels for different rules
+
 ``slack_username_override``: By default Slack will use your username when posting to the channel. Use this option to change it (free text).
 
 ``slack_channel_override``: Incoming webhooks have a default channel, but it can be overridden. A public channel can be specified "#other-channel", and a Direct Message with "@username".

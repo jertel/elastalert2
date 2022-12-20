@@ -618,6 +618,7 @@ properties:
 
   ### Slack
   slack_webhook_url: *arrayOfString
+  slack_webhook_url_env: {type: string}
   slack_username_override: {type: string}
   slack_channel_override: *arrayOfString
   slack_emoji_override: {type: string}
