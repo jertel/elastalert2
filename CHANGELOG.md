@@ -1,6 +1,17 @@
 # 2.TBD.TBD
 
 ## Breaking changes
+- TBD
+
+## New features
+- TBD
+
+## Other changes
+- TBD
+
+# 2.10.0
+
+## Breaking changes
 - [Alerta] All matches will now be sent with the alert - [#1068](https://github.com/jertel/elastalert2/pull/1068) - @dakotacody
 - Renamed the `overwrites` parameter to `overrides` in the load_conf method of config.py - [#1100](https://github.com/jertel/elastalert2/pull/1100) - @akusei
 
@@ -14,7 +25,7 @@
 ## Other changes
 - [Docs] Clarify Jira Cloud authentication configuration - [94f7e8c](https://github.com/jertel/elastalert2/commit/94f7e8cc98d59a00349e3b23acd8a8549c80dbc8) - @jertel
 - Update minimum versions for third-party dependencies in requirements.txt and setup.py - [#1051](https://github.com/jertel/elastalert2/pull/1051) - @nsano-rururu
-- [Docs] Clarify `import` support for list of files [#1075](https://github.com/jertel/elastalert2/pull/1075) - @sqrooted
+- [Docs] Clarify `import` support for list of files - [#1075](https://github.com/jertel/elastalert2/pull/1075) - @sqrooted
 - Add support for Kibana 8.6 for Kibana Discover - [#1080](https://github.com/jertel/elastalert2/pull/1080) - @nsano-rururu
 - Modify schema to allow string and boolean for `*_ca_certs` to allow for one to specify a cert bundle for SSL certificate verification - [#1082](https://github.com/jertel/elastalert2/pull/1082) - @goggin
 - Fix UnicodeEncodeError in PagerDutyAlerter - [#1091](https://github.com/jertel/elastalert2/pull/1091) - @nsano-rururu
