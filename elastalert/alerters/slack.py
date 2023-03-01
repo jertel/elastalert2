@@ -169,7 +169,12 @@ class SlackAlerter(Alerter):
                     warnings.resetwarnings()
                     response.raise_for_status()
                 except RequestException as e:
-                    raise EAException("Error posting to slack: %s" % e)
+                    # Ignore 429 - Too Many Requests by logging it instead of raising an exception.
+                    # It avoids an infinite loop where pending alerts are sent, resetting error 429.
+                    if response.status_code == 429:
+                        elastalert_logger.error("Alert '%s': Error posting to slack: %s" % (self.rule['name'], e))
+                    else:
+                        raise EAException("Alert '%s': Error posting to slack: %s" % (self.rule['name'], e))
         elastalert_logger.info("Alert '%s' sent to Slack" % self.rule['name'])
 
     def get_info(self):
