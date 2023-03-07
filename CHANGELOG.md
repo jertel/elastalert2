@@ -7,7 +7,8 @@
 - TBD
 
 ## Other changes
-- TBD
+- Corrected alert bug when both top_count_keys and query_key are specified in a rule - [#1128](https://github.com/jertel/elastalert2/pull/1128) - @jertel
+- Fixed docker-compose detection logic from recent PR - [#1128](https://github.com/jertel/elastalert2/pull/1128) - @jertel
 
 # 2.10.0
 
