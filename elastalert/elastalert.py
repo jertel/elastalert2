@@ -36,7 +36,7 @@ from elastalert.kibana_discover import generate_kibana_discover_url
 from elastalert.kibana_external_url_formatter import create_kibana_external_url_formatter
 from elastalert.prometheus_wrapper import PrometheusWrapper
 from elastalert.ruletypes import FlatlineRule
-from elastalert.util import (add_raw_postfix, cronite_datetime_to_timestamp, dt_to_ts, dt_to_unix, EAException,
+from elastalert.util import (add_keyword_postfix, cronite_datetime_to_timestamp, dt_to_ts, dt_to_unix, EAException,
                              elastalert_logger, elasticsearch_client, format_index, lookup_es_key, parse_deadline,
                              parse_duration, pretty_ts, replace_dots_in_field_names, seconds, set_es_key,
                              should_scrolling_continue, total_seconds, ts_add, ts_now, ts_to_dt, unix_to_dt,
@@ -468,14 +468,14 @@ class ElastAlerter(object):
                 qk = qk_list[0]
                 filter_key = rule['query_key']
                 if rule.get('raw_count_keys', True) and not rule['query_key'].endswith(end):
-                    filter_key = add_raw_postfix(filter_key)
+                    filter_key = add_keyword_postfix(filter_key)
                 rule_filter.extend([{'term': {filter_key: qk}}])
             else:
                 filter_keys = rule['compound_query_key']
                 for i in range(len(filter_keys)):
                     key_with_postfix = filter_keys[i]
                     if rule.get('raw_count_keys', True) and not key.endswith(end):
-                        key_with_postfix = add_raw_postfix(key_with_postfix)
+                        key_with_postfix = add_keyword_postfix(key_with_postfix)
                     rule_filter.extend([{'term': {key_with_postfix: qk_list[i]}}])
 
         base_query = self.get_query(

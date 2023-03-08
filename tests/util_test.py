@@ -12,7 +12,7 @@ from dateutil.tz import tzutc
 from unittest import mock
 from unittest.mock import MagicMock
 
-from elastalert.util import add_raw_postfix
+from elastalert.util import add_keyword_postfix
 from elastalert.util import build_es_conn_config
 from elastalert.util import dt_to_int
 from elastalert.util import dt_to_ts
@@ -156,13 +156,10 @@ def test_looking_up_arrays(ea):
     assert lookup_es_key(record, 'nested.foo[1]') == 'baz'
 
 
-def test_add_raw_postfix(ea):
-    expected = 'foo.raw'
-    assert add_raw_postfix('foo', False) == expected
-    assert add_raw_postfix('foo.raw', False) == expected
+def test_add_keyword_postfix(ea):
     expected = 'foo.keyword'
-    assert add_raw_postfix('foo', True) == expected
-    assert add_raw_postfix('foo.keyword', True) == expected
+    assert add_keyword_postfix('foo') == expected
+    assert add_keyword_postfix('foo.keyword') == expected
 
 
 def test_replace_dots_in_field_names(ea):

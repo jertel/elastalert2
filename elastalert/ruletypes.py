@@ -5,7 +5,7 @@ import sys
 
 from sortedcontainers import SortedKeyList as sortedlist
 
-from elastalert.util import (add_raw_postfix, dt_to_ts, EAException, elastalert_logger, elasticsearch_client,
+from elastalert.util import (add_keyword_postfix, dt_to_ts, EAException, elastalert_logger, elasticsearch_client,
                              format_index, hashable, lookup_es_key, new_get_event_ts, pretty_ts, total_seconds,
                              ts_now, ts_to_dt, expand_string_into_dict, format_string)
 
@@ -714,7 +714,7 @@ class NewTermsRule(RuleType):
                 # Iterate on each part of the composite key and add a sub aggs clause to the elastic search query
                 for i, sub_field in enumerate(field):
                     if self.rules.get('use_keyword_postfix', True):
-                        level['values']['terms']['field'] = add_raw_postfix(sub_field, True)
+                        level['values']['terms']['field'] = add_keyword_postfix(sub_field)
                     else:
                         level['values']['terms']['field'] = sub_field
                     if i < len(field) - 1:
@@ -725,7 +725,7 @@ class NewTermsRule(RuleType):
                 self.seen_values.setdefault(field, [])
                 # For non-composite keys, only a single agg is needed
                 if self.rules.get('use_keyword_postfix', True):
-                    field_name['field'] = add_raw_postfix(field, True)
+                    field_name['field'] = add_keyword_postfix(field)
                 else:
                     field_name['field'] = field
 
