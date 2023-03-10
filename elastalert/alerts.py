@@ -22,9 +22,13 @@ class DateTimeEncoder(json.JSONEncoder):
 class BasicMatchString(object):
     """ Creates a string containing fields in match for the given rule. """
 
-    def __init__(self, rule, match):
-        self.rule = rule
+    def __init__(self, rule, match, alerter=""):
+        self.rule  = rule
         self.match = match
+        self.alert_text      = f'alert_text_{alerter}'      if (f'alert_text_{alerter}'in self.rule)      else f'alert_text'
+        self.alert_text_type = f'alert_text_type_{alerter}' if (f'alert_text_type_{alerter}'in self.rule) else f'alert_text_type'
+        self.alert_text_args = f'alert_text_args_{alerter}' if (f'alert_text_args_{alerter}'in self.rule) else f'alert_text_args'
+        self.alert_text_kw   = f'alert_text_kw_{alerter}'   if (f'alert_text_kw_{alerter}'in self.rule)   else f'alert_text_kw'
 
     def _ensure_new_line(self):
         while self.text[-2:] != '\n\n':
@@ -32,16 +36,16 @@ class BasicMatchString(object):
 
     def _add_custom_alert_text(self):
         missing = self.rule.get('alert_missing_value', '<MISSING VALUE>')
-        alert_text = str(self.rule.get('alert_text', ''))
-        if self.rule.get('alert_text_type') == 'alert_text_jinja':
+        alert_text = str(self.rule.get(self.alert_text, ''))
+        if self.rule.get(self.alert_text_type) == 'alert_text_jinja':
             #  Top fields are accessible via `{{field_name}}` or `{{jinja_root_name['field_name']}}`
             #  `jinja_root_name` dict is useful when accessing *fields with dots in their keys*,
             #  as Jinja treat dot as a nested field.
             template_values = self.rule | self.match
             alert_text = self.rule.get("jinja_template").render(
                 template_values | {self.rule['jinja_root_name']: template_values})
-        elif 'alert_text_args' in self.rule:
-            alert_text_args = self.rule.get('alert_text_args')
+        elif self.alert_text_args in self.rule:
+            alert_text_args = self.rule.get(self.alert_text_args)
             alert_text_values = [lookup_es_key(self.match, arg) for arg in alert_text_args]
 
             # Support referencing other top-level rule properties
@@ -55,9 +59,9 @@ class BasicMatchString(object):
 
             alert_text_values = [missing if val is None else val for val in alert_text_values]
             alert_text = alert_text.format(*alert_text_values)
-        elif 'alert_text_kw' in self.rule:
+        elif self.alert_text_kw in self.rule:
             kw = {}
-            for name, kw_name in list(self.rule.get('alert_text_kw').items()):
+            for name, kw_name in list(self.rule.get(self.alert_text_kw).items()):
                 val = lookup_es_key(self.match, name)
 
                 # Support referencing other top-level rule properties
@@ -136,12 +140,17 @@ class Alerter(object):
     """
     required_options = frozenset([])
 
-    def __init__(self, rule):
+    def __init__(self, rule, alerter=""):
         self.rule = rule
         # pipeline object is created by ElastAlerter.send_alert()
         # and attached to each alerters used by a rule before calling alert()
         self.pipeline = None
         self.resolve_rule_references(self.rule)
+        self.alerter = alerter
+        self.alert_subject         = f'alert_subject_{alerter}'         if (f'alert_subject_{alerter}'in self.rule)         else f'alert_subject'
+        self.alert_subject_args    = f'alert_subject_args_{alerter}'    if (f'alert_subject_args_{alerter}'in self.rule)    else f'alert_subject_args'
+        self.alert_subject_max_len = f'alert_subject_max_len_{alerter}' if (f'alert_subject_max_len_{alerter}'in self.rule) else f'alert_subject_max_len'
+        self.alert_text_type       = f'alert_text_type_{alerter}'       if (f'alert_text_type_{alerter}'in self.rule)       else f'alert_text_type'
 
     def resolve_rule_references(self, root):
         # Support referencing other top-level rule properties to avoid redundant copy/paste
@@ -193,11 +202,11 @@ class Alerter(object):
         return self.create_default_title(matches)
 
     def create_custom_title(self, matches):
-        alert_subject = str(self.rule['alert_subject'])
-        alert_subject_max_len = int(self.rule.get('alert_subject_max_len', 2048))
+        alert_subject = str(self.rule[self.alert_subject])
+        alert_subject_max_len = int(self.rule.get(self.alert_subject_max_len, 2048))
 
-        if 'alert_subject_args' in self.rule:
-            alert_subject_args = self.rule['alert_subject_args']
+        if self.alert_subject_args in self.rule:
+            alert_subject_args = self.rule[self.alert_subject_args]
             alert_subject_values = [lookup_es_key(matches[0], arg) for arg in alert_subject_args]
 
             # Support referencing other top-level rule properties
@@ -212,8 +221,8 @@ class Alerter(object):
             missing = self.rule.get('alert_missing_value', '<MISSING VALUE>')
             alert_subject_values = [missing if val is None else val for val in alert_subject_values]
             alert_subject = alert_subject.format(*alert_subject_values)
-        elif self.rule.get('alert_text_type') == "alert_text_jinja":
-            title_template = Template(str(self.rule.get('alert_subject', '')))
+        elif self.rule.get(self.alert_text_type) == "alert_text_jinja":
+            title_template = Template(str(self.rule.get(self.alert_subject, '')))
             template_values = self.rule | matches[0]
             alert_subject = title_template.render(template_values | {self.rule['jinja_root_name']: template_values})
         if len(alert_subject) > alert_subject_max_len:
@@ -223,9 +232,9 @@ class Alerter(object):
 
     def create_alert_body(self, matches):
         body = self.get_aggregation_summary_text(matches)
-        if self.rule.get('alert_text_type') != 'aggregation_summary_only':
+        if self.rule.get(self.alert_text_type) != 'aggregation_summary_only':
             for match in matches:
-                body += str(BasicMatchString(self.rule, match))
+                body += str(BasicMatchString(self.rule, match, self.alerter))
                 # Separate text of aggregated alerts with dashes
                 if len(matches) > 1:
                     body += '\n----------------------------------------\n'

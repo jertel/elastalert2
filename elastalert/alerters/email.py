@@ -18,7 +18,7 @@ class EmailAlerter(Alerter):
     required_options = frozenset(['email'])
 
     def __init__(self, *args):
-        super(EmailAlerter, self).__init__(*args)
+        super(EmailAlerter, self).__init__(*args, alerter="email")
 
         self.assets_dir = self.rule.get('assets_dir', '/tmp')
         self.images_dictionary = dict(zip(self.rule.get('email_image_keys', []),  self.rule.get('email_image_values', [])))

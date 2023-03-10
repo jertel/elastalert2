@@ -13,7 +13,7 @@ class SlackAlerter(Alerter):
     required_options = frozenset(['slack_webhook_url'])
 
     def __init__(self, rule):
-        super(SlackAlerter, self).__init__(rule)
+        super(SlackAlerter, self).__init__(rule, alerter="slack")
         self.slack_webhook_url = self.rule.get('slack_webhook_url', None)
         if isinstance(self.slack_webhook_url, str):
             self.slack_webhook_url = [self.slack_webhook_url]
