@@ -1654,6 +1654,38 @@ come from an individual event, usually the one which triggers the alert.
 
 When using ``alert_text_args``, you can access nested fields and index into arrays. For example, if your match was ``{"data": {"ips": ["127.0.0.1", "12.34.56.78"]}}``, then by using ``"data.ips[1]"`` in ``alert_text_args``, it would replace value with ``"12.34.56.78"``. This can go arbitrarily deep into fields and will still work on keys that contain dots themselves.
 
+Multiple Alert Subject and Alert Content
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+If you need to have different alert topics and content for each alert you can suffix the alert name to the following keys:
+	- ``alert_subject``
+	- ``alert_subject_args``
+	- ``alert_subject_max_len``
+	- ``alert_text_type``
+	- ``alert_text``
+	- ``alert_text_args``
+	- ``alert_text_kw``
+	
+For example for an email and slack alert:
+
+.. code-block:: yaml
+	alert_subject_email: "Email Alert"
+	alert_text_email: "email"
+	
+	alert_subject_slack: "Slack Alert"
+	alert_text_slack: "slack"
+
+This setting in your rule file will cause different alert messages to be sent for both slack and email platforms.
+
+.. _commonconfig:
+
+.. note:: If you do not define any of these specific keys, the generic ones (without suffix) will be used.
+
+
+This feature is available for the following alerts:
+	- email
+	- slack 
+
 Alerter
 ~~~~~~~
 
