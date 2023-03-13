@@ -476,3 +476,27 @@ alert:
       telegram_room_id: "BBB"
 telegram_bot_token: "XXX"
 ```
+
+Is it possible to set a timeout for connecting to and reading from es_host ?
+==========
+
+default is `20`. 
+
+example
+
+
+```
+es_conn_timeout: 60
+```
+
+Is it possible to stop disabling rules for ElastAlert 2?
+==========
+
+default is `true`. 
+
+example
+
+
+```
+disable_rules_on_error: false
+```
