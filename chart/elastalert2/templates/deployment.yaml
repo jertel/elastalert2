@@ -47,8 +47,8 @@ spec:
 {{- if .Values.extraContainers }}
 {{ .Values.extraContainers | toYaml | indent 6}}
 {{- end }}
-      initContainers:
 {{- if .Values.extraInitContainers }}
+      initContainers:
 {{ .Values.extraInitContainers | toYaml | indent 6}}
 {{- end }}
 
