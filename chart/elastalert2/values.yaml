@@ -92,6 +92,9 @@ optEnv: []
 ## Specify optional additional containers to run alongside the Elastalert2 container.
 extraContainers: []
 
+## Specify optional additional initContainers to run prior to the Elastalert2 container.
+extraInitContainers: []
+
 extraConfigOptions: {}
   # # Options to propagate to all rules, e.g. a common slack_webhook_url or kibana_url
   # # Please note at the time of implementing this value, it will not work for required_locals
