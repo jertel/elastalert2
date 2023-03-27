@@ -43,15 +43,14 @@ spec:
       securityContext:
 {{ toYaml .Values.podSecurityContext | indent 8 }}
 {{- end }}
-      containers:
-{{- if .Values.extraContainers }}
-{{ .Values.extraContainers | toYaml | indent 6}}
-{{- end }}
 {{- if .Values.extraInitContainers }}
       initContainers:
 {{ .Values.extraInitContainers | toYaml | indent 6}}
 {{- end }}
-
+      containers:
+{{- if .Values.extraContainers }}
+{{ .Values.extraContainers | toYaml | indent 6}}
+{{- end }}
       - name: elastalert
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
         imagePullPolicy: {{ .Values.image.pullPolicy }}
