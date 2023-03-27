@@ -6,6 +6,14 @@
 ## New features
 - TBD
 
+# 2.10.1
+
+## Breaking changes
+- None
+
+## New features
+- None
+
 ## Other changes
 - Corrected alert bug when both top_count_keys and query_key are specified in a rule - [#1128](https://github.com/jertel/elastalert2/pull/1128) - @jertel
 - Fixed docker-compose detection logic from recent PR - [#1128](https://github.com/jertel/elastalert2/pull/1128) - @jertel
