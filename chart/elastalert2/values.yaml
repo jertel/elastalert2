@@ -361,7 +361,7 @@ metrics:
     ##   release: prometheus-operator
     additionalLabels: {}
 
-    ## @param metrics.prometheusRule.rules Prometheus Rules for Elastalert.
+    ## @param metrics.prometheusRule.rules Prometheus Rules for ElastAlert 2.
     ## These are just examples rules, please adapt them to your needs.
     ##    rules: |-
     ##        groups:
