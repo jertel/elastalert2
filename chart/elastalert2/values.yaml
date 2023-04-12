@@ -361,7 +361,7 @@ metrics:
     ##   release: prometheus-operator
     additionalLabels: {}
 
-    ## @param metrics.prometheusRule.rules Prometheus Rules for Thanos components
+    ## @param metrics.prometheusRule.rules Prometheus Rules for Elastalert.
     ## These are just examples rules, please adapt them to your needs.
     ##    rules: |-
     ##        groups:
