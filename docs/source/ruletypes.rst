@@ -1674,6 +1674,21 @@ come from an individual event, usually the one which triggers the alert.
 
 When using ``alert_text_args``, you can access nested fields and index into arrays. For example, if your match was ``{"data": {"ips": ["127.0.0.1", "12.34.56.78"]}}``, then by using ``"data.ips[1]"`` in ``alert_text_args``, it would replace value with ``"12.34.56.78"``. This can go arbitrarily deep into fields and will still work on keys that contain dots themselves.
 
+Further, accessing subfields within a nested array structure is accomplished by specifying the subfield name directly after the array index brackets. 
+
+For example, given the below data::
+
+    {"data": { "items": [{ "name": "Mickey Mouse", "price": 24.95 }, { "name": "Winnie the Pooh", "price": 14.95 }], "tax": 2.39, "total": 42.29 } }
+
+You would then access the fields as follows::
+
+    data.items[0]name
+    data.items[0]price
+    data.items[1]name
+    data.items[1]price
+    data.tax
+    data.total
+
 Alerter
 ~~~~~~~
 
