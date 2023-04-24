@@ -9,6 +9,7 @@
 ## Other changes
 - [Kubernetes] Fix mistake introduced in #1141 related to initContainers - [#1145](https://github.com/jertel/elastalert2/pull/1145) - @aturpin1789
 - Add support for Kibana 8.7 for Kibana Discover - [#1153](https://github.com/jertel/elastalert2/pull/1153) - @nsano-rururu
+- [Docs] Add documentation for accessing subfields of array items - [#1166](https://github.com/jertel/elastalert2/pull/1166) - @jertel
 
 # 2.10.1
 
