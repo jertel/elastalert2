@@ -7,7 +7,7 @@
 - TBD
 
 ## Other changes
-- TBD
+- Add support for Kibana 8.8 for Kibana Discover - [#1184](https://github.com/jertel/elastalert2/pull/1184) - @nsano-rururu
 
 # 2.11.0
 
