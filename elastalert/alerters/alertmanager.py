@@ -1,6 +1,7 @@
 import json
 import warnings
 
+from datetime import datetime, timedelta, timezone
 import requests
 from requests import RequestException
 from requests.auth import HTTPBasicAuth
@@ -21,6 +22,7 @@ class AlertmanagerAlerter(Alerter):
         self.alertname = self.rule.get('alertmanager_alertname', self.rule.get('name'))
         self.labels = self.rule.get('alertmanager_labels', dict())
         self.annotations = self.rule.get('alertmanager_annotations', dict())
+        self.resolve_timeout = self.rule.get('alertmanager_resolve_timeout', 5)
         self.fields = self.rule.get('alertmanager_fields', dict())
         self.title_labelname = self.rule.get('alertmanager_alert_subject_labelname', 'summary')
         self.body_labelname = self.rule.get('alertmanager_alert_text_labelname', 'description')
@@ -53,9 +55,12 @@ class AlertmanagerAlerter(Alerter):
         self.annotations.update({
             self.title_labelname: self.create_title(matches),
             self.body_labelname: self.create_alert_body(matches)})
+        end_time = datetime.now(timezone.utc) + timedelta(minutes=self.resolve_timeout)
+
         payload = {
             'annotations': self.annotations,
-            'labels': self.labels
+            'labels': self.labels,
+            'endsAt': end_time.isoformat()
         }
 
         for host in self.hosts:
