@@ -151,3 +151,4 @@ EQL is only partially supported due to the following limitations:
 - Cannot be used with percentage match rule types.
 - Cannot be used with ``use_count_query`` property.
 - Does not support scrolling, so large result sets may have unexpected results. Be sure to filter your queries thoroughly to avoid returning excessive numbers of events.
+- Not supported with OpenSearch
