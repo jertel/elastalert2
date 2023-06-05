@@ -4,7 +4,7 @@
 - TBD
 
 ## New features
-- TBD
+- Add initial support for EQL - [#1189](https://github.com/jertel/elastalert2/pull/1189) - @jertel
 
 ## Other changes
 - TBD
