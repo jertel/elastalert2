@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import copy
-import time
+import elastalert.eql as eql
 
 from elasticsearch import Elasticsearch
 from elasticsearch import RequestsHttpConnection
@@ -74,3 +74,84 @@ class ElasticSearchClient(Elasticsearch):
         elif doc_type == 'elastalert_error':
             return writeback_index + '_error'
         return writeback_index
+
+
+    @query_params(
+        "_source",
+        "_source_excludes",
+        "_source_includes",
+        "allow_no_indices",
+        "allow_partial_search_results",
+        "analyze_wildcard",
+        "analyzer",
+        "batched_reduce_size",
+        "ccs_minimize_roundtrips",
+        "default_operator",
+        "df",
+        "docvalue_fields",
+        "expand_wildcards",
+        "explain",
+        "from_",
+        "ignore_throttled",
+        "ignore_unavailable",
+        "lenient",
+        "max_concurrent_shard_requests",
+        "pre_filter_shard_size",
+        "preference",
+        "q",
+        "request_cache",
+        "rest_total_hits_as_int",
+        "routing",
+        "scroll",
+        "search_type",
+        "seq_no_primary_term",
+        "size",
+        "sort",
+        "stats",
+        "stored_fields",
+        "suggest_field",
+        "suggest_mode",
+        "suggest_size",
+        "suggest_text",
+        "terminate_after",
+        "timeout",
+        "track_scores",
+        "track_total_hits",
+        "typed_keys",
+        "version",
+    )
+    def search(self, body=None, index=None, doc_type=None, params=None, headers=None):
+        # This implementation of search is nearly identical to the base class with the following exceptions:
+        # 1. If the request body contains an EQL query, the body will be restructured to support the EQL API.
+        # 2. The path will be set to the EQL API endpoint, if #1 is true.
+        # 3. The scroll and _source_includes params will be dropped if #1 is true, since the EQL API doesn't support them.
+        # 4. The size param will be moved to a body parameter instead of a top-level param if #1 is true.
+        # 5. The results will be converted from EQL API format into the standard search format.
+
+        # from is a reserved word so it cannot be used, use from_ instead
+        if "from_" in params:
+            params["from"] = params.pop("from_")
+
+        path = _make_path(index, doc_type, "_search")
+        eql_body = eql.format_request(body)
+        if eql_body is not None:
+            path = path.replace('/_search', '/_eql/search')
+            body = eql_body
+            if 'size' in params:
+                body['size'] = int(params.pop('size'))
+            if 'scroll' in params:
+                params.pop('scroll')
+            if '_source_includes' in params:
+                params.pop('_source_includes')
+
+        results = self.transport.perform_request(
+            "POST",
+            path,
+            params=params,
+            headers=headers,
+            body=body,
+        )
+
+        eql.format_results(results);
+
+        return results

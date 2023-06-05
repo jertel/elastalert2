@@ -125,3 +125,29 @@ Below is a more complex example for Elasticsearch 7.x, provided by a `community 
                        uid: charlie
                    - match:
                        menu_item: "burrito pasta salad pizza"
+
+EQL (Event Query Language)
+**************************
+
+EQL is partially supported as of version 2.12.0. To use EQL, include a filter item as follows::
+
+    filter:
+    - eql: any where machine.os == "win 8"
+
+Note that only one ``eql`` filter can be defined in a filter.
+
+It is also possible to use standard query filters in combination with EQL filters::
+
+    filter:
+    - eql: any where machine.os == "win 8"
+    - query:
+        query_string:
+            query: "test.field: 123"
+
+EQL is only partially supported due to the following limitations:
+
+- Cannot be used with aggregation rule types.
+- Cannot be used with blacklist/whitelist rule types.
+- Cannot be used with percentage match rule types.
+- Cannot be used with ``use_count_query`` property.
+- Does not support scrolling, so large result sets may have unexpected results. Be sure to filter your queries thoroughly to avoid returning excessive numbers of events.
