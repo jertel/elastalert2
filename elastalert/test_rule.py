@@ -211,25 +211,28 @@ class MockElastAlerter(object):
 
         terms = res['hits']['hits'][0]['_source']
 
-        # Get a count of all docs
-        count_query = ElastAlerter.get_query(
-            conf['filter'],
-            starttime=self.starttime,
-            endtime=self.endtime,
-            timestamp_field=ts,
-            to_ts_func=conf['dt_to_ts'],
-            sort=False
-        )
-        try:
-            res = es_client.count(index=index, body=count_query, ignore_unavailable=True)
-        except Exception as e:
-            print("Error querying Elasticsearch:", file=sys.stderr)
-            print(repr(e)[:2048], file=sys.stderr)
-            if self.args.stop_error:
-                exit(2)
-            return None
+        is_eql = res.get('eql') == True
 
-        num_hits = res['count']
+        if not is_eql:
+            # Get a count of all docs
+            count_query = ElastAlerter.get_query(
+                conf['filter'],
+                starttime=self.starttime,
+                endtime=self.endtime,
+                timestamp_field=ts,
+                to_ts_func=conf['dt_to_ts'],
+                sort=False
+            )
+            try:
+                res = es_client.count(index=index, body=count_query, ignore_unavailable=True)
+            except Exception as e:
+                print("Error querying Elasticsearch:", file=sys.stderr)
+                print(repr(e)[:2048], file=sys.stderr)
+                if self.args.stop_error:
+                    exit(2)
+                return None
+
+            num_hits = res['count']
 
         if self.args.formatted_output:
             self.formatted_output['hits'] = num_hits
@@ -237,9 +240,14 @@ class MockElastAlerter(object):
             self.formatted_output['terms'] = list(terms.keys())
             self.formatted_output['result'] = terms
         else:
+            if is_eql:
+                count = 'N/A'
+            else:
+                count = num_hits
+
             print(
                 "Got %s hits from the last %s day%s"
-                % (num_hits, self.args.days, "s" if self.args.days > 1 else "")
+                % (count, self.args.days, "s" if self.args.days > 1 else "")
             )
             print("\nAvailable terms in first hit:")
             print_terms(terms, '')
@@ -276,6 +284,9 @@ class MockElastAlerter(object):
                     exit(2)
                 return None
             num_hits = len(res['hits']['hits'])
+
+            if is_eql:
+                self.formatted_output['hits'] = num_hits
 
             if self.args.save:
                 print("Downloaded %s documents to save" % (num_hits))
