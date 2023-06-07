@@ -104,6 +104,8 @@ Rule Configuration Cheat Sheet
 +--------------------------------------------------------------+           |
 | ``include`` (list of strs, default ["*"])                    |           |
 +--------------------------------------------------------------+           |
+| ``fields`` (list of strs, no default)                        |           |
++--------------------------------------------------------------+           |
 | ``filter`` (ES filter DSL, no default)                       |           |
 +--------------------------------------------------------------+           |
 | ``max_query_size`` (int, default global max_query_size)      |           |
@@ -583,6 +585,13 @@ include
 ``include``: A list of terms that should be included in query results and passed to rule types and alerts. When set, only those
 fields, along with '@timestamp', ``query_key``, ``compare_key``, and ``top_count_keys``  are included, if present.
 (Optional, list of strings, default all fields)
+
+fields
+^^^^^^
+
+``fields``: A list of fields that should be included in query results and passed to rule types and alerts. If ``_source_enabled`` is False,
+only these fields and those from ``include`` are included.  When ``_source_enabled`` is True, these are in addition to source.  This is used
+for runtime fields, script fields, etc.  This only works with Elasticsearch version 7.11 and newer.  (Optional, list of strings, no default)
 
 top_count_keys
 ^^^^^^^^^^^^^^
