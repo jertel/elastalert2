@@ -997,6 +997,8 @@ guaranteed to have the exact same results as with Elasticsearch. For example, an
    and flatline require a minimum elapsed time before they begin alerting, based on their timeframe. In addition, use_count_query and
    use_terms_query rely on run_every to determine their resolution. This script uses a fixed 5 minute window, which is the same as the default.
 
+   Also, EQL filters do not support counts, so the output relating to counts may show N/A (Not Applicable).
+
 
 .. _ruletypes:
 
