@@ -10,4 +10,4 @@ pytest-xdist==3.3.1
 setuptools
 sphinx==6.2.1
 sphinx_rtd_theme==1.2.2
-tox==3.28.0
+tox==4.6.0
