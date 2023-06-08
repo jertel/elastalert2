@@ -255,6 +255,7 @@ properties:
     items: *filter
 
   include: {type: array, items: {type: string}}
+  fields: {type: array, item: {type: string}}
   top_count_keys: {type: array, items: {type: string}}
   top_count_number: {type: integer}
   raw_count_keys: {type: boolean}

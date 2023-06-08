@@ -347,6 +347,7 @@ class RulesLoader(object):
         rule.setdefault('description', "")
         rule.setdefault('jinja_root_name', "_data")
         rule.setdefault('query_timezone', "")
+        rule.setdefault('fields', None)
 
         # Set timestamp_type conversion function, used when generating queries and processing hits
         rule['timestamp_type'] = rule['timestamp_type'].strip().lower()
@@ -392,6 +393,9 @@ class RulesLoader(object):
 
         if 'include' in rule and type(rule['include']) != list:
             raise EAException('include option must be a list')
+
+        if 'fields' in rule and rule['fields'] is not None and type(rule['fields']) != list:
+            raise EAException('fields option must be a list')
 
         raw_query_key = rule.get('query_key')
         if isinstance(raw_query_key, list):
