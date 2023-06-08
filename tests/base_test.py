@@ -101,7 +101,7 @@ def test_query(ea):
         size=ea.rules[0]['max_query_size'], scroll=ea.conf['scroll_keepalive'])
 
 
-def test_query_with_fields(ea):
+def test_query_with_stored_fields(ea):
     ea.rules[0]['_source_enabled'] = False
     ea.thread_data.current_es.search.return_value = {'hits': {'total': {'value': 0}, 'hits': []}}
     ea.run_query(ea.rules[0], START, END)
@@ -109,6 +109,18 @@ def test_query_with_fields(ea):
         'query': {'bool': {
             'filter': {'bool': {'must': [{'range': {'@timestamp': {'lte': END_TIMESTAMP, 'gt': START_TIMESTAMP}}}]}}}},
         'sort': [{'@timestamp': {'order': 'asc'}}], 'stored_fields': ['@timestamp']}, index='idx', ignore_unavailable=True,
+        size=ea.rules[0]['max_query_size'], scroll=ea.conf['scroll_keepalive'])
+
+
+def test_query_with_fields(ea):
+    ea.rules[0]['fields'] = ['test_runtime_field']
+    ea.thread_data.current_es.search.return_value = {'hits': {'total': {'value': 0}, 'hits': []}}
+    ea.run_query(ea.rules[0], START, END)
+    ea.thread_data.current_es.search.assert_called_with(body={
+        'query': {'bool': {
+            'filter': {'bool': {'must': [{'range': {'@timestamp': {'lte': END_TIMESTAMP, 'gt': START_TIMESTAMP}}}]}}}},
+        'sort': [{'@timestamp': {'order': 'asc'}}], 'fields': ['test_runtime_field']},
+        index='idx', ignore_unavailable=True, _source_includes=['@timestamp'],
         size=ea.rules[0]['max_query_size'], scroll=ea.conf['scroll_keepalive'])
 
 
