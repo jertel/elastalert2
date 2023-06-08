@@ -5,8 +5,8 @@
 
 ## New features
 - Add initial support for EQL - [#1189](https://github.com/jertel/elastalert2/pull/1189) - @jertel
-- Add EQL support to elastalert-test-rule utility - [#1195](https://github.com/jertel/elastalert2/pull/1195) - @jertel
 - Add `fields` parameter to rules to be able to pull in runtimes fields, and more. [#1193](https://github.com/jertel/elastalert2/pull/1193) - @Goggin
+- Add EQL support to elastalert-test-rule utility - [#1195](https://github.com/jertel/elastalert2/pull/1195) - @jertel
 
 ## Other changes
 - Add support for Kibana 8.8 for Kibana Discover - [#1184](https://github.com/jertel/elastalert2/pull/1184) - @nsano-rururu
