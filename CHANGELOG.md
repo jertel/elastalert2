@@ -5,9 +5,11 @@
 
 ## New features
 - Add `fields` parameter to rules to be able to pull in runtimes fields, and more. [#1193](https://github.com/jertel/elastalert2/pull/1193) - @Goggin
+- Add initial support for EQL - [#1189](https://github.com/jertel/elastalert2/pull/1189) - @jertel
 
 ## Other changes
 - Add support for Kibana 8.8 for Kibana Discover - [#1184](https://github.com/jertel/elastalert2/pull/1184) - @nsano-rururu
+- Upgrade pylint 2.17.0 to 2.17.4, pytest 7.2.2 to 7.3.1, pytest-xdist 3.2.0 to 3.3.1, sphinx 6.1.3 to 6.2.1, sphinx_rtd_theme == 1.2.2 - [#1194](https://github.com/jertel/elastalert2/pull/1194) - @nsano-rururu
 
 # 2.11.0
 
