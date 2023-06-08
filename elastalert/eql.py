@@ -47,5 +47,6 @@ def format_results(results):
     # relabel events as hits, for consistency
     events = hits.pop('events')
     hits['hits'] = events
+    results['eql'] = True
 
     return results
