@@ -14,20 +14,7 @@ def test_format_request_without_eql():
 
 
 def test_format_request_with_eql():
-    body = {
-        'query': {
-            'bool': {
-                'filter': {
-                    'bool': {
-                        'must': [
-                            {'eql': 'test query'},
-                            {'other': 'other filter'},
-                        ]
-                    }
-                }
-            }
-        }
-    }
+    body = eql_body()
     expected_body = {'filter': {'bool': {'must': [{'other': 'other filter'}]}}, 'query': 'test query'}
     assert eql.format_request(body) == expected_body
 
@@ -41,7 +28,6 @@ def eql_body():
                         'must': [
                             {'eql': 'test query'},
                             {'other': 'other filter'},
-                            {'eql': 'newer query'},
                         ]
                     }
                 }
@@ -53,6 +39,7 @@ def eql_body():
 
 def test_format_request_with_excessive_eql():
     body = eql_body()
+    body['query']['bool']['filter']['bool']['must'].append({'eql': 'newer query'})
     expected_body = {'filter': {'bool': {'must': [{'other': 'other filter'}]}}, 'query': 'newer query'}
     assert eql.format_request(body) == expected_body
 
@@ -60,13 +47,13 @@ def test_format_request_with_excessive_eql():
 def test_format_results_without_events():
     expected_results = {'hits': {'hits': []}}
     results = expected_results
-    eql.format_results(results) == expected_results
+    assert eql.format_results(results) == expected_results
 
 
 def test_format_results_with_events():
-    expected_results = {'hits': {'events': [{'foo': 'bar'}]}}
-    results = {'hits': {'hits': [{'foo': 'bar'}]}}
-    eql.format_results(results) == expected_results
+    expected_results = {'hits': {'hits': [{'foo': 'bar'}]}, 'eql': True}
+    results = {'hits': {'events': [{'foo': 'bar'}]}}
+    assert eql.format_results(results) == expected_results
 
 
 def init_client():
@@ -113,7 +100,7 @@ def test_search_with_eql():
 
     expected_params = {'from': True}
     expected_headers = {}
-    expected_body = {'filter': {'bool': {'must': [{'other': 'other filter'}]}}, 'query': 'newer query', 'size': 12}
+    expected_body = {'filter': {'bool': {'must': [{'other': 'other filter'}]}}, 'query': 'test query', 'size': 12}
     results = {}
     es_client.transport = mock.Mock()
     es_client.transport.perform_request.return_value = results
