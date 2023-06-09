@@ -987,8 +987,21 @@ and missing or misconfigured fields.
 
 ``--count-only``: Only find the number of matching documents and list available fields. ElastAlert 2 will not be run and documents will not be downloaded.
 
-``--days N``: Instead of the default 1 day, query N days. For selecting more specific time ranges, you must run ElastAlert 2 itself and use ``--start``
+``--days N``: Instead of the default 1 day, query N days. For selecting more specific time ranges, use ``--start``
 and ``--end``.
+
+``--end <timestamp>`` will force ElastAlert 2 to stop querying after the given
+time, instead of the default, querying to the present time. This really only
+makes sense when running standalone. The timestamp is formatted as
+``YYYY-MM-DDTHH:MM:SS`` (UTC) or with timezone ``YYYY-MM-DDTHH:MM:SS-XX:00``
+(UTC-XX).
+
+``--start <timestamp>`` will force ElastAlert 2 to begin querying from the given
+time, instead of the default, querying from the present. The timestamp should be
+ISO8601, e.g.  ``YYYY-MM-DDTHH:MM:SS`` (UTC) or with timezone
+``YYYY-MM-DDTHH:MM:SS-08:00`` (PST). Note that if querying over a large date
+range, no alerts will be sent until that rule has finished querying over the
+entire time period. To force querying from the current time, use "NOW".
 
 ``--save-json FILE``: Save all documents downloaded to a file as JSON. This is useful if you wish to modify data while testing or do offline
 testing in conjunction with ``--data FILE``. A maximum of 10,000 documents will be downloaded.
