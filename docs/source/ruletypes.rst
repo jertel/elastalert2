@@ -990,18 +990,13 @@ and missing or misconfigured fields.
 ``--days N``: Instead of the default 1 day, query N days. For selecting more specific time ranges, use ``--start``
 and ``--end``.
 
-``--end <timestamp>`` will force ElastAlert 2 to stop querying after the given
-time, instead of the default, querying to the present time. This really only
-makes sense when running standalone. The timestamp is formatted as
+``--start <timestamp>`` The starting date/time of the search filter's time range. The timestamp is formatted as
 ``YYYY-MM-DDTHH:MM:SS`` (UTC) or with timezone ``YYYY-MM-DDTHH:MM:SS-XX:00``
-(UTC-XX).
+(UTC-XX). If ``timeframe`` is specified, defaults to the ending time - timeframe. Otherwise defaults to ending time - 1 day.
 
-``--start <timestamp>`` will force ElastAlert 2 to begin querying from the given
-time, instead of the default, querying from the present. The timestamp should be
-ISO8601, e.g.  ``YYYY-MM-DDTHH:MM:SS`` (UTC) or with timezone
-``YYYY-MM-DDTHH:MM:SS-08:00`` (PST). Note that if querying over a large date
-range, no alerts will be sent until that rule has finished querying over the
-entire time period. To force querying from the current time, use "NOW".
+``--end <timestamp>`` The ending date/time of the search filter's time range. The timestamp is formatted as
+``YYYY-MM-DDTHH:MM:SS`` (UTC) or with timezone ``YYYY-MM-DDTHH:MM:SS-XX:00``
+(UTC-XX). Defaults to the current time.
 
 ``--save-json FILE``: Save all documents downloaded to a file as JSON. This is useful if you wish to modify data while testing or do offline
 testing in conjunction with ``--data FILE``. A maximum of 10,000 documents will be downloaded.
