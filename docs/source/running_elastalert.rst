@@ -292,7 +292,7 @@ connections
 ``writeback_index`` is the name of the index in which ElastAlert 2 will store
 data. We will create this index later.
 
-``alert_time_limit`` is the retry window for failed alerts.
+``alert_time_limit`` is the retry window for failed alerts. Must be greater than zero.
 
 Save the file as ``config.yaml``
 
