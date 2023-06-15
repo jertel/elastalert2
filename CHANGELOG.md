@@ -7,7 +7,7 @@
 - TBD
 
 ## Other changes
-- [Docs] Clarify docs to state that alert_time_limit should not be 0 - [#xx](https://github.com/jertel/elastalert2/pull/xx) - @jertel
+- [Docs] Clarify docs to state that alert_time_limit should not be 0 - [#1208](https://github.com/jertel/elastalert2/pull/1208) - @jertel
 
 # 2.12.0
 
