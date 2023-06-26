@@ -26,7 +26,7 @@ class TelegramAlerter(Alerter):
 
     def alert(self, matches):
         if self.telegram_parse_mode != 'html':
-            body = '⚠ *%s* ⚠ ```\n' % (self.create_title(matches))
+            body = '⚠ *%s* ⚠ \n' % (self.create_title(matches))
         else:
             body = '⚠ %s ⚠ \n' % (self.create_title(matches))
 
@@ -39,7 +39,7 @@ class TelegramAlerter(Alerter):
             body = body[0:4000] + "\n⚠ *message was cropped according to telegram limits!* ⚠"
 
         if self.telegram_parse_mode != 'html':
-            body += ' ```'
+            body += ' '
 
         headers = {'content-type': 'application/json'}
         # set https proxy, if it was provided
