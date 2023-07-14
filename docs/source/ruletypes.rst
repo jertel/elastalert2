@@ -1828,7 +1828,9 @@ Optional:
 ``alertmanager_ignore_ssl_errors``: By default ElastAlert 2 will verify SSL certificate. Set this option to ``True`` if you want to ignore SSL errors.
 
 ``alertmanager_timeout``: You can specify a timeout value, in seconds, for making communicating with Alertmanager. The default is 10. If a timeout occurs, the alert will be retried next time ElastAlert 2 cycles.
-
+``
+``alertmanager_resolve_time``: Optionally provide an automatic resolution timeframe. If no further alerts arrive within this time period alertmanager will automatically mark the alert as resolved. If not defined it will use Alertmanager's default behavior.
+``
 ``alertmanager_basic_auth_login``: Basic authentication username.
 
 ``alertmanager_basic_auth_password``: Basic authentication password.
@@ -1842,6 +1844,8 @@ Example usage::
   alertmanager_alertname: "Title"
   alertmanager_annotations:
     severity: "error"
+  alertmanager_resolve_time:
+    minutes: 10
   alertmanager_labels:
     source: "elastalert"
   alertmanager_fields:

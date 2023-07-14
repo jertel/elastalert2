@@ -1,6 +1,7 @@
 import json
 import warnings
 
+from datetime import datetime, timedelta, timezone
 import requests
 from requests import RequestException
 from requests.auth import HTTPBasicAuth
@@ -30,7 +31,10 @@ class AlertmanagerAlerter(Alerter):
         self.timeout = self.rule.get('alertmanager_timeout', 10)
         self.alertmanager_basic_auth_login = self.rule.get('alertmanager_basic_auth_login', None)
         self.alertmanager_basic_auth_password = self.rule.get('alertmanager_basic_auth_password', None)
-
+        if 'alertmanager_resolve_time' in rule:
+            self.resolve_timeout = timedelta(**rule['alertmanager_resolve_time'])
+        else:
+            self.resolve_timeout = None
 
     @staticmethod
     def _json_or_string(obj):
@@ -53,10 +57,15 @@ class AlertmanagerAlerter(Alerter):
         self.annotations.update({
             self.title_labelname: self.create_title(matches),
             self.body_labelname: self.create_alert_body(matches)})
+
         payload = {
             'annotations': self.annotations,
             'labels': self.labels
         }
+
+        if self.resolve_timeout is not None:
+            end_time = self.now() + self.resolve_timeout
+            payload['endsAt'] = end_time.isoformat()
 
         for host in self.hosts:
             try:
@@ -87,3 +96,6 @@ class AlertmanagerAlerter(Alerter):
 
     def get_info(self):
         return {'type': 'alertmanager'}
+
+    def now(self):
+        return datetime.nowdatetime.now(timezone.utc)

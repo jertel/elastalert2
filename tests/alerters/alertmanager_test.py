@@ -1,3 +1,4 @@
+import datetime
 import json
 import logging
 import pytest
@@ -386,3 +387,66 @@ def test_alertmanager_basic_auth():
         auth=HTTPBasicAuth('user', 'password')
     )
     assert expected_data == json.loads(mock_post_request.call_args_list[0][1]['data'])
+
+
+def test_alertmanager_resolve_timeout(caplog):
+    caplog.set_level(logging.INFO)
+    rule = {
+        'name': 'Test Alertmanager Rule',
+        'type': 'any',
+        'alertmanager_hosts': ['http://alertmanager:9093'],
+        'alertmanager_alertname': 'Title',
+        'alertmanager_annotations': {'severity': 'error'},
+        'alertmanager_resolve_time': {'minutes': 10},
+        'alertmanager_labels': {'source': 'elastalert'},
+        'alertmanager_fields': {'msg': 'message', 'log': '@log_name'},
+        'alert_subject_args': ['message', '@log_name'],
+        'alert': []
+    }
+    rules_loader = FileRulesLoader({})
+    rules_loader.load_modules(rule)
+
+    alert = AlertmanagerAlerter(rule)
+    match = {
+        '@timestamp': '2021-01-01T00:00:00',
+        'somefield': 'foobarbaz',
+        'message': 'Quit 123',
+        '@log_name': 'mysqld.general'
+    }
+    with mock.patch('requests.post') as mock_post_request:
+        alert.now = mock.Mock(return_value=datetime.datetime(2023, 7, 14, tzinfo=datetime.timezone.utc))
+        alert.alert([match])
+
+    expected_data = [
+        {
+            'annotations':
+            {
+                'severity': 'error',
+                'summary': 'Test Alertmanager Rule',
+                'description': 'Test Alertmanager Rule\n\n' +
+                '@log_name: mysqld.general\n' +
+                '@timestamp: 2021-01-01T00:00:00\n' +
+                'message: Quit 123\nsomefield: foobarbaz\n'
+            },
+            'endsAt': '2023-07-14T00:10:00+00:00',
+            'labels': {
+                'source': 'elastalert',
+                'msg': 'Quit 123',
+                'log': 'mysqld.general',
+                'alertname': 'Title',
+                'elastalert_rule': 'Test Alertmanager Rule'
+            }
+        }
+    ]
+
+    mock_post_request.assert_called_once_with(
+        'http://alertmanager:9093/api/v1/alerts',
+        data=mock.ANY,
+        headers={'content-type': 'application/json'},
+        proxies=None,
+        verify=True,
+        timeout=10,
+        auth=None
+    )
+    assert expected_data == json.loads(mock_post_request.call_args_list[0][1]['data'])
+    assert ('elastalert', logging.INFO, "Alert sent to Alertmanager") == caplog.record_tuples[0]
