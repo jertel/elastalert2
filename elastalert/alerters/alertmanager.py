@@ -22,7 +22,6 @@ class AlertmanagerAlerter(Alerter):
         self.alertname = self.rule.get('alertmanager_alertname', self.rule.get('name'))
         self.labels = self.rule.get('alertmanager_labels', dict())
         self.annotations = self.rule.get('alertmanager_annotations', dict())
-        self.resolve_timeout = self.rule.get('alertmanager_resolve_timeout', 5)
         self.fields = self.rule.get('alertmanager_fields', dict())
         self.title_labelname = self.rule.get('alertmanager_alert_subject_labelname', 'summary')
         self.body_labelname = self.rule.get('alertmanager_alert_text_labelname', 'description')
@@ -32,7 +31,10 @@ class AlertmanagerAlerter(Alerter):
         self.timeout = self.rule.get('alertmanager_timeout', 10)
         self.alertmanager_basic_auth_login = self.rule.get('alertmanager_basic_auth_login', None)
         self.alertmanager_basic_auth_password = self.rule.get('alertmanager_basic_auth_password', None)
-
+        if 'alertmanager_resolve_time' in rule:
+            self.resolve_timeout = timedelta(**rule['alertmanager_resolve_time'])
+        else:
+            self.resolve_timeout = None
 
     @staticmethod
     def _json_or_string(obj):
@@ -55,13 +57,15 @@ class AlertmanagerAlerter(Alerter):
         self.annotations.update({
             self.title_labelname: self.create_title(matches),
             self.body_labelname: self.create_alert_body(matches)})
-        end_time = datetime.now(timezone.utc) + timedelta(minutes=self.resolve_timeout)
 
         payload = {
             'annotations': self.annotations,
-            'labels': self.labels,
-            'endsAt': end_time.isoformat()
+            'labels': self.labels
         }
+
+        if self.resolve_timeout is not None:
+            end_time = self.now() + self.resolve_timeout
+            payload['endsAt'] = end_time.isoformat()
 
         for host in self.hosts:
             try:
@@ -92,3 +96,6 @@ class AlertmanagerAlerter(Alerter):
 
     def get_info(self):
         return {'type': 'alertmanager'}
+
+    def now(self):
+        return datetime.nowdatetime.now(timezone.utc)

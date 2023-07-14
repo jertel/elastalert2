@@ -1810,7 +1810,7 @@ Optional:
 
 ``alertmanager_timeout``: You can specify a timeout value, in seconds, for making communicating with Alertmanager. The default is 10. If a timeout occurs, the alert will be retried next time ElastAlert 2 cycles.
 ``
-``alertmanager_resolve_timeout``: You can specify a timeout value, in minutes.The default is 5, and we recommend leaving this configuration greater than the ``buffer_time`` or the ``realert`` value because Alertmanager has a default ``resolve_timeout`` of 5 minutes (this means that after 5 minutes, if it doesn't receive any repeated alerts, it will consider the alert to have stopped firing).
+``alertmanager_resolve_time``: Optionally provide an automatic resolution timeframe. If no further alerts arrive within this time period alertmanager will automatically mark the alert as resolved. If not defined it will use Alertmanager's default behavior.
 ``
 ``alertmanager_basic_auth_login``: Basic authentication username.
 
@@ -1825,6 +1825,8 @@ Example usage::
   alertmanager_alertname: "Title"
   alertmanager_annotations:
     severity: "error"
+  alertmanager_resolve_time:
+    minutes: 10
   alertmanager_labels:
     source: "elastalert"
   alertmanager_fields:

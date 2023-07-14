@@ -328,9 +328,7 @@ properties:
   alertmanager_ca_certs: {type: [boolean, string]}
   alertmanager_ignore_ssl_errors: {type: boolean}
   alertmanager_timeout: {type: integer}
-  alertmanager_resolve_timeout:
-      type: integer
-      minProperties: 1
+  alertmanager_resolve_time: *timedelta
   alertmanager_basic_auth_login: {type: string}
   alertmanager_basic_auth_password: {type: string}
   alertmanager_labels:
