@@ -363,6 +363,9 @@ class ElastAlerter(object):
             query['stored_fields'] = rule['include']
             extra_args = {}
 
+        if rule.get('fields', None) is not None:
+            query['fields'] = rule['fields']
+
         try:
             if scroll:
                 res = self.thread_data.current_es.scroll(scroll_id=rule['scroll_id'], scroll=scroll_keepalive)
@@ -1129,7 +1132,9 @@ class ElastAlerter(object):
             if self.args.end:
                 endtime = ts_to_dt(self.args.end)
 
-                if next_run.replace(tzinfo=dateutil.tz.tzutc()) > endtime:
+                next_run_dt = next_run.replace(tzinfo=dateutil.tz.tzutc())
+                if next_run_dt > endtime:
+                    elastalert_logger.info("End time '%s' falls before the next run time '%s', exiting." % (endtime, next_run_dt))
                     exit(0)
 
             if next_run < datetime.datetime.utcnow():

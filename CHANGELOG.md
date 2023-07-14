@@ -7,7 +7,23 @@
 - [Alertmanager] Add alertmanager resolve timeout configuration option - [#1187](https://github.com/jertel/elastalert2/pull/1187) - @eveningcafe
 
 ## Other changes
-- TBD
+- [Docs] Clarify docs to state that alert_time_limit should not be 0 - [#1208](https://github.com/jertel/elastalert2/pull/1208) - @jertel
+
+# 2.12.0
+
+## Breaking changes
+- None
+
+## New features
+- Add initial support for EQL - [#1189](https://github.com/jertel/elastalert2/pull/1189) - @jertel
+- Add `fields` parameter to rules to be able to pull in runtimes fields, and more. [#1193](https://github.com/jertel/elastalert2/pull/1193) - @Goggin
+- Add EQL support to elastalert-test-rule utility - [#1195](https://github.com/jertel/elastalert2/pull/1195) - @jertel
+
+## Other changes
+- Add support for Kibana 8.8 for Kibana Discover - [#1184](https://github.com/jertel/elastalert2/pull/1184) - @nsano-rururu
+- Upgrade pylint 2.17.0 to 2.17.4, pytest 7.2.2 to 7.3.1, pytest-xdist 3.2.0 to 3.3.1, sphinx 6.1.3 to 6.2.1, sphinx_rtd_theme == 1.2.2 - [#1194](https://github.com/jertel/elastalert2/pull/1194) - @nsano-rururu
+- Upgrade to Tox 4 - [#1196](https://github.com/jertel/elastalert2/pull/1196) - @jertel
+- Log message when exiting due to --end param being in the past - [#1199](https://github.com/jertel/elastalert2/pull/1199) - @jertel
 
 # 2.11.0
 

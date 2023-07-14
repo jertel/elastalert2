@@ -104,6 +104,8 @@ Rule Configuration Cheat Sheet
 +--------------------------------------------------------------+           |
 | ``include`` (list of strs, default ["*"])                    |           |
 +--------------------------------------------------------------+           |
+| ``fields`` (list of strs, no default)                        |           |
++--------------------------------------------------------------+           |
 | ``filter`` (ES filter DSL, no default)                       |           |
 +--------------------------------------------------------------+           |
 | ``max_query_size`` (int, default global max_query_size)      |           |
@@ -584,6 +586,13 @@ include
 fields, along with '@timestamp', ``query_key``, ``compare_key``, and ``top_count_keys``  are included, if present.
 (Optional, list of strings, default all fields)
 
+fields
+^^^^^^
+
+``fields``: A list of fields that should be included in query results and passed to rule types and alerts. If ``_source_enabled`` is False,
+only these fields and those from ``include`` are included.  When ``_source_enabled`` is True, these are in addition to source.  This is used
+for runtime fields, script fields, etc.  This only works with Elasticsearch version 7.11 and newer.  (Optional, list of strings, no default)
+
 top_count_keys
 ^^^^^^^^^^^^^^
 
@@ -716,7 +725,7 @@ kibana_discover_version
 The currently supported versions of Kibana Discover are:
 
 - `7.0`, `7.1`, `7.2`, `7.3`, `7.4`, `7.5`, `7.6`, `7.7`, `7.8`, `7.9`, `7.10`, `7.11`, `7.12`, `7.13`, `7.14`, `7.15`, `7.16`, `7.17`
-- `8.0`, `8.1`, `8.2`, `8.3`, `8.4`, `8.5`, `8.6`, `8.7`
+- `8.0`, `8.1`, `8.2`, `8.3`, `8.4`, `8.5`, `8.6`, `8.7`, `8.8` 
 
 ``kibana_discover_version: '7.15'``
 
@@ -978,8 +987,16 @@ and missing or misconfigured fields.
 
 ``--count-only``: Only find the number of matching documents and list available fields. ElastAlert 2 will not be run and documents will not be downloaded.
 
-``--days N``: Instead of the default 1 day, query N days. For selecting more specific time ranges, you must run ElastAlert 2 itself and use ``--start``
+``--days N``: Instead of the default 1 day, query N days. For selecting more specific time ranges, use ``--start``
 and ``--end``.
+
+``--start <timestamp>`` The starting date/time of the search filter's time range. The timestamp is formatted as
+``YYYY-MM-DDTHH:MM:SS`` (UTC) or with timezone ``YYYY-MM-DDTHH:MM:SS-XX:00``
+(UTC-XX). If ``timeframe`` is specified, defaults to the ending time - timeframe. Otherwise defaults to ending time - 1 day.
+
+``--end <timestamp>`` The ending date/time of the search filter's time range. The timestamp is formatted as
+``YYYY-MM-DDTHH:MM:SS`` (UTC) or with timezone ``YYYY-MM-DDTHH:MM:SS-XX:00``
+(UTC-XX). Defaults to the current time.
 
 ``--save-json FILE``: Save all documents downloaded to a file as JSON. This is useful if you wish to modify data while testing or do offline
 testing in conjunction with ``--data FILE``. A maximum of 10,000 documents will be downloaded.
@@ -996,6 +1013,8 @@ guaranteed to have the exact same results as with Elasticsearch. For example, an
    Results from running this script may not always be the same as if an actual ElastAlert 2 instance was running. Some rule types, such as spike
    and flatline require a minimum elapsed time before they begin alerting, based on their timeframe. In addition, use_count_query and
    use_terms_query rely on run_every to determine their resolution. This script uses a fixed 5 minute window, which is the same as the default.
+
+   Also, EQL filters do not support counts, so the output relating to counts may show N/A (Not Applicable).
 
 
 .. _ruletypes:
