@@ -8,7 +8,7 @@
 
 ## Other changes
 - [Docs] Clarify docs to state that alert_time_limit should not be 0 - [#1208](https://github.com/jertel/elastalert2/pull/1208) - @jertel
-Add support for Kibana 8.9 for Kibana Discover - [#1224](https://github.com/jertel/elastalert2/pull/1224) - @nsano-rururu
+- Add support for Kibana 8.9 for Kibana Discover - [#1224](https://github.com/jertel/elastalert2/pull/1224) - @nsano-rururu
 
 # 2.12.0
 
