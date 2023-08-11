@@ -4,11 +4,23 @@
 - TBD
 
 ## New features
+- TBD
+
+## Other changes
+- TBD
+
+# 2.13.0
+
+## Breaking changes
+- None
+
+## New features
 - [Alertmanager] Add alertmanager resolve timeout configuration option - [#1187](https://github.com/jertel/elastalert2/pull/1187) - @eveningcafe
 
 ## Other changes
 - [Docs] Clarify docs to state that alert_time_limit should not be 0 - [#1208](https://github.com/jertel/elastalert2/pull/1208) - @jertel
 - Add support for Kibana 8.9 for Kibana Discover - [#1224](https://github.com/jertel/elastalert2/pull/1224) - @nsano-rururu
+- Remove docker image pin to outdated "buster" debian release - [24f794a](https://github.com/jertel/elastalert2/commit/24f794a) - @jertel
 
 # 2.12.0
 
