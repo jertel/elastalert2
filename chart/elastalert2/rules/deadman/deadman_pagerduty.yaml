@@ -1,0 +1,14 @@
+name: Deadman Switch PagerDuty
+type: frequency
+index: containers-*
+num_events: 3
+timeframe:
+  minutes: 3
+filter:
+  - term:
+      message: "deadmanpd"
+alert:
+  - "pagerduty"
+pagerduty:
+pagerduty_service_key: dummy
+pagerduty_client_name: ElastAlert Deadman Switch

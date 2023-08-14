@@ -18,4 +18,5 @@ my_rules
 *.swp
 *~
 /rules/
+/chart/elastalert2/real_values.yaml
 mod/

@@ -7,7 +7,17 @@ metadata:
   {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
   {{- end }}
 data:
-{{- range $key, $value := .Values.rules }}
-{{ $key | indent 2}}: |-
-{{ $value | indent 4}}
+{{- if .Values.rootRulesFolder }}
+  {{- $rulesDirectory := printf "%v/**.yaml" .Values.rootRulesFolder -}}
+  {{- range $rule, $_ :=  .Files.Glob $rulesDirectory }}
+  {{ base $rule }}: |- 
+{{ $.Files.Get $rule | indent 6 }}
+  {{ end }}
+{{- else }}
+  {{- range $key, $value := .Values.rules }}
+    {{ $key | indent 2}}: |-
+    {{ $value | indent 4}}
+  {{- end }}  
 {{- end }}
+
+
