@@ -8,16 +8,19 @@ metadata:
   {{- end }}
 data:
 {{- if .Values.rootRulesFolder }}
-  {{- $rulesDirectory := printf "%v/**.yaml" .Values.rootRulesFolder -}}
-  {{- range $rule, $_ :=  .Files.Glob $rulesDirectory }}
-  {{ base $rule }}: |- 
-{{ $.Files.Get $rule | indent 6 }}
-  {{ end }}
-{{- else }}
-  {{- range $key, $value := .Values.rules }}
-    {{ $key | indent 2}}: |-
-    {{ $value | indent 4}}
-  {{- end }}  
+{{- $rulesDirectory := printf "%v/**.{yaml,yml}" .Values.rootRulesFolder -}}
+{{- $enabledRules := .Values.enabledRules -}}
+{{- range $rule, $_ :=  .Files.Glob $rulesDirectory -}}
+  {{- $ruleBase := base $rule -}}
+  {{- $ruleName := regexReplaceAll "\\.(yaml|yml)$" $ruleBase "" -}}
+  {{- if has $ruleName $enabledRules }}
+  {{ $ruleBase }}: |-
+{{ $.Files.Get $rule | indent 4 }}
+  {{- end }}
 {{- end }}
-
-
+{{- else }}
+{{- range $key, $value := .Values.rules }}
+  {{ $key }}: |-
+{{ $value | indent 2 }}
+{{- end }}
+{{- end }}
