@@ -1,4 +1,4 @@
-FROM python:3-slim-buster
+FROM python:3-slim
 
 RUN apt update && apt upgrade -y
 RUN apt install -y gcc libffi-dev

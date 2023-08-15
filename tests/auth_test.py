@@ -38,5 +38,5 @@ def test_auth_aws_region():
         profile_name=None
     )
 
-    assert type(auth) == RefeshableAWSRequestsAuth
+    assert type(auth) is RefeshableAWSRequestsAuth
     assert auth.aws_region == 'us-east-1'
