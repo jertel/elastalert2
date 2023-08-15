@@ -4,6 +4,7 @@
 - TBD
 
 ## New features
+- Add support for loading rules from a directory in helm chart
 - TBD
 
 ## Other changes

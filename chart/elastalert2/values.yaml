@@ -7,7 +7,8 @@ commonAnnotations: {}
 appKubernetesIoComponent: elastalert2
 
 # Folder where you store your rules must be in root of the chart
-rootRulesFolder: "rules"
+# this will override the rules and secretRulesName values
+# rootRulesFolder: "rules"
 
 # number of replicas to run
 replicaCount: 1
@@ -57,7 +58,7 @@ elasticsearch:
   # elasticsearch port
   port: 9200
   # whether or not to connect to es_host using TLS
-  useSsl: "True"
+  useSsl: "False"
   # Username if authenticating to ES with basic auth
   username: ""
   # Password if authenticating to ES with basic auth
@@ -98,8 +99,7 @@ extraContainers: []
 ## Specify optional additional initContainers to run prior to the Elastalert2 container.
 extraInitContainers: []
 
-extraConfigOptions:
-  {}
+extraConfigOptions: {}
   # # Options to propagate to all rules, e.g. a common slack_webhook_url or kibana_url
   # # Please note at the time of implementing this value, it will not work for required_locals
   # # Which MUST be set at the rule level, these are: ['alert', 'type', 'name', 'index']
@@ -133,6 +133,7 @@ extraConfigOptions:
 #       minutes: 2880
 #     slack_webhook_url: https://hooks.slack.com/services/xxxx
 #     slack_channel_override: '#alerts'
+
 
 # To load ElastAlert's rules via secret, uncomment the line below
 #secretRulesName: elastalert-rules-secret
@@ -176,8 +177,7 @@ extraConfigOptions:
 rulesVolumeName: "rules"
 
 # additional rule configurations e.g. (http://elastalert2.readthedocs.io/en/latest/)
-rules:
-  {}
+rules: {}
   # deadman_slack: |-
   #   ---
   #   name: Deadman Switch Slack
@@ -254,8 +254,7 @@ tolerations: []
 #   username: ""
 #   password: ""
 
-extraVolumes:
-  []
+extraVolumes: []
   # - name: smtp-auth
   #   secret:
   #     secretName: elastalert-smtp-auth
@@ -264,12 +263,12 @@ extraVolumes:
   #         path: smtp_auth.yaml
   #         mode: 0400
 
-extraVolumeMounts:
-  []
+extraVolumeMounts: []
   # - name: smtp-auth
   #   mountPath: /opt/elastalert/config-smtp/smtp_auth.yaml
   #   subPath: smtp_auth.yaml
   #   readOnly: true
+
 
 ## @section Metrics parameters
 
