@@ -4,11 +4,10 @@
 - TBD
 
 ## New features
-- Add support for loading rules from a directory in helm chart
 - TBD
 
 ## Other changes
-- TBD
+- [Helm] Add support for generating rule config from a directory of rules, during chart deployment - [#1236](https://github.com/jertel/elastalert2/pull/1236) - @mehrdad-khojastefar 
 
 # 2.13.0
 
