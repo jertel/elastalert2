@@ -98,4 +98,4 @@ class AlertmanagerAlerter(Alerter):
         return {'type': 'alertmanager'}
 
     def now(self):
-        return datetime.nowdatetime.now(timezone.utc)
+        return datetime.now(timezone.utc)
