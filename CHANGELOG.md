@@ -7,7 +7,7 @@
 - TBD
 
 ## Other changes
-- TBD
+- [AlertManager] Fix typo with new feature released in 2.13.0 - [#1237](https://github.com/jertel/elastalert2/pull/1237) - @eveningcafe
 
 # 2.13.0
 
