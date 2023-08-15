@@ -10,6 +10,7 @@ appKubernetesIoComponent: elastalert2
 # 'rules' folder must be located in the root of the chart directory. Note that this setting
 # will override the rules and secretRulesName values. Again, these rules are only read 
 # during the time of the chart deployment (installation) into the cluster.
+# IMPORTANT: Rule files MUST use the 4-character .yaml extension.
 # rootRulesFolder: "rules"
 
 # number of replicas to run
