@@ -7,6 +7,16 @@
 - TBD
 
 ## Other changes
+
+# 2.13.1
+
+## Breaking changes
+- None
+
+## New features
+- None
+
+## Other changes
 - [Helm] Add support for generating rule config from a directory of rules, during chart deployment - [#1236](https://github.com/jertel/elastalert2/pull/1236) - @mehrdad-khojastefar 
 - [AlertManager] Fix typo with new feature released in 2.13.0 - [#1237](https://github.com/jertel/elastalert2/pull/1237) - @eveningcafe
 
