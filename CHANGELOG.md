@@ -7,6 +7,17 @@
 - TBD
 
 ## Other changes
+- TBD
+
+# 2.13.2
+
+## Breaking changes
+- None
+
+## New features
+- None
+
+## Other changes
 - [Helm] Fix chart indentation issue introduced in 2.13.1 - [#1239](https://github.com/jertel/elastalert2/pull/1239) - @jertel
 
 # 2.13.1
