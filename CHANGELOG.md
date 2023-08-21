@@ -7,7 +7,7 @@
 - TBD
 
 ## Other changes
-- TBD
+- [Helm] Expose minReadySeconds parameter to assist in detecting failed deployments - [#1243](https://github.com/jertel/elastalert2/pull/1243) - @alexku7 
 
 # 2.13.2
 
