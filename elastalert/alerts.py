@@ -4,6 +4,11 @@ import json
 import os
 
 from jinja2 import Template
+
+from prettytable import PrettyTable
+from prettytable import MSWORD_FRIENDLY
+from prettytable import ALL
+
 from texttable import Texttable
 
 from elastalert.util import EAException, lookup_es_key
@@ -297,6 +302,22 @@ class Alerter(object):
                         markdown_row += '| ' + str(key) + ' '
                     text += markdown_row + '| ' + str(count) + ' |\n'
                 text += '\n'
+            
+            elif summary_table_type == 'html':
+                # Portions of the following block of HTML formatting code was taken from
+                # an abandoned PR (https://github.com/jertel/elastalert2/pull/1227).
+                text_table = PrettyTable()
+                text_table.field_names = summary_table_fields_with_count
+                text_table.set_style(MSWORD_FRIENDLY)
+                text_table.border = True
+                text_table.header = True
+                text_table.hrules = ALL
+                text_table.vrules = ALL
+                text_table.header = True
+                text_table.format = True
+                for keys, count in match_aggregation.items():
+                    text_table.add_row([key for key in keys] + [count])
+                text = text_table.get_html_string()
 
             # max_rows message
             if 'summary_table_max_rows' in self.rule:
