@@ -4,7 +4,7 @@
 - TBD
 
 ## New features
-- TBD
+- 'summary_table_type' property now supports 'html' format for aggregation tables - [#1260](https://github.com/jertel/elastalert2/pull/1260) - @jertel 
 
 ## Other changes
 - [Helm] Expose minReadySeconds parameter to assist in detecting failed deployments - [#1243](https://github.com/jertel/elastalert2/pull/1243) - @alexku7 

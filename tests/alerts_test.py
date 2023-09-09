@@ -245,6 +245,36 @@ def test_alert_aggregation_summary_markdown_table():
     assert "| field_value | cde from match | 2 |" in summary_table
 
 
+def test_alert_aggregation_summary_html_table():
+    rule = {
+        'name': 'test_rule',
+        'type': mock_rule(),
+        'owner': 'the_owner',
+        'priority': 2,
+        'alert_subject': 'A very long subject',
+        'aggregation': 1,
+        'summary_table_fields': ['field', 'abc'],
+        'summary_table_type': 'html'
+    }
+    matches = [
+        {'@timestamp': '2016-01-01', 'field': 'field_value', 'abc': 'abc from match', },
+        {'@timestamp': '2016-01-01', 'field': 'field_value', 'abc': 'abc from match', },
+        {'@timestamp': '2016-01-01', 'field': 'field_value', 'abc': 'abc from match', },
+        {'@timestamp': '2016-01-01', 'field': 'field_value', 'abc': 'cde from match', },
+        {'@timestamp': '2016-01-01', 'field': 'field_value', 'abc': 'cde from match', },
+    ]
+    alert = Alerter(rule)
+    summary_table = str(alert.get_aggregation_summary_text(matches))
+    assert '<table' in summary_table
+    assert '<thead>' in summary_table
+    assert 'field' in summary_table
+    assert 'abc' in summary_table
+    assert 'abc from match</td>' in summary_table
+    assert '3</td>' in summary_table
+    assert 'cde from match</td>' in summary_table
+    assert '2</td>' in summary_table
+
+
 def test_alert_aggregation_summary_default_table():
     rule = {
         'name': 'test_rule',
