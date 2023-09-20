@@ -55,6 +55,9 @@ image:
 
 resources: {}
 
+# Annotations to be added to deployment
+deploymentAnnotations: {}
+
 # Annotations to be added to pods
 podAnnotations: {}
 
