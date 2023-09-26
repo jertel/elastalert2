@@ -536,6 +536,9 @@ properties:
   jira_transition_to: {type: string}
   jira_bump_after_inactivity: {type: number}
 
+  ### Lark
+  lark_bot_id: {type: string, enum: ['text']}
+
   ### Line Notify
   linenotify_access_token: {type: string}
 

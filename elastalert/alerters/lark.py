@@ -15,7 +15,7 @@ class LarkAlerter(Alerter):
         super(LarkAlerter, self).__init__(rule)
         self.lark_bot_id = self.rule.get('lark_bot_id', None)
         self.lark_webhook_url = f'https://open.feishu.cn/open-apis/bot/v2/hook/{self.lark_bot_id}'
-        self.lark_msgtype = self.rule.get('lark_msgtype', 'text')
+        self.lark_msg_type = self.rule.get('lark_msgtype', 'text')
 
     def alert(self, matches):
         title = self.create_title(matches)
@@ -27,7 +27,7 @@ class LarkAlerter(Alerter):
         }
 
         payload = {
-            'msg_type': self.lark_msgtype,
+            'msg_type': self.lark_msg_type,
             "content": {
                 "title": title,
                 "text": body

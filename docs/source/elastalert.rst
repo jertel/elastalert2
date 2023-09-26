@@ -45,6 +45,7 @@ Currently, we have support built in for these alert types:
 - HTTP POST
 - HTTP POST 2
 - Jira
+- Lark
 - Line Notify
 - Mattermost
 - Microsoft Teams
