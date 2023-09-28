@@ -13,6 +13,7 @@
 - Add support for Kibana 8.10 for Kibana Discover - [#1277](https://github.com/jertel/elastalert2/pull/1277) - @nsano-rururu
 - Upgrade pylint 2.17.4 to 2.17.5, pytest 7.3.1 to 7.4.2, sphinx 6.2.1 to 7.2.6, sphinx_rtd_theme 1.2.2 to 1.3.0 - [#1278](https://github.com/jertel/elastalert2/pull/1278) - @nsano-rururu
 - Fix issue with aggregated alerts not being sent - [#1285](https://github.com/jertel/elastalert2/pull/1285) - @jertel
+- Add support for [Lark](https://www.larksuite.com/en_us/) alerter - [#1282](https://github.com/jertel/elastalert2/pull/1282) - @seanyinx
 
 # 2.13.2
 
