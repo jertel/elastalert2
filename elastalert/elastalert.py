@@ -1598,9 +1598,14 @@ class ElastAlerter(object):
             # Optionally include the 'aggregation_key' as a dimension for aggregations
             aggregation_key_value = self.get_aggregation_key_value(rule, match)
 
+            if rule.get('aggregation_alert_time_compared_with_timestamp_field', False):
+                compare_dt := lookup_es_key(match, rule['timestamp_field'])
+            else:
+                compare_dt := ts_now()
+
             if (not rule['current_aggregate_id'].get(aggregation_key_value) or
                     ('aggregate_alert_time' in rule and aggregation_key_value in rule['aggregate_alert_time'] and rule[
-                        'aggregate_alert_time'].get(aggregation_key_value) < ts_to_dt(lookup_es_key(match, rule['timestamp_field'])))):
+                        'aggregate_alert_time'].get(aggregation_key_value) < ts_to_dt(compare_dt))):
 
                 # ElastAlert may have restarted while pending alerts exist
                 pending_alert = self.find_pending_aggregate_alert(rule, aggregation_key_value)
