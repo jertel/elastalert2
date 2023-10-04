@@ -4,10 +4,14 @@
 - TBD
 
 ## New features
-- TBD
+- 'summary_table_type' property now supports 'html' format for aggregation tables - [#1260](https://github.com/jertel/elastalert2/pull/1260) - @jertel 
+- [Helm] Add support for custom deployment annotations - [#1271](https://github.com/jertel/elastalert2/pull/1271) - @victorpugin 
 
 ## Other changes
-- TBD
+- [Helm] Expose minReadySeconds parameter to assist in detecting failed deployments - [#1243](https://github.com/jertel/elastalert2/pull/1243) - @alexku7 
+- [Helm] Fix commonLabels indentation for the deployment template - [#1250](https://github.com/jertel/elastalert2/pull/1250) - @dan-duffy 
+- Add support for Kibana 8.10 for Kibana Discover - [#1277](https://github.com/jertel/elastalert2/pull/1277) - @nsano-rururu
+- Upgrade pylint 2.17.4 to 2.17.5, pytest 7.3.1 to 7.4.2, sphinx 6.2.1 to 7.2.6, sphinx_rtd_theme 1.2.2 to 1.3.0 - [#1278](https://github.com/jertel/elastalert2/pull/1278) - @nsano-rururu
 
 # 2.13.2
 

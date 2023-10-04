@@ -19,6 +19,9 @@ replicaCount: 1
 # number of helm release revisions to retain
 revisionHistoryLimit: 5
 
+# number of seconds for which a newly created Pod should be ready without any of its containers crashing, for it to be considered available.
+minReadySeconds: 5
+
 # Default internal between alert checks against the elasticsearch datasource, in minutes
 runIntervalMins: 1
 
@@ -51,6 +54,9 @@ image:
   pullSecret: ""
 
 resources: {}
+
+# Annotations to be added to deployment
+deploymentAnnotations: {}
 
 # Annotations to be added to pods
 podAnnotations: {}

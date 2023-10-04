@@ -464,7 +464,7 @@ This should result in 2 alerts: One containing alice's two events, sent at ``201
 
 For aggregations, there can sometimes be a large number of documents present in the viewing medium (email, Jira ticket, etc..). If you set the ``summary_table_fields`` field, ElastAlert 2 will provide a summary of the specified fields from all the results.
 
-The formatting style of the summary table can be switched between ``ascii`` (default) and ``markdown`` with parameter ``summary_table_type``. ``markdown`` might be the more suitable formatting for alerters supporting it like TheHive.
+The formatting style of the summary table can be switched between ``ascii`` (default), ``markdown``, or ``html`` with parameter ``summary_table_type``.
 
 The maximum number of rows in the summary table can be limited with the parameter ``summary_table_max_rows``.
 
@@ -725,7 +725,7 @@ kibana_discover_version
 The currently supported versions of Kibana Discover are:
 
 - `7.0`, `7.1`, `7.2`, `7.3`, `7.4`, `7.5`, `7.6`, `7.7`, `7.8`, `7.9`, `7.10`, `7.11`, `7.12`, `7.13`, `7.14`, `7.15`, `7.16`, `7.17`
-- `8.0`, `8.1`, `8.2`, `8.3`, `8.4`, `8.5`, `8.6`, `8.7`, `8.8`, `8.9` 
+- `8.0`, `8.1`, `8.2`, `8.3`, `8.4`, `8.5`, `8.6`, `8.7`, `8.8`, `8.9` , `8.10` 
 
 ``kibana_discover_version: '7.15'``
 
@@ -823,7 +823,7 @@ summary_table_fields
 summary_table_type
 ^^^^^^^^^^^^^^^^^^^^
 
-``summary_table_type``: Either ``ascii`` or ``markdown``. Select the table type to use for the aggregation summary. Defaults to ``ascii`` for the classical text based table.
+``summary_table_type``: One of: ``ascii`` or ``markdown`` or ``html``. Select the table type to use for the aggregation summary. Defaults to ``ascii`` for the classical text based table.
 
 summary_table_max_rows
 ^^^^^^^^^^^^^^^^^^^^^^
