@@ -1598,10 +1598,13 @@ class ElastAlerter(object):
             # Optionally include the 'aggregation_key' as a dimension for aggregations
             aggregation_key_value = self.get_aggregation_key_value(rule, match)
 
+            # This is a fallback option in case this change to using ts_now() interferes with the behavior current
+            # users are accustomed to. It is not documented because it likely won't be needed. If no one reports 
+            # a problem we can remove this fallback option in a future release.
             if rule.get('aggregation_alert_time_compared_with_timestamp_field', False):
-                compare_dt := lookup_es_key(match, rule['timestamp_field'])
+                compare_dt = lookup_es_key(match, rule['timestamp_field'])
             else:
-                compare_dt := ts_now()
+                compare_dt = ts_now()
 
             if (not rule['current_aggregate_id'].get(aggregation_key_value) or
                     ('aggregate_alert_time' in rule and aggregation_key_value in rule['aggregate_alert_time'] and rule[
@@ -1674,8 +1677,6 @@ class ElastAlerter(object):
             # Couldn't write the match to ES, save it in memory for now
             if not res:
                 rule['agg_matches'].append(match)
-
-            self.alert_lock.release()
 
             return res
 

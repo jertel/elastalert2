@@ -1,4 +1,4 @@
-FROM python:3-slim as builder
+FROM python:3.11-slim as builder
 
 LABEL description="ElastAlert 2 Official Image"
 LABEL maintainer="Jason Ertel"
@@ -10,7 +10,7 @@ RUN mkdir -p /opt/elastalert && \
     pip install setuptools wheel && \
     python setup.py sdist bdist_wheel
 
-FROM python:3-slim
+FROM python:3.11-slim
 
 ARG GID=1000
 ARG UID=1000
