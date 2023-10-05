@@ -236,6 +236,7 @@ properties:
           type: string
       - type: string
   aggregation: *timeframe
+  aggregation_alert_time_compared_with_timestamp_field: {type: boolean}
   realert: *timeframe
   realert_key: {type: string}
   exponential_realert: *timeframe

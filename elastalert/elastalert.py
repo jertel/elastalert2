@@ -183,6 +183,8 @@ class ElastAlerter(object):
         if self.args.silence:
             self.silence()
 
+        self.alert_lock = threading.Lock()
+
     @staticmethod
     def get_index(rule, starttime=None, endtime=None):
         """ Gets the index for a rule. If strftime is set and starttime and endtime
@@ -1486,72 +1488,73 @@ class ElastAlerter(object):
         return []
 
     def send_pending_alerts(self):
-        pending_alerts = self.find_recent_pending_alerts(self.alert_time_limit)
-        for alert in pending_alerts:
-            _id = alert['_id']
-            alert = alert['_source']
-            try:
-                rule_name = alert.pop('rule_name')
-                alert_time = alert.pop('alert_time')
-                match_body = alert.pop('match_body')
-            except KeyError:
-                # Malformed alert, drop it
-                continue
-
-            # Find original rule
-            for rule in self.rules:
-                if rule['name'] == rule_name:
-                    break
-            else:
-                # Original rule is missing, keep alert for later if rule reappears
-                continue
-
-            # Set current_es for top_count_keys query
-            self.thread_data.current_es = elasticsearch_client(rule)
-
-            # Send the alert unless it's a future alert
-            if ts_now() > ts_to_dt(alert_time):
-                aggregated_matches = self.get_aggregated_matches(_id)
-                if aggregated_matches:
-                    matches = [match_body] + [agg_match['match_body'] for agg_match in aggregated_matches]
-                    self.alert(matches, rule, alert_time=alert_time)
-                else:
-                    # If this rule isn't using aggregation, this must be a retry of a failed alert
-                    retried = False
-                    if not rule.get('aggregation'):
-                        retried = True
-                    self.alert([match_body], rule, alert_time=alert_time, retried=retried)
-
-                if rule['current_aggregate_id']:
-                    for qk, agg_id in rule['current_aggregate_id'].items():
-                        if agg_id == _id:
-                            rule['current_aggregate_id'].pop(qk)
-                            break
-
-                # Delete it from the index
+        with self.alert_lock:
+            pending_alerts = self.find_recent_pending_alerts(self.alert_time_limit)
+            for alert in pending_alerts:
+                _id = alert['_id']
+                alert = alert['_source']
                 try:
-                    self.writeback_es.delete(index=self.writeback_index, id=_id)
-                except ElasticsearchException:  # TODO: Give this a more relevant exception, try:except: is evil.
-                    self.handle_error("Failed to delete alert %s at %s" % (_id, alert_time))
+                    rule_name = alert.pop('rule_name')
+                    alert_time = alert.pop('alert_time')
+                    match_body = alert.pop('match_body')
+                except KeyError:
+                    # Malformed alert, drop it
+                    continue
 
-        # Send in memory aggregated alerts
-        for rule in self.rules:
-            if rule['agg_matches']:
-                for aggregation_key_value, aggregate_alert_time in rule['aggregate_alert_time'].items():
-                    if ts_now() > aggregate_alert_time:
-                        alertable_matches = [
-                            agg_match
-                            for agg_match
-                            in rule['agg_matches']
-                            if self.get_aggregation_key_value(rule, agg_match) == aggregation_key_value
-                        ]
-                        self.alert(alertable_matches, rule)
-                        rule['agg_matches'] = [
-                            agg_match
-                            for agg_match
-                            in rule['agg_matches']
-                            if self.get_aggregation_key_value(rule, agg_match) != aggregation_key_value
-                        ]
+                # Find original rule
+                for rule in self.rules:
+                    if rule['name'] == rule_name:
+                        break
+                else:
+                    # Original rule is missing, keep alert for later if rule reappears
+                    continue
+
+                # Set current_es for top_count_keys query
+                self.thread_data.current_es = elasticsearch_client(rule)
+
+                # Send the alert unless it's a future alert
+                if ts_now() > ts_to_dt(alert_time):
+                    aggregated_matches = self.get_aggregated_matches(_id)
+                    if aggregated_matches:
+                        matches = [match_body] + [agg_match['match_body'] for agg_match in aggregated_matches]
+                        self.alert(matches, rule, alert_time=alert_time)
+                    else:
+                        # If this rule isn't using aggregation, this must be a retry of a failed alert
+                        retried = False
+                        if not rule.get('aggregation'):
+                            retried = True
+                        self.alert([match_body], rule, alert_time=alert_time, retried=retried)
+
+                    if rule['current_aggregate_id']:
+                        for qk, agg_id in rule['current_aggregate_id'].items():
+                            if agg_id == _id:
+                                rule['current_aggregate_id'].pop(qk)
+                                break
+
+                    # Delete it from the index
+                    try:
+                        self.writeback_es.delete(index=self.writeback_index, id=_id)
+                    except ElasticsearchException:  # TODO: Give this a more relevant exception, try:except: is evil.
+                        self.handle_error("Failed to delete alert %s at %s" % (_id, alert_time))
+
+            # Send in memory aggregated alerts
+            for rule in self.rules:
+                if rule['agg_matches']:
+                    for aggregation_key_value, aggregate_alert_time in rule['aggregate_alert_time'].items():
+                        if ts_now() > aggregate_alert_time:
+                            alertable_matches = [
+                                agg_match
+                                for agg_match
+                                in rule['agg_matches']
+                                if self.get_aggregation_key_value(rule, agg_match) == aggregation_key_value
+                            ]
+                            self.alert(alertable_matches, rule)
+                            rule['agg_matches'] = [
+                                agg_match
+                                for agg_match
+                                in rule['agg_matches']
+                                if self.get_aggregation_key_value(rule, agg_match) != aggregation_key_value
+                            ]
 
     def get_aggregated_matches(self, _id):
         """ Removes and returns all matches from writeback_es that have aggregate_id == _id """
@@ -1591,20 +1594,66 @@ class ElastAlerter(object):
     def add_aggregated_alert(self, match, rule):
         """ Save a match as a pending aggregate alert to Elasticsearch. """
 
-        # Optionally include the 'aggregation_key' as a dimension for aggregations
-        aggregation_key_value = self.get_aggregation_key_value(rule, match)
+        with self.alert_lock:
+            # Optionally include the 'aggregation_key' as a dimension for aggregations
+            aggregation_key_value = self.get_aggregation_key_value(rule, match)
 
-        if (not rule['current_aggregate_id'].get(aggregation_key_value) or
-                ('aggregate_alert_time' in rule and aggregation_key_value in rule['aggregate_alert_time'] and rule[
-                    'aggregate_alert_time'].get(aggregation_key_value) < ts_to_dt(lookup_es_key(match, rule['timestamp_field'])))):
+            # This is a fallback option in case this change to using ts_now() interferes with the behavior current
+            # users are accustomed to. It is not documented because it likely won't be needed. If no one reports 
+            # a problem we can remove this fallback option in a future release.
+            if rule.get('aggregation_alert_time_compared_with_timestamp_field', False):
+                compare_dt = lookup_es_key(match, rule['timestamp_field'])
+            else:
+                compare_dt = ts_now()
 
-            # ElastAlert may have restarted while pending alerts exist
-            pending_alert = self.find_pending_aggregate_alert(rule, aggregation_key_value)
-            if pending_alert:
-                alert_time = ts_to_dt(pending_alert['_source']['alert_time'])
-                rule['aggregate_alert_time'][aggregation_key_value] = alert_time
-                agg_id = pending_alert['_id']
-                rule['current_aggregate_id'] = {aggregation_key_value: agg_id}
+            if (not rule['current_aggregate_id'].get(aggregation_key_value) or
+                    ('aggregate_alert_time' in rule and aggregation_key_value in rule['aggregate_alert_time'] and rule[
+                        'aggregate_alert_time'].get(aggregation_key_value) < ts_to_dt(compare_dt))):
+
+                # ElastAlert may have restarted while pending alerts exist
+                pending_alert = self.find_pending_aggregate_alert(rule, aggregation_key_value)
+                if pending_alert:
+                    alert_time = ts_to_dt(pending_alert['_source']['alert_time'])
+                    rule['aggregate_alert_time'][aggregation_key_value] = alert_time
+                    agg_id = pending_alert['_id']
+                    rule['current_aggregate_id'] = {aggregation_key_value: agg_id}
+                    elastalert_logger.info(
+                        'Adding alert for %s to aggregation(id: %s, aggregation_key: %s), next alert at %s' % (
+                            rule['name'],
+                            agg_id,
+                            aggregation_key_value,
+                            alert_time
+                        )
+                    )
+                else:
+                    # First match, set alert_time
+                    alert_time = ''
+                    if isinstance(rule['aggregation'], dict) and rule['aggregation'].get('schedule'):
+                        croniter._datetime_to_timestamp = cronite_datetime_to_timestamp  # For Python 2.6 compatibility
+                        try:
+                            iter = croniter(rule['aggregation']['schedule'], ts_now())
+                            alert_time = unix_to_dt(iter.get_next())
+                        except Exception as e:
+                            self.handle_error("Error parsing aggregate send time Cron format %s" % (e), rule['aggregation']['schedule'])
+                    else:
+                        try:
+                            if rule.get('aggregate_by_match_time', False):
+                                match_time = ts_to_dt(lookup_es_key(match, rule['timestamp_field']))
+                                alert_time = match_time + rule['aggregation']
+                            else:
+                                alert_time = ts_now() + rule['aggregation']
+                        except Exception as e:
+                            self.handle_error("[add_aggregated_alert]Error parsing aggregate send time format %s" % (e), rule['aggregation'])
+
+                    rule['aggregate_alert_time'][aggregation_key_value] = alert_time
+                    agg_id = None
+                    elastalert_logger.info(
+                        'New aggregation for %s, aggregation_key: %s. next alert at %s.' % (rule['name'], aggregation_key_value, alert_time)
+                    )
+            else:
+                # Already pending aggregation, use existing alert_time
+                alert_time = rule['aggregate_alert_time'].get(aggregation_key_value)
+                agg_id = rule['current_aggregate_id'].get(aggregation_key_value)
                 elastalert_logger.info(
                     'Adding alert for %s to aggregation(id: %s, aggregation_key: %s), next alert at %s' % (
                         rule['name'],
@@ -1613,60 +1662,23 @@ class ElastAlerter(object):
                         alert_time
                     )
                 )
-            else:
-                # First match, set alert_time
-                alert_time = ''
-                if isinstance(rule['aggregation'], dict) and rule['aggregation'].get('schedule'):
-                    croniter._datetime_to_timestamp = cronite_datetime_to_timestamp  # For Python 2.6 compatibility
-                    try:
-                        iter = croniter(rule['aggregation']['schedule'], ts_now())
-                        alert_time = unix_to_dt(iter.get_next())
-                    except Exception as e:
-                        self.handle_error("Error parsing aggregate send time Cron format %s" % (e), rule['aggregation']['schedule'])
-                else:
-                    try:
-                        if rule.get('aggregate_by_match_time', False):
-                            match_time = ts_to_dt(lookup_es_key(match, rule['timestamp_field']))
-                            alert_time = match_time + rule['aggregation']
-                        else:
-                            alert_time = ts_now() + rule['aggregation']
-                    except Exception as e:
-                        self.handle_error("[add_aggregated_alert]Error parsing aggregate send time format %s" % (e), rule['aggregation'])
 
-                rule['aggregate_alert_time'][aggregation_key_value] = alert_time
-                agg_id = None
-                elastalert_logger.info(
-                    'New aggregation for %s, aggregation_key: %s. next alert at %s.' % (rule['name'], aggregation_key_value, alert_time)
-                )
-        else:
-            # Already pending aggregation, use existing alert_time
-            alert_time = rule['aggregate_alert_time'].get(aggregation_key_value)
-            agg_id = rule['current_aggregate_id'].get(aggregation_key_value)
-            elastalert_logger.info(
-                'Adding alert for %s to aggregation(id: %s, aggregation_key: %s), next alert at %s' % (
-                    rule['name'],
-                    agg_id,
-                    aggregation_key_value,
-                    alert_time
-                )
-            )
+            alert_body = self.get_alert_body(match, rule, False, alert_time)
+            if agg_id:
+                alert_body['aggregate_id'] = agg_id
+            if aggregation_key_value:
+                alert_body['aggregation_key'] = aggregation_key_value
+            res = self.writeback('elastalert', alert_body, rule)
 
-        alert_body = self.get_alert_body(match, rule, False, alert_time)
-        if agg_id:
-            alert_body['aggregate_id'] = agg_id
-        if aggregation_key_value:
-            alert_body['aggregation_key'] = aggregation_key_value
-        res = self.writeback('elastalert', alert_body, rule)
+            # If new aggregation, save _id
+            if res and not agg_id:
+                rule['current_aggregate_id'][aggregation_key_value] = res['_id']
 
-        # If new aggregation, save _id
-        if res and not agg_id:
-            rule['current_aggregate_id'][aggregation_key_value] = res['_id']
+            # Couldn't write the match to ES, save it in memory for now
+            if not res:
+                rule['agg_matches'].append(match)
 
-        # Couldn't write the match to ES, save it in memory for now
-        if not res:
-            rule['agg_matches'].append(match)
-
-        return res
+            return res
 
     def silence(self, silence_cache_key=None):
         """ Silence an alert for a period of time. --silence and --rule must be passed as args. """
