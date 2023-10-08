@@ -2697,6 +2697,26 @@ Example usage::
       - My Custom Value 1
       - My Custom Value 2
 
+Lark
+~~~~~~~~
+
+Lark alerter will send notification to a predefined bot in Lark application. The body of the notification is formatted the same as with other alerters.
+
+Required:
+
+``lark_bot_id``:  Lark bot id.
+
+Optional:
+
+``lark_msgtype``:  Lark msgtype, currently only ``text`` supported.
+
+Example usage::
+
+    alert:
+      - "lark"
+    lark_bot_id: "your lark bot id"
+    lark_msgtype: "text"
+
 Line Notify
 ~~~~~~~~~~~
 

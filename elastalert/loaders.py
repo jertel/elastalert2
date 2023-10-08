@@ -25,6 +25,7 @@ import elastalert.alerters.gelf
 import elastalert.alerters.googlechat
 import elastalert.alerters.httppost
 import elastalert.alerters.httppost2
+import elastalert.alerters.lark
 import elastalert.alerters.line
 import elastalert.alerters.pagertree
 import elastalert.alerters.rocketchat
@@ -126,6 +127,7 @@ class RulesLoader(object):
         'zabbix': ZabbixAlerter,
         'discord': elastalert.alerters.discord.DiscordAlerter,
         'dingtalk': elastalert.alerters.dingtalk.DingTalkAlerter,
+        'lark': elastalert.alerters.lark.LarkAlerter,
         'chatwork': elastalert.alerters.chatwork.ChatworkAlerter,
         'datadog': elastalert.alerters.datadog.DatadogAlerter,
         'ses': elastalert.alerters.ses.SesAlerter,
