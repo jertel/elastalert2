@@ -4,6 +4,17 @@
 - TBD
 
 ## New features
+- TBD
+
+## Other changes
+- TBD
+
+# 2.14.0
+
+## Breaking changes
+- None
+
+## New features
 - 'summary_table_type' property now supports 'html' format for aggregation tables - [#1260](https://github.com/jertel/elastalert2/pull/1260) - @jertel 
 - [Helm] Add support for custom deployment annotations - [#1271](https://github.com/jertel/elastalert2/pull/1271) - @victorpugin 
 
