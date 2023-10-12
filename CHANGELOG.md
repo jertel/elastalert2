@@ -1,4 +1,4 @@
-# 2.TBD.TBD
+# 2.14.1
 
 ## Breaking changes
 - TBD
@@ -7,7 +7,7 @@
 - TBD
 
 ## Other changes
-- TBD
+- Refactored FlatlineRule to make it more extensible
 
 # 2.14.0
 
