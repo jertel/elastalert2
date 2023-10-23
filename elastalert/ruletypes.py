@@ -586,6 +586,14 @@ class FlatlineRule(FrequencyRule):
         # Dictionary mapping query keys to the first events
         self.first_event = {}
 
+    def get_threshold(self, key):
+        return self.rules['threshold']
+
+    def get_event_data(self, key):
+        return {
+            'threshold': self.get_threshold(key)
+        }
+
     def check_for_match(self, key, end=True):
         # This function gets called between every added document with end=True after the last
         # We ignore the calls before the end because it may trigger false positives
@@ -602,10 +610,10 @@ class FlatlineRule(FrequencyRule):
 
         # Match if, after removing old events, we hit num_events
         count = self.occurrences[key].count()
-        if count < self.rules['threshold']:
+        if count < self.get_threshold(key):
             # Do a deep-copy, otherwise we lose the datetime type in the timestamp field of the last event
             event = copy.deepcopy(self.occurrences[key].data[-1][0])
-            event.update(key=key, count=count)
+            event.update(key=key, count=count, **self.get_event_data(key))
             self.add_match(event)
 
             if not self.rules.get('forget_keys'):
@@ -632,11 +640,14 @@ class FlatlineRule(FrequencyRule):
         )
         return message
 
+    def get_keys(self):
+        return list(self.occurrences.keys())
+
     def garbage_collect(self, ts):
         # We add an event with a count of zero to the EventWindow for each key. This will cause the EventWindow
         # to remove events that occurred more than one `timeframe` ago, and call onRemoved on them.
         default = ['all'] if 'query_key' not in self.rules else []
-        for key in list(self.occurrences.keys()) or default:
+        for key in self.get_keys() or default:
             self.occurrences.setdefault(
                 key,
                 EventWindow(self.rules['timeframe'], getTimestamp=self.get_ts)
