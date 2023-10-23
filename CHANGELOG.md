@@ -1,10 +1,10 @@
-# 2.TBD.TBD
+# 2.15.0
 
 ## Breaking changes
 - TBD
 
 ## New features
-- TBD
+- [Iris] Alerter added. [#1301](https://github.com/jertel/elastalert2/pull/1301) - @malinkinsa 
 
 ## Other changes
 - TBD
