@@ -2579,6 +2579,66 @@ Example usage with json string formatting::
         "X-custom-{{key}}": "{{type}}"
       }
 
+IRIS
+~~~~~~~~~
+The Iris alerter can be used to create a new alert or case in `Iris IRP System <https://dfir-iris.org>`_. The alerter supports adding tags, IOCs, and context from the alert matches and rule data.
+
+The alerter requires the following option:
+
+``iris_host``: Address of the Iris host. Exclude https:// For example: ``iris.example.com``.
+
+``iris_api_token``: The API key of the user you created, which will be used to initiate alerts and cases on behalf of this user.
+
+``iris_customer_id``: The user ID associated with the API key mentioned above. You can find it on the same page where the API key is located.
+
+Optional:
+
+``iris_ca_cert``: Path to custom CA certificate.
+
+``iris_ignore_ssl_errors``: Ignore ssl error. The default value is: ``False``.
+
+``iris_description``: Description of the alert or case.
+
+``iris_overwrite_timestamp``: Should the timestamp be overridden when creating an alert. By default, the alert's creation time will be the trigger time. If you want to use the event's timestamp as the ticket creation time, set this value to ``True``. Default value is ``False``.
+
+``iris_type``: The type of object being created. It can be either ``alert`` or ``case``. The default value is ``alert``.
+
+``iris_case_template_id``: Case template ID, if you want to apply a pre-prepared template.
+
+``iris_alert_note``: Note for the alert.
+
+``iris_alert_tags``: List of tags.
+
+``iris_alert_status_id``: Alert status. Can be: ``1 - Unspecified``, ``2 - New``, ``3 - Assigned``, ``4 - In progress``, ``5 - Pending``, ``6 - Closed``, ``7 - Merged``. The default value is: `2`.
+
+``iris_alert_source_link``: Link, if needed.
+
+``iris_alert_severity_id``: Alert severity. Can be: ``1 - Unspecified``, ``2 - Informational``, ``3 - Low``, ``4 - Medium``, ``5 - High``, ``6 - Critical``. The default value is: `1`.
+
+``iris_alert_context``:
+
+``iris_iocs``: Description of the IOC to be added.
+
+Example usage ``iris_iocs``:
+
+.. code-block:: yaml
+
+    iris_iocs:
+      - ioc_value: ip
+        ioc_description: Suspicious IP address
+        ioc_tlp_id: 2
+        ioc_type_id: 76
+        ioc_tags: ipv4, ip, suspicious
+      - ioc_value: username
+        ioc_description: Suspicious username
+        ioc_tlp_id: 1
+        ioc_type_id: 3
+        ioc_tags: username
+
+A few words about ``ioc_tlp_id`` and ``ioc_type_id``. ``ioc_tlp_id`` can be of three types: ``1 - red``, ``2 - amber``, ``3 - green``. There are numerous values for ``ioc_type_id``, and you can also add your custom ones. To find the ID for the type you are interested in, refer to your Iris instance's API at 'https://example.com/manage/ioc-types/list'.
+
+You can find complete examples of rules in the repository under the 'examples' folder.
+
 Jira
 ~~~~
 

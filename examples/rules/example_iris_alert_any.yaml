@@ -1,0 +1,36 @@
+name: "Example Iris alert"
+type: any
+index: index_*
+use_strftime_index: true
+
+filter:
+- query:
+    query_string:
+      query: "session_status: opened"
+
+realert:
+  minutes: 0
+
+alert:
+- iris
+
+iris_host: 127.0.0.1
+iris_api_token: token123456789
+iris_customer_id: 1
+iris_description: 'Test alert from ElastAlert2'
+iris_alert_note: 'Alert triggered by opened session'
+iris_alert_tags: 'test, login, ssh'
+iris_alert_context:
+  username: username
+  ip: src_ip
+iris_iocs:
+  - ioc_value: src_ip
+    ioc_description: source ip address
+    ioc_tlp_id: 1
+    ioc_type_id: 42
+    ioc_tags: ipv4
+  - ioc_value: username
+    ioc_description: who was connecting
+    ioc_tlp_id: 3
+    ioc_type_id: 3
+    ioc_tags: username

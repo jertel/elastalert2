@@ -44,6 +44,7 @@ Currently, we have support built in for these alert types:
 - Graylog GELF
 - HTTP POST
 - HTTP POST 2
+- Iris
 - Jira
 - Lark
 - Line Notify
