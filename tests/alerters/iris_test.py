@@ -41,6 +41,7 @@ def test_iris_make_alert_context_records(caplog):
 
     assert expected_data == actual_data
 
+
 def test_iris_make_iocs_records(caplog):
     caplog.set_level(logging.INFO)
     rule = {
@@ -98,6 +99,7 @@ def test_iris_make_iocs_records(caplog):
     actual_data = alert.make_iocs_records([match])
     assert expected_data == actual_data
 
+
 def test_iris_make_alert_minimal(caplog):
     caplog.set_level(logging.INFO)
     rule = {
@@ -132,6 +134,7 @@ def test_iris_make_alert_minimal(caplog):
 
     actual_data = alert.make_alert([match])
     assert expected_data == actual_data
+
 
 def test_iris_make_alert_maximal(caplog):
     caplog.set_level(logging.INFO)
@@ -212,6 +215,7 @@ def test_iris_make_alert_maximal(caplog):
     actual_data = alert.make_alert([match])
     assert expected_data == actual_data
 
+
 def test_iris_make_case_minimal(caplog):
     caplog.set_level(logging.INFO)
     rule = {
@@ -244,6 +248,7 @@ def test_iris_make_case_minimal(caplog):
         actual_data, actual_data_iocs = alert.make_case([match])
 
     assert expected_data == actual_data
+
 
 def test_iris_make_case_maximal(caplog):
     caplog.set_level(logging.INFO)
@@ -313,6 +318,7 @@ def test_iris_make_case_maximal(caplog):
 
     assert expected_data == actual_data
     assert expected_data_iocs == actual_data_iocs
+
 
 def test_iris_alert_alert(caplog):
     caplog.set_level(logging.INFO)
@@ -406,6 +412,7 @@ def test_iris_alert_alert(caplog):
 
     assert expected_data == mock_post_request.call_args_list[0][1]['json']
     assert ('elastalert', logging.INFO, 'Alert sent to Iris') == caplog.record_tuples[0]
+
 
 def test_iris_get_info(caplog):
     caplog.set_level(logging.INFO)

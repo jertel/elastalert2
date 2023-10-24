@@ -7,6 +7,7 @@ from requests import RequestException
 from elastalert.alerts import Alerter
 from elastalert.util import EAException, elastalert_logger, lookup_es_key
 
+
 class IrisAlerter(Alerter):
     required_options = set(['iris_host', 'iris_api_token', 'iris_customer_id'])
 
@@ -17,22 +18,21 @@ class IrisAlerter(Alerter):
         self.customer_id = self.rule.get('iris_customer_id')
         self.ca_cert = self.rule.get('iris_ca_cert', False)
         self.ignore_ssl_errors = self.rule.get('iris_ignore_ssl_errors', False)
-        self.description = self.rule.get('iris_description', '')
+        self.description = self.rule.get('iris_description', None)
         self.overwrite_timestamp = self.rule.get('iris_overwrite_timestamp', False)
         self.type = self.rule.get('iris_type', 'alert')
-        self.case_template_id = self.rule.get('iris_case_template_id', '')
+        self.case_template_id = self.rule.get('iris_case_template_id', None)
         self.headers = {
             'Content-Type': 'application/json',
             'Authorization': f'Bearer {self.rule.get("iris_api_token")}'
         }
-        self.alert_note = self.rule.get('iris_alert_note', '')
-        self.alert_tags = self.rule.get('iris_alert_tags', '')
+        self.alert_note = self.rule.get('iris_alert_note', None)
+        self.alert_tags = self.rule.get('iris_alert_tags', None)
         self.alert_status_id = self.rule.get('iris_alert_status_id', 2)
-        self.alert_source_link = self.rule.get('iris_alert_source_link', '')
+        self.alert_source_link = self.rule.get('iris_alert_source_link', None)
         self.alert_severity_id = self.rule.get('iris_alert_severity_id', 1)
-        self.alert_context = self.rule.get('iris_alert_context', '')
+        self.alert_context = self.rule.get('iris_alert_context', None)
         self.iocs = self.rule.get('iris_iocs', None)
-
 
     def make_alert_context_records(self, matches):
         alert_context = {}

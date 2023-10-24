@@ -2609,11 +2609,30 @@ Optional:
 
 ``iris_alert_tags``: List of tags.
 
-``iris_alert_status_id``: Alert status. Can be: ``1 - Unspecified``, ``2 - New``, ``3 - Assigned``, ``4 - In progress``, ``5 - Pending``, ``6 - Closed``, ``7 - Merged``. The default value is: `2`.
+``iris_alert_status_id``: The alert status of the alert, default value is ``2``. This parameter requires an integer input.
 
-``iris_alert_source_link``: Link, if needed.
+    Possible values:
 
-``iris_alert_severity_id``: Alert severity. Can be: ``1 - Unspecified``, ``2 - Informational``, ``3 - Low``, ``4 - Medium``, ``5 - High``, ``6 - Critical``. The default value is: `1`.
+    - ``1`` - Unspecified
+    - ``2`` - New
+    - ``3`` - Assigned
+    - ``4`` - In progress
+    - ``5`` - Pending
+    - ``6`` - Closed
+    - ``7`` - Merged.
+
+``iris_alert_source_link``: Your custom link, if needed.
+
+``iris_alert_severity_id``: The severity level of the alert, default value is ``1``. This parameter requires an integer input.
+
+    Possible values:
+
+    - ``1`` - Unspecified
+    - ``2`` - Informational
+    - ``3`` - Low
+    - ``4`` - Medium
+    - ``5`` - High
+    - ``6`` - Critical.
 
 ``iris_alert_context``:
 
