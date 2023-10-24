@@ -1,4 +1,3 @@
-import json
 import logging
 
 from unittest import mock
@@ -404,7 +403,7 @@ def test_iris_alert_alert(caplog):
         url=f'https://{rule["iris_host"]}/alerts/add',
         headers={
             'Content-Type': 'application/json',
-            f'Authorization': f'Bearer {rule["iris_api_token"]}'
+            'Authorization': f'Bearer {rule["iris_api_token"]}'
         },
         json=mock.ANY,
         verify=False,
