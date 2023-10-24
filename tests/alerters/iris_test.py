@@ -122,13 +122,13 @@ def test_iris_make_alert_minimal(caplog):
 
     expected_data = {
         "alert_title": 'Test Minimal Alert Body',
-        "alert_description": '',
+        "alert_description": None,
         "alert_source": "ElastAlert2",
         "alert_severity_id": 1,
         "alert_status_id": 2,
         "alert_source_event_time": datetime.now().strftime("%Y-%m-%dT%H:%M:%S"),
-        "alert_note": '',
-        "alert_tags": '',
+        "alert_note": None,
+        "alert_tags": None,
         "alert_customer_id": 1
     }
 
@@ -241,7 +241,7 @@ def test_iris_make_case_minimal(caplog):
         "case_soc_id": "SOC_123456",
         "case_customer": 1,
         "case_name": "Test Minimal Case",
-        "case_description": ''
+        "case_description": None
     }
 
     with patch('uuid.uuid4', return_value='123456'):
@@ -292,7 +292,7 @@ def test_iris_make_case_maximal(caplog):
         "case_soc_id": "SOC_123456",
         "case_customer": 1,
         "case_name": "Test Maximal Case",
-        "case_description": '',
+        "case_description": None,
         "case_template_id": 55,
     }
 
