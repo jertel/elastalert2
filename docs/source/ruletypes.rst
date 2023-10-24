@@ -2634,7 +2634,7 @@ Optional:
     - ``5`` - High
     - ``6`` - Critical.
 
-``iris_alert_context``:
+``iris_alert_context``: Include information from the match into the alert context. Working as key-value, where the key is your custom name and value - data from elasticsearch message.
 
 ``iris_iocs``: Description of the IOC to be added.
 
