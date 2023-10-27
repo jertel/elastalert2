@@ -1,7 +1,7 @@
 .PHONY: all production test docs clean
 
 COMPOSE = "-compose"
-$(shell docker$(COMPOSE) 2> /dev/null)
+$(which shell && shell docker$(COMPOSE) 2> /dev/null)
 ifneq ($(.SHELLSTATUS),0)
 	COMPOSE = " compose"
 endif
