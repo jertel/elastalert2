@@ -4,7 +4,7 @@
 - TBD
 
 ## New features
-- TBD
+- [Iris] Alerter added - [#1301](https://github.com/jertel/elastalert2/pull/1301) - @malinkinsa 
 
 ## Other changes
 - Refactored FlatlineRule to make it more extensible - [#1291](https://github.com/jertel/elastalert2/pull/1291) - @rundef 

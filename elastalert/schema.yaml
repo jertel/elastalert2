@@ -72,6 +72,20 @@ definitions:
 
   filter: &filter {}
 
+  irisIocField: &irisIocField
+    type: object
+    additionalProperties: false
+    properties:
+      ioc_value: {type: string}
+      ioc_description: {type: string}
+      ioc_tlp_id: {type: integer, enum: [1, 2, 3]}
+      ioc_type_id: {type: integer}
+      ioc_tags: {type: string}
+
+  arrayOfIrisIocFields: &arrayOfIrisIocFields
+    type: array
+    items: *irisIocField
+
 required: [type, index, alert]
 type: object
 
@@ -513,6 +527,35 @@ properties:
   http_post2_ca_certs: {type: [boolean, string]}
   http_post2_ignore_ssl_errors: {type: boolean}
   http_post2_timeout: {type: integer}
+
+  ### IRIS
+  iris_url: {type: string}
+  iris_api_token: {type: string}
+  iris_type: {type: string, enum: ['alert', 'case']}
+  iris_customer_id: {type: integer}
+  iris_ignore_ssl_errors: {type: boolean}
+  iris_ca_cert: {type: string}
+  iris_overwrite_timestamp: {type: boolean}
+  iris_case_template_id: {type: integer}
+  iris_description: {type: string}
+  iris_alert_note: {type: string}
+  iris_alert_tags: {type: string}
+  iris_alert_status_id: {type: integer, enum: [1, 2, 3, 4, 5, 6, 7]}
+  iris_alert_source_link: {type: string}
+  iris_alert_severity_id: {type: integer, enum: [1, 2, 3, 4, 5, 6]}
+  iris_iocs: *arrayOfIrisIocFields
+  iris_alert_context:
+    type: object
+    minProperties: 1
+    patternProperties:
+      "^.+$":
+        oneOf:
+          - type: string
+          - type: object
+            additionalProperties: false
+            required: [ field ]
+            properties:
+              field: { type: string, minLength: 1 }
 
   ### Jira
   jira_server: {type: string}
