@@ -30,7 +30,7 @@ jobs:
 
       - name: Install buildx
         id: buildx
-        uses: crazy-max/ghaction-docker-buildx@v1
+        uses: docker/setup-buildx-action@v3
         with:
           buildx-version: latest
 
