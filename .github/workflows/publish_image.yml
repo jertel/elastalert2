@@ -20,7 +20,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
 
       - name: Log into GitHub Registry
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login docker.pkg.github.com -u ${{ github.actor }} --password-stdin
@@ -32,7 +32,7 @@ jobs:
         id: buildx
         uses: crazy-max/ghaction-docker-buildx@v1
         with:
-          version: latest
+          buildx-version: latest
 
       - name: Build and Push multi-arch to Docker Hub
         run: |
