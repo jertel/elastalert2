@@ -8,6 +8,7 @@
 
 ## Other changes
 - Refactored FlatlineRule to make it more extensible - [#1291](https://github.com/jertel/elastalert2/pull/1291) - @rundef 
+- Add support for Kibana 8.11 for Kibana Discover - [#1305](https://github.com/jertel/elastalert2/pull/1305) - @nsano-rururu
 
 # 2.14.0
 
