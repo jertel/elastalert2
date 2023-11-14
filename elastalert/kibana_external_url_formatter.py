@@ -157,3 +157,15 @@ def create_kibana_external_url_formatter(
         return ShortKibanaExternalUrlFormatter(base_url, auth, security_tenant, new_shortener, verify)
 
     return AbsoluteKibanaExternalUrlFormatter(base_url, security_tenant)
+    
+def create_opensearch_external_url_formatter(
+    rule,
+    shorten: bool,
+    security_tenant: str,
+) -> KibanaExternalUrlFormatter:
+    '''Creates a Kibana external url formatter'''
+
+    base_url = rule.get('kibana_url')
+
+    return AbsoluteKibanaExternalUrlFormatter(base_url, security_tenant)
+
