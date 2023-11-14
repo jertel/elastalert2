@@ -70,6 +70,8 @@ Rule Configuration Cheat Sheet
 +--------------------------------------------------------------+           |
 | ``generate_kibana_discover_url`` (boolean, default False)    |           |
 +--------------------------------------------------------------+           |
+| ``generate_opensearch_discover_url`` (boolean, default False)|           |
++--------------------------------------------------------------+           |
 | ``shorten_kibana_discover_url`` (boolean, default False)     |           |
 +--------------------------------------------------------------+           |
 | ``kibana_discover_app_url`` (string, no default)             |           |
