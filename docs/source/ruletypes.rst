@@ -686,7 +686,7 @@ Example kibana_url + kibana_discover_app_url usage::
     alert_text_type: alert_text_only
 
 generate_opensearch_discover_url
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ``generate_opensearch_discover_url``: Enables the generation of the ``kibana_discover_url`` variable for the Opensearch Discover application.
 This setting requires the following settings are also configured:
