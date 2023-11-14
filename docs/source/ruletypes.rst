@@ -627,7 +627,7 @@ kibana_url
 ``kibana_url``: The base url of the Kibana application. If not specified, a URL will be constructed using ``es_host``
 and ``es_port``.
 
-This value will be used if ``generate_kibana_discover_url`` is true and ``kibana_discover_app_url`` is a relative path
+This value will be used if ``generate_kibana_discover_url`` or ``generate_opensearch_discover_url`` is true and ``kibana_discover_app_url`` is a relative path
 
 (Optional, string, default ``http://<es_host>:<es_port>/_plugin/kibana/``)
 
@@ -681,6 +681,39 @@ Example kibana_url + kibana_discover_app_url usage::
     kibana_discover_app_url: "app/discover#/"
     kibana_discover_index_pattern_id: "4babf380-c3b1-11eb-b616-1b59c2feec54"
     kibana_discover_version: "7.15"
+    alert_text: '{}'
+    alert_text_args: [ kibana_discover_url ]
+    alert_text_type: alert_text_only
+
+generate_opensearch_discover_url
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+``generate_opensearch_discover_url``: Enables the generation of the ``kibana_discover_url`` variable for the Opensearch Discover application.
+This setting requires the following settings are also configured:
+
+- ``kibana_discover_app_url``
+- ``kibana_discover_version``
+- ``kibana_discover_index_pattern_id``
+
+``generate_opensearch_discover_url: true``
+
+Example kibana_discover_app_url only usage for opensearch::
+
+    generate_opensearch_discover_url: true
+    kibana_discover_app_url: "http://localhost:5601/app/data-explorer/discover?security_tenant=Admin#"
+    kibana_discover_index_pattern_id: "4babf380-c3b1-11eb-b616-1b59c2feec54"
+    kibana_discover_version: "2.11"
+    alert_text: '{}'
+    alert_text_args: [ kibana_discover_url ]
+    alert_text_type: alert_text_only
+
+Example kibana_url + kibana_discover_app_url usage for opensearch::
+
+    generate_kibana_discover_url: true
+    kibana_url: "http://localhost:5601/"
+    kibana_discover_app_url: "app/data-explorer/discover?security_tenant=Admin#"
+    kibana_discover_index_pattern_id: "4babf380-c3b1-11eb-b616-1b59c2feec54"
+    kibana_discover_version: "2.11"
     alert_text: '{}'
     alert_text_args: [ kibana_discover_url ]
     alert_text_type: alert_text_only
