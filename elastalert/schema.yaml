@@ -284,7 +284,7 @@ properties:
   query_key: *arrayOfString
   replace_dots_in_field_names: {type: boolean}
   scan_entire_timeframe: {type: boolean}
-
+  
   ### summary table
   summary_table_fields: {type: array, items: {type: string}}
   summary_table_type: {type: string, enum: ['ascii', 'html', 'markdown']}
@@ -302,7 +302,7 @@ properties:
   kibana_discover_from_timedelta: *timedelta
   kibana_discover_to_timedelta: *timedelta
   kibana_discover_security_tenant: {type:string}
-
+  generate_opensearch_discover_url: {type: boolean}
   # Alert Content
   alert_text: {type: string} # Python format string
   alert_text_args: {type: array, items: {type: string}}
