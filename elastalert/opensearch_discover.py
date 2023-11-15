@@ -12,7 +12,7 @@ from .util import elastalert_logger
 from .util import lookup_es_key
 from .util import ts_add
 
-kibana_default_timedelta = datetime.timedelta(minutes=10)
+opensearch_default_timedelta = datetime.timedelta(minutes=10)
 
 opensearch_versions = frozenset([
         '2.11'
@@ -30,16 +30,16 @@ def generate_opensearch_discover_url(rule, match):
         )
         return None
 
-    opensearch_version = rule.get('kibana_discover_version')
+    opensearch_version = rule.get('opensearch_discover_version')
     if not opensearch_version:
         elastalert_logger.warning(
-            'Missing kibana_discover_version for rule %s' % (
+            'Missing opensearch_discover_version for rule %s' % (
                 rule.get('name', '<MISSING NAME>')
             )
         )
         return None
 
-    index = rule.get('kibana_discover_index_pattern_id')
+    index = rule.get('opensearch_discover_index_pattern_id')
     if not index:
         elastalert_logger.warning(
             'Missing opensearch_discover_index_pattern_id for rule %s' % (
@@ -48,7 +48,7 @@ def generate_opensearch_discover_url(rule, match):
         )
         return None
 
-    columns = rule.get('kibana_discover_columns', ['_source'])
+    columns = rule.get('opensearch_discover_columns', ['_source'])
     filters = rule.get('filter', [])
 
     if 'query_key' in rule:
@@ -57,10 +57,10 @@ def generate_opensearch_discover_url(rule, match):
         query_keys = []
 
     timestamp = lookup_es_key(match, rule['timestamp_field'])
-    timeframe = rule.get('timeframe', kibana_default_timedelta)
-    from_timedelta = rule.get('kibana_discover_from_timedelta', timeframe)
+    timeframe = rule.get('timeframe', opensearch_default_timedelta)
+    from_timedelta = rule.get('opensearch_discover_from_timedelta', timeframe)
     from_time = ts_add(timestamp, -from_timedelta)
-    to_timedelta = rule.get('kibana_discover_to_timedelta', timeframe)
+    to_timedelta = rule.get('opensearch_discover_to_timedelta', timeframe)
     to_time = ts_add(timestamp, to_timedelta)
 
     if opensearch_version in opensearch_versions:
