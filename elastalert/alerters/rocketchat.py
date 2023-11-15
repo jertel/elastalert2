@@ -33,7 +33,7 @@ class RocketChatAlerter(Alerter):
         self.rocket_chat_kibana_discover_title = self.rule.get('rocket_chat_kibana_discover_title', 'Discover in Kibana')
         self.rocket_chat_attach_opensearch_discover_url = self.rule.get('rocket_chat_attach_opensearch_discover_url', False)
         self.rocket_chat_opensearch_discover_color = self.rule.get('rocket_chat_opensearch_discover_color', '#ec4b98')
-        self.rocket_chat_opensearch_discover_title = self.rule.get('rocket_chat_opensearch_discover_title', 'Discover in Kibana')
+        self.rocket_chat_opensearch_discover_title = self.rule.get('rocket_chat_opensearch_discover_title', 'Discover in opensearch')
         self.rocket_chat_ignore_ssl_errors = self.rule.get('rocket_chat_ignore_ssl_errors', False)
         self.rocket_chat_timeout = self.rule.get('rocket_chat_timeout', 10)
         self.rocket_chat_ca_certs = self.rule.get('rocket_chat_ca_certs')
