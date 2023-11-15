@@ -481,7 +481,7 @@ def test_ms_teams_opensearch_discover_title():
         'name': 'Test Rule',
         'type': 'any',
         'ms_teams_attach_opensearch_discover_url': True,
-        'ms_teams_opensearch_discover_title': 'Click to discover in Kibana',
+        'ms_teams_opensearch_discover_title': 'Click to discover in opensearch',
         'ms_teams_webhook_url': 'http://test.webhook.url',
         'ms_teams_alert_summary': 'Alert from ElastAlert',
         'alert': [],
