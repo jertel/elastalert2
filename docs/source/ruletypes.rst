@@ -643,7 +643,17 @@ kibana_url
 ``kibana_url``: The base url of the Kibana application. If not specified, a URL will be constructed using ``es_host``
 and ``es_port``.
 
-This value will be used if ``generate_kibana_discover_url`` or ``generate_opensearch_discover_url`` is true and ``kibana_discover_app_url`` is a relative path
+This value will be used if ``generate_kibana_discover_url`` is true and ``kibana_discover_app_url`` is a relative path
+
+(Optional, string, default ``http://<es_host>:<es_port>/_plugin/kibana/``)
+
+opensearch_url
+^^^^^^^^^^
+
+``opensearch_url``: The base url of the opensearch application. If not specified, a URL will be constructed using ``es_host``
+and ``es_port``.
+
+This value will be used if ``generate_opensearch_discover_url`` is true and ``opensearch_discover_app_url`` is a relative path
 
 (Optional, string, default ``http://<es_host>:<es_port>/_plugin/kibana/``)
 
@@ -704,34 +714,34 @@ Example kibana_url + kibana_discover_app_url usage::
 generate_opensearch_discover_url
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-``generate_opensearch_discover_url``: Enables the generation of the ``kibana_discover_url`` variable for the Opensearch Discover application.
+``generate_opensearch_discover_url``: Enables the generation of the ``opensearch_discover_url`` variable for the Opensearch Discover application.
 This setting requires the following settings are also configured:
 
-- ``kibana_discover_app_url``
-- ``kibana_discover_version``
-- ``kibana_discover_index_pattern_id``
+- ``opensearch_discover_app_url``
+- ``opensearch_discover_version``
+- ``opensearch_discover_index_pattern_id``
 
 ``generate_opensearch_discover_url: true``
 
-Example kibana_discover_app_url only usage for opensearch::
+Example opensearch_discover_app_url only usage for opensearch::
 
     generate_opensearch_discover_url: true
-    kibana_discover_app_url: "http://localhost:5601/app/data-explorer/discover?security_tenant=Admin#"
-    kibana_discover_index_pattern_id: "4babf380-c3b1-11eb-b616-1b59c2feec54"
-    kibana_discover_version: "2.11"
+    opensearch_discover_app_url: "http://localhost:5601/app/data-explorer/discover?security_tenant=Admin#"
+    opensearch_discover_index_pattern_id: "4babf380-c3b1-11eb-b616-1b59c2feec54"
+    opensearch_discover_version: "2.11"
     alert_text: '{}'
-    alert_text_args: [ kibana_discover_url ]
+    alert_text_args: [ opensearch_discover_url ]
     alert_text_type: alert_text_only
 
-Example kibana_url + kibana_discover_app_url usage for opensearch::
+Example opensearch_url + opensearch_discover_app_url usage for opensearch::
 
-    generate_kibana_discover_url: true
-    kibana_url: "http://localhost:5601/"
-    kibana_discover_app_url: "app/data-explorer/discover?security_tenant=Admin#"
-    kibana_discover_index_pattern_id: "4babf380-c3b1-11eb-b616-1b59c2feec54"
-    kibana_discover_version: "2.11"
+    generate_opensearch_discover_url: true
+    opensearch_url: "http://localhost:5601/"
+    opensearch_discover_app_url: "app/data-explorer/discover?security_tenant=Admin#"
+    opensearch_discover_index_pattern_id: "4babf380-c3b1-11eb-b616-1b59c2feec54"
+    opensearch_discover_version: "2.11"
     alert_text: '{}'
-    alert_text_args: [ kibana_discover_url ]
+    alert_text_args: [ opensearch_discover_url ]
     alert_text_type: alert_text_only
 
 shorten_kibana_discover_url
@@ -760,6 +770,17 @@ This value should be relative to the base kibana url defined by ``kibana_url`` a
 
 (Optional, string, no default)
 
+opensearch_discover_app_url
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+``opensearch_discover_app_url``: The url of the opensearch Discover application used to generate the ``opensearch_discover_url`` variable.
+This value can use `$VAR` and `${VAR}` references to expand environment variables.
+This value should be relative to the base opensearch url defined by ``opensearch_url`` and will vary depending on your installation.
+
+``opensearch_discover_app_url: app/discover#/``
+
+(Optional, string, no default)
+
 kibana_discover_security_tenant
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -779,6 +800,18 @@ The currently supported versions of Kibana Discover are:
 - `8.0`, `8.1`, `8.2`, `8.3`, `8.4`, `8.5`, `8.6`, `8.7`, `8.8`, `8.9` , `8.10` , `8.11` 
 
 ``kibana_discover_version: '7.15'``
+
+opensearch_discover_version
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+``opensearch_discover_version``: Specifies the version of the opensearch Discover application.
+
+The currently supported versions of opensearch Discover are:
+
+- `2.11`
+
+``opensearch_discover_version: '2.11'``
+
 
 kibana_discover_index_pattern_id
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -804,6 +837,29 @@ You can modify an index pattern's id by exporting the saved object, modifying th
 
 ``kibana_discover_index_pattern_id: 4e97d188-8a45-4418-8a37-07ed69b4d34c``
 
+opensearch_discover_index_pattern_id
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+``opensearch_discover_index_pattern_id``: The id of the index pattern to link to in the opensearch Discover application.
+These ids are usually generated and can be found in url of the index pattern management page, or by exporting its saved object.
+
+
+Example export of an index pattern's saved object:
+
+.. code-block:: text
+
+    [
+        {
+            "_id": "4e97d188-8a45-4418-8a37-07ed69b4d34c",
+            "_type": "index-pattern",
+            "_source": { ... }
+        }
+    ]
+
+You can modify an index pattern's id by exporting the saved object, modifying the ``_id`` field, and re-importing.
+
+``opensearch_discover_index_pattern_id: 4e97d188-8a45-4418-8a37-07ed69b4d34c``
+
 kibana_discover_columns
 ^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -811,6 +867,15 @@ kibana_discover_columns
 Defaults to the ``_source`` column.
 
 ``kibana_discover_columns: [ timestamp, message ]``
+
+opensearch_discover_columns
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+``opensearch_discover_columns``: The columns to display in the generated opensearch Discover application link.
+Defaults to the ``_source`` column.
+
+``opensearch_discover_columns: [ timestamp, message ]``
+
 
 kibana_discover_from_timedelta
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -820,6 +885,15 @@ The `from` time is calculated by subtracting this timedelta from the event time.
 
 ``kibana_discover_from_timedelta: minutes: 2``
 
+
+opensearch_discover_from_timedelta
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+``opensearch_discover_from_timedelta``:  The offset to the `from` time of the opensearch Discover link's time range.
+The `from` time is calculated by subtracting this timedelta from the event time.  Defaults to 10 minutes.
+
+``opensearch_discover_from_timedelta: minutes: 2``
+
 kibana_discover_to_timedelta
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -827,6 +901,14 @@ kibana_discover_to_timedelta
 The `to` time is calculated by adding this timedelta to the event time.  Defaults to 10 minutes.
 
 ``kibana_discover_to_timedelta: minutes: 2``
+
+opensearch_discover_to_timedelta
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+``opensearch_discover_to_timedelta``:  The offset to the `to` time of the opensearch Discover link's time range.
+The `to` time is calculated by adding this timedelta to the event time.  Defaults to 10 minutes.
+
+``opensearch_discover_to_timedelta: minutes: 2``
 
 use_local_time
 ^^^^^^^^^^^^^^
