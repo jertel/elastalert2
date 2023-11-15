@@ -88,6 +88,22 @@ Rule Configuration Cheat Sheet
 +--------------------------------------------------------------+           |
 | ``kibana_discover_to_timedelta`` (time, default: 10 min)     |           |
 +--------------------------------------------------------------+           |
+| ``shorten_kibana_discover_url`` (boolean, default False)     |           |
++--------------------------------------------------------------+           |
+| ``opensearch_discover_app_url`` (string, no default)         |           |
++--------------------------------------------------------------+           |
+| ``opensearch_discover_version`` (string, no default)         |           |
++--------------------------------------------------------------+           |
+| ``opensearch_discover_index_pattern_id`` (string, no default)|           |
++--------------------------------------------------------------+           |
+| ``opensearch_discover_security_tenant``  (string, no default)|           |
++--------------------------------------------------------------+           |
+| ``opensearch_discover_columns`` (list of strs, default _source)|           |
++--------------------------------------------------------------+           |
+| ``opensearch_discover_from_timedelta`` (time, default: 10 min)|           |
++--------------------------------------------------------------+           |
+| ``opensearch_discover_to_timedelta`` (time, default: 10 min) |           |
++--------------------------------------------------------------+           |
 | ``use_local_time`` (boolean, default True)                   |           |
 +--------------------------------------------------------------+           |
 | ``realert`` (time, default: 1 min)                           |           |
