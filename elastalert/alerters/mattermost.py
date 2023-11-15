@@ -47,6 +47,9 @@ class MattermostAlerter(Alerter):
         self.mattermost_attach_kibana_discover_url = self.rule.get('mattermost_attach_kibana_discover_url', False)
         self.mattermost_kibana_discover_color = self.rule.get('mattermost_kibana_discover_color', '#ec4b98')
         self.mattermost_kibana_discover_title = self.rule.get('mattermost_kibana_discover_title', 'Discover in Kibana')
+        self.mattermost_attach_opensearch_discover_url = self.rule.get('mattermost_attach_opensearch_discover_url', False)
+        self.mattermost_opensearch_discover_color = self.rule.get('mattermost_opensearch_discover_color', '#ec4b98')
+        self.mattermost_opensearch_discover_title = self.rule.get('mattermost_opensearch_discover_title', 'Discover in Kibana')
 
     def get_aggregation_summary_text__maximum_width(self):
         width = super(MattermostAlerter, self).get_aggregation_summary_text__maximum_width()
@@ -143,7 +146,17 @@ class MattermostAlerter(Alerter):
                     'title': self.mattermost_kibana_discover_title,
                     'title_link': kibana_discover_url
                 })
+                
+        if self.mattermost_attach_opensearch_discover_url:
+            opensearch_discover_url = lookup_es_key(matches[0], 'opensearch_discover_url')
+            if kibana_discover_url:
+                payload['attachments'].append({
+                    'color': self.mattermost_opensearch_discover_color,
+                    'title': self.mattermost_opensearch_discover_title,
+                    'title_link': opensearch_discover_url
+                })
 
+        
         for url in self.mattermost_webhook_url:
             for channel_override in self.mattermost_channel_override:
                 try:
