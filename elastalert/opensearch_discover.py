@@ -21,10 +21,10 @@ opensearch_versions = frozenset([
 def generate_opensearch_discover_url(rule, match):
     ''' Creates a link for a kibana discover app. '''
 
-    discover_app_url = rule.get('kibana_discover_app_url')
+    discover_app_url = rule.get('opensearch_discover_app_url')
     if not discover_app_url:
         elastalert_logger.warning(
-            'Missing kibana_discover_app_url for rule %s' % (
+            'Missing opensearch_discover_app_url for rule %s' % (
                 rule.get('name', '<MISSING NAME>')
             )
         )
