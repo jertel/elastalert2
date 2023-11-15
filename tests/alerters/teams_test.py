@@ -389,7 +389,142 @@ def test_ms_teams_kibana_discover_title():
     actual_data = json.loads(mock_post_request.call_args_list[0][1]['data'])
     assert expected_data == actual_data
 
+def test_ms_teams_attach_opensearch_discover_url_when_generated():
+    rule = {
+        'name': 'Test Rule',
+        'type': 'any',
+        'ms_teams_attach_opensearch_discover_url': True,
+        'ms_teams_webhook_url': 'http://test.webhook.url',
+        'ms_teams_alert_summary': 'Alert from ElastAlert',
+        'alert': [],
+        'alert_subject': 'Cool subject',
+    }
+    rules_loader = FileRulesLoader({})
+    rules_loader.load_modules(rule)
+    alert = MsTeamsAlerter(rule)
+    match = {
+        '@timestamp': '2016-01-01T00:00:00',
+        'opensearch_discover_url': 'http://opensearch#discover'
+    }
+    with mock.patch('requests.post') as mock_post_request:
+        alert.alert([match])
 
+    expected_data = {
+        '@type': 'MessageCard',
+        '@context': 'http://schema.org/extensions',
+        'summary': rule['ms_teams_alert_summary'],
+        'title': rule['alert_subject'],
+        'sections': [{'text': BasicMatchString(rule, match).__str__()}],
+        'potentialAction': [
+            {
+                '@type': 'OpenUri',
+                'name': 'Discover in opensearch',
+                'targets': [
+                    {
+                        'os': 'default',
+                        'uri': 'http://opensearch#discover',
+                    }
+                ],
+            }
+        ],
+    }
+    mock_post_request.assert_called_once_with(
+        rule['ms_teams_webhook_url'],
+        data=mock.ANY,
+        headers={'content-type': 'application/json'},
+        proxies=None,
+        verify=True
+    )
+    actual_data = json.loads(mock_post_request.call_args_list[0][1]['data'])
+    assert expected_data == actual_data
+
+
+def test_ms_teams_attach_opensearch_discover_url_when_not_generated():
+    rule = {
+        'name': 'Test Rule',
+        'type': 'any',
+        'ms_teams_attach_opensearch_discover_url': True,
+        'ms_teams_webhook_url': 'http://test.webhook.url',
+        'ms_teams_alert_summary': 'Alert from ElastAlert',
+        'alert': [],
+        'alert_subject': 'Cool subject',
+    }
+    rules_loader = FileRulesLoader({})
+    rules_loader.load_modules(rule)
+    alert = MsTeamsAlerter(rule)
+    match = {
+        '@timestamp': '2016-01-01T00:00:00'
+    }
+    with mock.patch('requests.post') as mock_post_request:
+        alert.alert([match])
+
+    expected_data = {
+        '@type': 'MessageCard',
+        '@context': 'http://schema.org/extensions',
+        'summary': rule['ms_teams_alert_summary'],
+        'title': rule['alert_subject'],
+        'sections': [{'text': BasicMatchString(rule, match).__str__()}],
+    }
+    mock_post_request.assert_called_once_with(
+        rule['ms_teams_webhook_url'],
+        data=mock.ANY,
+        headers={'content-type': 'application/json'},
+        proxies=None,
+        verify=True
+    )
+    actual_data = json.loads(mock_post_request.call_args_list[0][1]['data'])
+    assert expected_data == actual_data
+
+
+def test_ms_teams_opensearch_discover_title():
+    rule = {
+        'name': 'Test Rule',
+        'type': 'any',
+        'ms_teams_attach_opensearch_discover_url': True,
+        'ms_teams_opensearch_discover_title': 'Click to discover in Kibana',
+        'ms_teams_webhook_url': 'http://test.webhook.url',
+        'ms_teams_alert_summary': 'Alert from ElastAlert',
+        'alert': [],
+        'alert_subject': 'Cool subject',
+    }
+    rules_loader = FileRulesLoader({})
+    rules_loader.load_modules(rule)
+    alert = MsTeamsAlerter(rule)
+    match = {
+        '@timestamp': '2016-01-01T00:00:00',
+        'opensearch_discover_url': 'http://opensearch#discover'
+    }
+    with mock.patch('requests.post') as mock_post_request:
+        alert.alert([match])
+
+    expected_data = {
+        '@type': 'MessageCard',
+        '@context': 'http://schema.org/extensions',
+        'summary': rule['ms_teams_alert_summary'],
+        'title': rule['alert_subject'],
+        'sections': [{'text': BasicMatchString(rule, match).__str__()}],
+        'potentialAction': [
+            {
+                '@type': 'OpenUri',
+                'name': 'Click to discover in opensearch',
+                'targets': [
+                    {
+                        'os': 'default',
+                        'uri': 'http://opensearch#discover',
+                    }
+                ],
+            }
+        ],
+    }
+    mock_post_request.assert_called_once_with(
+        rule['ms_teams_webhook_url'],
+        data=mock.ANY,
+        headers={'content-type': 'application/json'},
+        proxies=None,
+        verify=True
+    )
+    actual_data = json.loads(mock_post_request.call_args_list[0][1]['data'])
+    assert expected_data == actual_data
 def test_ms_teams_alert_facts():
     rule = {
         'name': 'Test Rule',
