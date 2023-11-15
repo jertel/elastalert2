@@ -302,7 +302,17 @@ properties:
   kibana_discover_from_timedelta: *timedelta
   kibana_discover_to_timedelta: *timedelta
   kibana_discover_security_tenant: {type:string}
+
+  ### Opensearch discover App Link
   generate_opensearch_discover_url: {type: boolean}
+  opensearch_url: {type: string, format: uri}
+  opensearch_discover_app_url: {type: string}
+  opensearch_discover_version: {type: string, enum: ['2.11']}
+  opensearch_discover_index_pattern_id: {type: string, minLength: 1}
+  opensearch_discover_columns: {type: array, items: {type: string, minLength: 1}, minItems: 1}
+  opensearch_discover_from_timedelta: *timedelta
+  opensearch_discover_to_timedelta: *timedelta
+  
   # Alert Content
   alert_text: {type: string} # Python format string
   alert_text_args: {type: array, items: {type: string}}
