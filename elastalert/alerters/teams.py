@@ -25,6 +25,8 @@ class MsTeamsAlerter(Alerter):
         self.ms_teams_alert_facts = self.rule.get('ms_teams_alert_facts', '')
         self.ms_teams_attach_kibana_discover_url = self.rule.get('ms_teams_attach_kibana_discover_url', False)
         self.ms_teams_kibana_discover_title = self.rule.get('ms_teams_kibana_discover_title', 'Discover in Kibana')
+        self.ms_teams_attach_opensearch_discover_url = self.rule.get('ms_teams_attach_opensearch_discover_url', False)
+        self.ms_teams_opensearch_discover_title = self.rule.get('ms_teams_opensearch_discover_title', 'Discover in opensearch')
 
     def format_body(self, body):
         if self.ms_teams_alert_fixed_width:
