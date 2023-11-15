@@ -648,7 +648,7 @@ This value will be used if ``generate_kibana_discover_url`` is true and ``kibana
 (Optional, string, default ``http://<es_host>:<es_port>/_plugin/kibana/``)
 
 opensearch_url
-^^^^^^^^^^
+^^^^^^^^^^^^^^
 
 ``opensearch_url``: The base url of the opensearch application. If not specified, a URL will be constructed using ``es_host``
 and ``es_port``.
