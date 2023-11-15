@@ -455,6 +455,204 @@ def test_slack_kibana_discover_color():
     actual_data = json.loads(mock_post_request.call_args_list[0][1]['data'])
     assert expected_data == actual_data
 
+def test_slack_attach_opensearch_discover_url_when_generated():
+    rule = {
+        'name': 'Test Rule',
+        'type': 'any',
+        'slack_attach_opensearch_discover_url': True,
+        'slack_webhook_url': 'http://please.dontgohere.slack',
+        'alert': []
+    }
+    rules_loader = FileRulesLoader({})
+    rules_loader.load_modules(rule)
+    alert = SlackAlerter(rule)
+    match = {
+        '@timestamp': '2016-01-01T00:00:00',
+        'opensearch_discover_url': 'http://opensearch#discover'
+    }
+    with mock.patch('requests.post') as mock_post_request:
+        alert.alert([match])
+
+    expected_data = {
+        'username': 'elastalert',
+        'parse': 'none',
+        'text': '',
+        'attachments': [
+            {
+                'color': 'danger',
+                'title': 'Test Rule',
+                'text': BasicMatchString(rule, match).__str__(),
+                'mrkdwn_in': ['text', 'pretext'],
+                'fields': []
+            },
+            {
+                'color': '#ec4b98',
+                'title': 'Discover in Opensearch',
+                'title_link': 'http://opensearch#discover'
+            }
+        ],
+        'icon_emoji': ':ghost:',
+        'channel': ''
+    }
+    mock_post_request.assert_called_once_with(
+        rule['slack_webhook_url'],
+        data=mock.ANY,
+        headers={'content-type': 'application/json'},
+        proxies=None,
+        verify=True,
+        timeout=10
+    )
+    actual_data = json.loads(mock_post_request.call_args_list[0][1]['data'])
+    assert expected_data == actual_data
+
+
+def test_slack_attach_opensearch_discover_url_when_not_generated():
+    rule = {
+        'name': 'Test Rule',
+        'type': 'any',
+        'slack_attach_opensearch_discover_url': True,
+        'slack_webhook_url': 'http://please.dontgohere.slack',
+        'alert': []
+    }
+    rules_loader = FileRulesLoader({})
+    rules_loader.load_modules(rule)
+    alert = SlackAlerter(rule)
+    match = {
+        '@timestamp': '2016-01-01T00:00:00'
+    }
+    with mock.patch('requests.post') as mock_post_request:
+        alert.alert([match])
+
+    expected_data = {
+        'username': 'elastalert',
+        'parse': 'none',
+        'text': '',
+        'attachments': [
+            {
+                'color': 'danger',
+                'title': 'Test Rule',
+                'text': BasicMatchString(rule, match).__str__(),
+                'mrkdwn_in': ['text', 'pretext'],
+                'fields': []
+            }
+        ],
+        'icon_emoji': ':ghost:',
+        'channel': ''
+    }
+    mock_post_request.assert_called_once_with(
+        rule['slack_webhook_url'],
+        data=mock.ANY,
+        headers={'content-type': 'application/json'},
+        proxies=None,
+        verify=True,
+        timeout=10
+    )
+    actual_data = json.loads(mock_post_request.call_args_list[0][1]['data'])
+    assert expected_data == actual_data
+
+
+def test_slack_opensearch_discover_title():
+    rule = {
+        'name': 'Test Rule',
+        'type': 'any',
+        'slack_attach_opensearch_discover_url': True,
+        'slack_opensearch_discover_title': 'Click to Discover in Opensearch',
+        'slack_webhook_url': 'http://please.dontgohere.slack',
+        'alert': []
+    }
+    rules_loader = FileRulesLoader({})
+    rules_loader.load_modules(rule)
+    alert = SlackAlerter(rule)
+    match = {
+        '@timestamp': '2016-01-01T00:00:00',
+        'opensearch_discover_url': 'http://opensearch#discover'
+    }
+    with mock.patch('requests.post') as mock_post_request:
+        alert.alert([match])
+
+    expected_data = {
+        'username': 'elastalert',
+        'parse': 'none',
+        'text': '',
+        'attachments': [
+            {
+                'color': 'danger',
+                'title': 'Test Rule',
+                'text': BasicMatchString(rule, match).__str__(),
+                'mrkdwn_in': ['text', 'pretext'],
+                'fields': []
+            },
+            {
+                'color': '#ec4b98',
+                'title': 'Click to Discover in Opensearch',
+                'title_link': 'http://opensearch#discover'
+            }
+        ],
+        'icon_emoji': ':ghost:',
+        'channel': ''
+    }
+    mock_post_request.assert_called_once_with(
+        rule['slack_webhook_url'],
+        data=mock.ANY,
+        headers={'content-type': 'application/json'},
+        proxies=None,
+        verify=True,
+        timeout=10
+    )
+    actual_data = json.loads(mock_post_request.call_args_list[0][1]['data'])
+    assert expected_data == actual_data
+
+
+def test_slack_opensearch_discover_color():
+    rule = {
+        'name': 'Test Rule',
+        'type': 'any',
+        'slack_attach_opensearch_discover_url': True,
+        'slack_opensearch_discover_color': 'blue',
+        'slack_webhook_url': 'http://please.dontgohere.slack',
+        'alert': []
+    }
+    rules_loader = FileRulesLoader({})
+    rules_loader.load_modules(rule)
+    alert = SlackAlerter(rule)
+    match = {
+        '@timestamp': '2016-01-01T00:00:00',
+        'opensearch_discover_url': 'http://opensearch#discover'
+    }
+    with mock.patch('requests.post') as mock_post_request:
+        alert.alert([match])
+
+    expected_data = {
+        'username': 'elastalert',
+        'parse': 'none',
+        'text': '',
+        'attachments': [
+            {
+                'color': 'danger',
+                'title': 'Test Rule',
+                'text': BasicMatchString(rule, match).__str__(),
+                'mrkdwn_in': ['text', 'pretext'],
+                'fields': []
+            },
+            {
+                'color': 'blue',
+                'title': 'Discover in Opensearch',
+                'title_link': 'http://opensearch#discover'
+            }
+        ],
+        'icon_emoji': ':ghost:',
+        'channel': ''
+    }
+    mock_post_request.assert_called_once_with(
+        rule['slack_webhook_url'],
+        data=mock.ANY,
+        headers={'content-type': 'application/json'},
+        proxies=None,
+        verify=True,
+        timeout=10
+    )
+    actual_data = json.loads(mock_post_request.call_args_list[0][1]['data'])
+    assert expected_data == actual_data
 
 def test_slack_proxy():
     rule = {
