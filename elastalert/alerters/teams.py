@@ -90,6 +90,21 @@ class MsTeamsAlerter(Alerter):
                         ],
                     }
                 ]
+        if self.ms_teams_attach_opensearch_discover_url:
+            opensearch_discover_url = lookup_es_key(matches[0], 'opensearch_discover_url')
+            if opensearch_discover_url:
+                payload['potentialAction'] = [
+                    {
+                        '@type': 'OpenUri',
+                        'name': self.ms_teams_opensearch_discover_title,
+                        'targets': [
+                            {
+                                'os': 'default',
+                                'uri': opensearch_discover_url,
+                            }
+                        ],
+                    }
+                ]
 
         for url in self.ms_teams_webhook_url:
             try:
