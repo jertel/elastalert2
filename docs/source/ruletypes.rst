@@ -887,7 +887,7 @@ The `from` time is calculated by subtracting this timedelta from the event time.
 
 
 opensearch_discover_from_timedelta
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ``opensearch_discover_from_timedelta``:  The offset to the `from` time of the opensearch Discover link's time range.
 The `from` time is calculated by subtracting this timedelta from the event time.  Defaults to 10 minutes.
@@ -903,7 +903,7 @@ The `to` time is calculated by adding this timedelta to the event time.  Default
 ``kibana_discover_to_timedelta: minutes: 2``
 
 opensearch_discover_to_timedelta
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ``opensearch_discover_to_timedelta``:  The offset to the `to` time of the opensearch Discover link's time range.
 The `to` time is calculated by adding this timedelta to the event time.  Defaults to 10 minutes.
