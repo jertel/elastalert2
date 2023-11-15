@@ -149,7 +149,7 @@ class MattermostAlerter(Alerter):
                 
         if self.mattermost_attach_opensearch_discover_url:
             opensearch_discover_url = lookup_es_key(matches[0], 'opensearch_discover_url')
-            if kibana_discover_url:
+            if opensearch_discover_url:
                 payload['attachments'].append({
                     'color': self.mattermost_opensearch_discover_color,
                     'title': self.mattermost_opensearch_discover_title,
