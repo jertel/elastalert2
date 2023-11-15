@@ -619,6 +619,10 @@ properties:
   mattermost_attach_kibana_discover_url: {type: boolean}
   mattermost_kibana_discover_color: {type: string}
   mattermost_kibana_discover_title: {type: string}
+  mattermost_attach_opensearch_discover_url: {type: boolean}
+  mattermost_opensearch_discover_color: {type: string}
+  mattermost_opensearch_discover_title: {type: string}
+
 
   ### Microsoft Teams
   ms_teams_webhook_url: *arrayOfString
@@ -631,6 +635,8 @@ properties:
   ms_teams_kibana_discover_title: {type: string}
   ms_teams_ca_certs: {type: [boolean, string]}
   ms_teams_ignore_ssl_errors: {type: boolean}
+  ms_teams_attach_opensearch_discover_url: {type: boolean}
+  ms_teams_opensearch_discover_title: {type: string}
 
   ### Opsgenie
   opsgenie_key: {type: string}
@@ -728,6 +734,9 @@ properties:
   slack_attach_kibana_discover_url: {type: boolean}
   slack_kibana_discover_color: {type: string}
   slack_kibana_discover_title: {type: string}
+  slack_attach_opensearch_discover_url: {type: boolean}
+  slack_opensearch_discover_color: {type: string}
+  slack_opensearch_discover_title: {type: string}
   slack_attach_jira_ticket_url: {type: boolean}
   slack_jira_ticket_color: {type: string}
   slack_jira_ticket_title: {type: string}
