@@ -1150,7 +1150,8 @@ higher. 'Down' meaning the reference number is ``spike_height`` higher than the 
 ``timeframe``: The rule will average out the rate of events over this time period. For example, ``hours: 1`` means that the 'current'
 window will span from present to one hour ago, and the 'reference' window will span from one hour ago to two hours ago. The rule
 will not be active until the time elapsed from the first event is at least two timeframes. This is to prevent an alert being triggered
-before a baseline rate has been established. This can be overridden using ``alert_on_new_data``.
+before a baseline rate has been established. This can be overridden using ``alert_on_new_data``, provided the rule uses the ``query_key`` 
+property (see more information on this below).
 
 
 Optional:
