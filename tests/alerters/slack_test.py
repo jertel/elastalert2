@@ -655,6 +655,7 @@ def test_slack_opensearch_discover_color():
     actual_data = json.loads(mock_post_request.call_args_list[0][1]['data'])
     assert expected_data == actual_data
 
+
 def test_slack_proxy():
     rule = {
         'name': 'Test Rule',
