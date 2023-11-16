@@ -260,7 +260,7 @@ def test_generate_opensearch_discover_url_with_single_filter():
         + '&_q=%28'
         + 'filters%3A%21%28%28%27%24state%27%3A%28store%3AappState%29'
         + '%2Cmeta%3A%28alias%3Afilter%2Cdisabled%3A%21f%2Cindex%3A%27logs-%2A%27%2C'
-        + 'key%3Aquery%2Cnegate%3A%21f%2Ctype%3Acustom%2Cvalue%3A%27%7B%22bool%22%3A%7B%22
+        + 'key%3Aquery%2Cnegate%3A%21f%2Ctype%3Acustom%2Cvalue%3A%27%7B%22bool%22%3A%7B%22'
         + 'must%22%3A%5B%7B%22term%22%3A%7B%22level%22%3A30%7D%7D%5D%7D%7D%27%29'
         + '%2Cquery%3A%28bool%3A%28must%3A%21%28%28term%3A%28level%3A30%29%29%29%29%29%29%29%2C'
         + 'query%3A%28language%3Alucene%2Cquery%3A%27%27%29%29'  # app end
