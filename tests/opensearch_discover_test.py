@@ -509,7 +509,7 @@ def test_generate_opensearch_discover_url_with_filter_and_query_key():
         + 'bool%22%3A%7B%22must%22%3A%5B%7B%22'
         + 'term%22%3A%7B%22level%22%3A30%7D%7D%5D%7D%7D%27%29%2C'
         + 'query%3A%28bool%3A%28must%3A%21%28%28term%3A%28level%3A30%29%29%29%29%29%29%2C%28%27%24'
-        + 'state%27%3A%28store%3AappState%29%2Cmeta%3A%28alias%3A%21n%2Cdisabled%3A%21f%2C
+        + 'state%27%3A%28store%3AappState%29%2Cmeta%3A%28alias%3A%21n%2Cdisabled%3A%21f%2C'
         + 'index%3A%27logs-%2A%27%2Ckey%3Astatus'
         + '%2Cnegate%3A%21f%2Cparams%3A%28query%3Aok%2Ctype%3Aphrase%29%2Ctype%3Aphrase%2Cvalue%3Aok%29%2C'
         + 'query%3A%28match%3A%28status%3A%28query%3Aok%2Ctype%3Aphrase%29%29%29%29%29%2C'
