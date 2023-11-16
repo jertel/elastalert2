@@ -389,6 +389,7 @@ def test_ms_teams_kibana_discover_title():
     actual_data = json.loads(mock_post_request.call_args_list[0][1]['data'])
     assert expected_data == actual_data
 
+
 def test_ms_teams_attach_opensearch_discover_url_when_generated():
     rule = {
         'name': 'Test Rule',
@@ -525,6 +526,8 @@ def test_ms_teams_opensearch_discover_title():
     )
     actual_data = json.loads(mock_post_request.call_args_list[0][1]['data'])
     assert expected_data == actual_data
+
+
 def test_ms_teams_alert_facts():
     rule = {
         'name': 'Test Rule',
