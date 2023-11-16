@@ -400,8 +400,9 @@ This is the default limit for ElasticSearch. Specifying more than 1024 items in 
 This is a known issue. Perhaps White List can have similar issues.
 See the following issues on the original yelp/elastalert for more information.
 
-https://github.com/Yelp/elastalert/issues/1867<br>
-https://github.com/Yelp/elastalert/issues/2704
+`Blacklist filter with 10.000+ terms is extremely slow <https://github.com/Yelp/elastalert/issues/1867>`_.
+
+`Failed to parse query for blacklist rule when file contains more than 1024 entries <https://github.com/Yelp/elastalert/issues/2704>`_.
 
 ElastAlert 2 doesn't have a listening port?
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -505,3 +506,13 @@ example
 .. code-block:: yaml
 
     disable_rules_on_error: false
+
+
+Is there an introductory article about elastalert2?
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Yelp, the developer of the original elastalert, has the following article on its blog.
+
+`ElastAlert: Alerting At Scale With Elasticsearch, Part 1 <https://engineeringblog.yelp.com/2015/10/elastalert-alerting-at-scale-with-elasticsearch.html>`_.
+
+`ElastAlert: Alerting At Scale With Elasticsearch, Part 2 <https://engineeringblog.yelp.com/2016/03/elastalert-part-two.html>`_.
