@@ -157,4 +157,3 @@ def create_kibana_external_url_formatter(
         return ShortKibanaExternalUrlFormatter(base_url, auth, security_tenant, new_shortener, verify)
 
     return AbsoluteKibanaExternalUrlFormatter(base_url, security_tenant)
-
