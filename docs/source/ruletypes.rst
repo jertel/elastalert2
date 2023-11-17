@@ -96,8 +96,6 @@ Rule Configuration Cheat Sheet
 +--------------------------------------------------------------+           |
 | ``opensearch_discover_index_pattern_id`` (string, no default)|           |
 +--------------------------------------------------------------+           |
-| ``opensearch_discover_security_tenant``  (string, no default)|           |
-+--------------------------------------------------------------+           |
 |``opensearch_discover_columns`` (list of strs,default _source)|           |
 +--------------------------------------------------------------+           |
 | ``opensearch_discover_from_timedelta`` (time,default: 10 min)|           |
