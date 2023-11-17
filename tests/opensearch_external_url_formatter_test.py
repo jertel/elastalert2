@@ -3,6 +3,7 @@ import pytest
 from elastalert.opensearch_external_url_formatter import AbsoluteOpensearchExternalUrlFormatter
 from elastalert.opensearch_external_url_formatter import create_opensearch_external_url_formatter
 
+
 class AbsoluteFormatTestCase:
     def __init__(
          self,
@@ -23,8 +24,6 @@ class AbsoluteFormatTestCase:
         expected_url='http://opensearch.test.org/_dashboards/app/dev_tools#/console'
     ),
 ])
-
-
 def test_absolute_opensearch_external_url_formatter(
     test_case: AbsoluteFormatTestCase
 ):
