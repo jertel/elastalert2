@@ -1670,7 +1670,9 @@ or
       - googlechat
       - gelf
       - hivealerter
+      - iris
       - jira
+      - lark
       - linenotify
       - mattermost
       - ms_teams
@@ -1856,7 +1858,7 @@ Alerta
 ~~~~~~
 
 Alerta alerter will post an alert in the Alerta server instance through the alert API endpoint.
-See https://docs.alerta.io/en/latest/api/alert.html for more details on the Alerta JSON format.
+See https://docs.alerta.io/api/reference.html#alerts for more details on the Alerta JSON format.
 
 For Alerta 5.0
 
@@ -2587,6 +2589,11 @@ Optional:
 
 ``gelf_timeout``: Custom timeout.
 
+Grafana OnCall
+~~~~~~~~~~~~~~
+
+https://grafana.com/docs/oncall/latest/integrations/elastalert/
+
 HTTP POST
 ~~~~~~~~~
 
@@ -2952,7 +2959,7 @@ Mattermost alerter will send a notification to a predefined Mattermost channel. 
 
 The alerter requires the following option:
 
-``mattermost_webhook_url``: The webhook URL. Follow the instructions on https://docs.mattermost.com/developer/webhooks-incoming.html to create an incoming webhook on your Mattermost installation.
+``mattermost_webhook_url``: The webhook URL. Follow the instructions on https://developers.mattermost.com/integrate/webhooks/incoming/ to create an incoming webhook on your Mattermost installation.
 
 Optional:
 
@@ -2975,7 +2982,7 @@ Provide absolute address of the pciture.
 ``mattermost_msg_color``: By default the alert will be posted with the 'danger' color. You can also use 'good', 'warning', or hex color code.
 
 ``mattermost_msg_fields``: You can add fields to your Mattermost alerts using this option. You can specify the title using `title` and the text value using `value`. Additionally you can specify whether this field should be a `short` field using `short: true`. If you set `args` and `value` is a formattable string, ElastAlert 2 will format the incident key based on the provided array of fields from the rule or match.
-See https://docs.mattermost.com/developer/message-attachments.html#fields for more information.
+See https://developers.mattermost.com/integrate/reference/message-attachments/#fields for more information.
 
 Example mattermost_msg_fields::
 
@@ -3339,7 +3346,7 @@ Configuration variables in rules YAML file::
       Title: <Incident Title>
     http_post_all_values: true
 
-For more details, you can refer the `Squadcast documentation <https://support.squadcast.com/docs/elastalert>`_.
+For more details, you can refer the `Squadcast documentation <https://support.squadcast.com/integrations/alert-source-integrations-native/elastalert>`_.
 
 ServiceNow
 ~~~~~~~~~~
