@@ -3016,6 +3016,12 @@ Example mattermost_msg_fields::
 
 ``mattermost_kibana_discover_title``: The title of the Kibana Discover url attachment. Defaults to ``Discover in Kibana``.
 
+``mattermost_attach_opensearch_discover_url``: Enables the attachment of the ``opensearch_discover_url`` to the mattermost notification. The config ``generate_opensearch_discover_url`` must also be ``True`` in order to generate the url. Defaults to ``False``.
+
+``mattermost_opensearch_discover_color``: The color of the Opensearch Discover url attachment. Defaults to ``#ec4b98``.
+
+``mattermost_opensearch_discover_title``: The title of the Opensearch Discover url attachment. Defaults to ``Discover in opensearch``.
+
 Example mattermost_attach_kibana_discover_url, mattermost_kibana_discover_color, mattermost_kibana_discover_title::
 
     # (Required)
@@ -3036,6 +3042,28 @@ Example mattermost_attach_kibana_discover_url, mattermost_kibana_discover_color,
     # (Optional)
     mattermost_kibana_discover_color: "#ec4b98"
     mattermost_kibana_discover_title: "Discover in Kibana"
+
+Example mattermost_attach_opensearch_discover_url, mattermost_kibana_discover_color, mattermost_kibana_discover_title::
+
+    # (Required)
+    generate_opensearch_discover_url: True
+    opensearch_discover_app_url: "http://localhost:5601/app/discover#/"
+    opensearch_discover_index_pattern_id: "4babf380-c3b1-11eb-b616-1b59c2feec54"
+    opensearch_discover_version: "2.11"
+
+    # (Optional)
+    opensearch_discover_from_timedelta:
+      minutes: 10
+    opensearch_discover_to_timedelta:
+      minutes: 10
+
+    # (Required)
+    mattermost_attach_opensearch_discover_url: True
+
+    # (Optional)
+    mattermost_opensearch_discover_color: "#ec4b98"
+    mattermost_opensearch_discover_title: "Discover in opensearch"
+
 
 Microsoft Teams
 ~~~~~~~~~~~~~~~
@@ -3073,6 +3101,10 @@ Example ms_teams_alert_facts::
 
 ``ms_teams_kibana_discover_title``: The title of the Kibana Discover url attachment. Defaults to ``Discover in Kibana``.
 
+``ms_teams_attach_opensearch_discover_url``: Enables the attachment of the ``opensearch_discover_url`` to the MS Teams notification. The config ``generate_opensearch_discover_url`` must also be ``True`` in order to generate the url. Defaults to ``False``.
+
+``ms_teams_opensearch_discover_title``: The title of the Opensearch Discover url attachment. Defaults to ``Discover in opensearch``.
+
 Example ms_teams_attach_kibana_discover_url, ms_teams_kibana_discover_title::
 
     # (Required)
@@ -3092,6 +3124,26 @@ Example ms_teams_attach_kibana_discover_url, ms_teams_kibana_discover_title::
 
     # (Optional)
     ms_teams_kibana_discover_title: "Discover in Kibana"
+
+Example ms_teams_attach_opensearch_discover_url, ms_teams_opensearch_discover_title::
+
+    # (Required)
+    generate_opensearch_discover_url: True
+    opensearch_discover_app_url: "http://localhost:5601/app/discover#/"
+    opensearch_discover_index_pattern_id: "4babf380-c3b1-11eb-b616-1b59c2feec54"
+    opensearch_discover_version: "7.15"
+
+    # (Optional)
+    opensearch_discover_from_timedelta:
+      minutes: 10
+    opensearch_discover_to_timedelta:
+      minutes: 10
+
+    # (Required)
+    ms_teams_attach_opensearch_discover_url: True
+
+    # (Optional)
+    ms_teams_opensearch_discover_title: "Discover in opensearch"
 
 ``ms_teams_ca_certs``: Set this option to ``True`` or a path to a CA cert bundle or directory (eg: ``/etc/ssl/certs/ca-certificates.crt``) to validate the SSL certificate.
 
@@ -3294,6 +3346,12 @@ ElastAlert 2 rule. Any Apple emoji can be used, see http://emojipedia.org/apple/
 
 ``rocket_chat_kibana_discover_title``: The title of the Kibana Discover url attachment. Defaults to ``Discover in Kibana``.
 
+``rocket_chat_attach_opensearch_discover_url``: Enables the attachment of the ``opensearch_discover_url`` to the Rocket.Chat notification. The config ``generate_opensearch_discover_url`` must also be ``True`` in order to generate the url. Defaults to ``False``.
+
+``rocket_chat_opensearch_discover_color``: The color of the Opensearch Discover url attachment. Defaults to ``#ec4b98``.
+
+``rocket_chat_opensearch_discover_title``: The title of the Opensearch Discover url attachment. Defaults to ``Discover in opensearch``.
+
 Example rocket_chat_attach_kibana_discover_url, rocket_chat_kibana_discover_color, rocket_chat_kibana_discover_title::
 
     # (Required)
@@ -3314,6 +3372,27 @@ Example rocket_chat_attach_kibana_discover_url, rocket_chat_kibana_discover_colo
     # (Optional)
     rocket_chat_kibana_discover_color: "#ec4b98"
     rocket_chat_kibana_discover_title: "Discover in Kibana"
+
+Example rocket_chat_attach_opensearch_discover_url, rocket_chat_opensearch_discover_color, rocket_chat_opensearch_discover_title::
+
+    # (Required)
+    generate_opensearch_discover_url: True
+    opensearch_discover_app_url: "http://localhost:5601/app/discover#/"
+    opensearch_discover_index_pattern_id: "4babf380-c3b1-11eb-b616-1b59c2feec54"
+    opensearch_discover_version: "2.11"
+
+    # (Optional)
+    opensearch_discover_from_timedelta:
+      minutes: 10
+    opensearch_discover_to_timedelta:
+      minutes: 10
+
+    # (Required)
+    rocket_chat_attach_opensearch_discover_url: True
+
+    # (Optional)
+    rocket_chat_opensearch_discover_color: "#ec4b98"
+    rocket_chat_opensearch_discover_title: "Discover in opensearch"
 
 ``rocket_chat_alert_fields``: You can add additional fields to your Rocket.Chat alerts using this field. Specify the title using `title` and a value for the field using `value`. Additionally you can specify whether or not this field should be a `short` field using `short: true`.
 
@@ -3458,6 +3537,12 @@ Example slack_alert_fields::
 
 ``slack_kibana_discover_title``: The title of the Kibana Discover url attachment. Defaults to ``Discover in Kibana``.
 
+``slack_attach_opensearch_discover_url``: Enables the attachment of the ``opensearch_discover_url`` to the slack notification. The config ``generate_opensearch_discover_url`` must also be ``True`` in order to generate the url. Defaults to ``False``.
+
+``slack_opensearch_discover_color``: The color of the Opensearch Discover url attachment. Defaults to ``#ec4b98``.
+
+``slack_opensearch_discover_title``: The title of the Opensearch Discover url attachment. Defaults to ``Discover in Opensearch``.
+
 Example slack_attach_kibana_discover_url, slack_kibana_discover_color, slack_kibana_discover_title::
 
     # (Required)
@@ -3478,6 +3563,27 @@ Example slack_attach_kibana_discover_url, slack_kibana_discover_color, slack_kib
     # (Optional)
     slack_kibana_discover_color: "#ec4b98"
     slack_kibana_discover_title: "Discover in Kibana"
+
+Example slack_attach_opensearch_discover_url, slack_opensearch_discover_color, slack_opensearch_discover_title::
+
+    # (Required)
+    generate_opensearch_discover_url: True
+    opensearch_discover_app_url: "http://localhost:5601/app/discover#/"
+    opensearch_discover_index_pattern_id: "4babf380-c3b1-11eb-b616-1b59c2feec54"
+    opensearch_discover_version: "7.15"
+
+    # (Optional)
+    opensearch_discover_from_timedelta:
+      minutes: 10
+    opensearch_discover_to_timedelta:
+      minutes: 10
+
+    # (Required)
+    slack_attach_opensearch_discover_url: True
+
+    # (Optional)
+    slack_opensearch_discover_color: "#ec4b98"
+    slack_opensearch_discover_title: "Discover in opensearch"
 
 ``slack_ca_certs``: Set this option to ``True`` or a path to a CA cert bundle or directory (eg: ``/etc/ssl/certs/ca-certificates.crt``) to validate the SSL certificate.
 
