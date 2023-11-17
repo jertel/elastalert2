@@ -35,7 +35,7 @@ from elastalert.enhancements import DropMatchException
 from elastalert.kibana_discover import generate_kibana_discover_url
 from elastalert.kibana_external_url_formatter import create_kibana_external_url_formatter
 from elastalert.opensearch_discover import generate_opensearch_discover_url
-from elastalert.kibana_external_url_formatter import create_opensearch_external_url_formatter
+from elastalert.opensearch_external_url_formatter import create_opensearch_external_url_formatter
 from elastalert.prometheus_wrapper import PrometheusWrapper
 from elastalert.ruletypes import FlatlineRule
 from elastalert.util import (add_keyword_postfix, cronite_datetime_to_timestamp, dt_to_ts, dt_to_unix, EAException,
@@ -1451,13 +1451,11 @@ class ElastAlerter(object):
 
 
     def get_opensearch_discover_external_url_formatter(self, rule):
-        """ Gets or create the external url formatter for kibana discover links """
-        key = '__kibana_discover_external_url_formatter__'
+        """ Gets or create the external url formatter for Opensearch discover links """
+        key = '__opensearch_discover_external_url_formatter__'
         formatter = rule.get(key)
         if formatter is None:
-            shorten = rule.get('shorten_kibana_discover_url')
-            security_tenant = rule.get('kibana_discover_security_tenant')
-            formatter = create_opensearch_external_url_formatter(rule, shorten, security_tenant)
+            formatter = create_opensearch_external_url_formatter(rule)
             rule[key] = formatter
         return formatter
 
