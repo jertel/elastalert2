@@ -19,7 +19,7 @@ opensearch_versions = frozenset([
         ])
 
 def generate_opensearch_discover_url(rule, match):
-    ''' Creates a link for a kibana discover app. '''
+    ''' Creates a link for a opensearch discover app. '''
 
     discover_app_url = rule.get('opensearch_discover_app_url')
     if not discover_app_url:
@@ -123,7 +123,6 @@ def opensearch_discover_app_filter(index, columns, filters, query_keys, match):
 
     if filters:
 
-        # Remove nested query since the outer most query key will break Kibana 8.
         new_filters = []
         for filter in filters:
             if 'query' in filter:
