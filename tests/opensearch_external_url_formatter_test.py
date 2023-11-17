@@ -1,19 +1,8 @@
-from typing import Any
-import os
 import pytest
-
-import requests
-from requests.auth import AuthBase, HTTPBasicAuth
 
 from elastalert.opensearch_external_url_formatter import AbsoluteOpensearchExternalUrlFormatter
 from elastalert.opensearch_external_url_formatter import OpensearchExternalUrlFormatter
 from elastalert.opensearch_external_url_formatter import create_opensearch_external_url_formatter
-
-from elastalert.auth import RefeshableAWSRequestsAuth
-from elastalert.util import EAException
-
-from unittest import mock
-
 
 class AbsoluteFormatTestCase:
     def __init__(
@@ -46,3 +35,13 @@ def test_absolute_opensearch_external_url_formatter(
     actualUrl = formatter.format(test_case.relative_url)
     print(actualUrl)
     assert actualUrl == test_case.expected_url
+
+
+def test_create_opensearch_external_url_formatter_without_shortening():
+    formatter = create_opensearch_external_url_formatter(
+        rule={
+            'opensearch_url': 'http://opensearch.test.org/'
+        },
+    )
+    assert type(formatter) is AbsoluteOpensearchExternalUrlFormatter
+    assert formatter.base_url == 'http://opensearch.test.org/'
