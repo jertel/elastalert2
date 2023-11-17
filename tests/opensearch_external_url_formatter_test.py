@@ -31,7 +31,6 @@ def test_absolute_opensearch_external_url_formatter(
         base_url=test_case.base_url
     )
     actualUrl = formatter.format(test_case.relative_url)
-    print(actualUrl)
     assert actualUrl == test_case.expected_url
 
 
