@@ -1350,10 +1350,10 @@ class ElastAlerter(object):
                 matches[0]['kibana_discover_url'] =  kb_link_formatter.format(kb_link)
 
         if rule.get('generate_opensearch_discover_url'):
-            kb_link = generate_opensearch_discover_url(rule, matches[0])
-            if kb_link:
-                kb_link_formatter = self.get_opensearch_discover_external_url_formatter(rule)
-                matches[0]['opensearch_discover_url'] =  kb_link_formatter.format(kb_link)
+            opsh_link = generate_opensearch_discover_url(rule, matches[0])
+            if opsh_link:
+                opsh_link_formatter = self.get_opensearch_discover_external_url_formatter(rule)
+                matches[0]['opensearch_discover_url'] =  opsh_link_formatter.format(opsh_link)
 
 
         
