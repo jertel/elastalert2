@@ -34,6 +34,8 @@ from elastalert.config import load_conf
 from elastalert.enhancements import DropMatchException
 from elastalert.kibana_discover import generate_kibana_discover_url
 from elastalert.kibana_external_url_formatter import create_kibana_external_url_formatter
+from elastalert.opensearch_discover import generate_opensearch_discover_url
+from elastalert.opensearch_external_url_formatter import create_opensearch_external_url_formatter
 from elastalert.prometheus_wrapper import PrometheusWrapper
 from elastalert.ruletypes import FlatlineRule
 from elastalert.util import (add_keyword_postfix, cronite_datetime_to_timestamp, dt_to_ts, dt_to_unix, EAException,
@@ -1347,6 +1349,14 @@ class ElastAlerter(object):
                 kb_link_formatter = self.get_kibana_discover_external_url_formatter(rule)
                 matches[0]['kibana_discover_url'] =  kb_link_formatter.format(kb_link)
 
+        if rule.get('generate_opensearch_discover_url'):
+            opsh_link = generate_opensearch_discover_url(rule, matches[0])
+            if opsh_link:
+                opsh_link_formatter = self.get_opensearch_discover_external_url_formatter(rule)
+                matches[0]['opensearch_discover_url'] =  opsh_link_formatter.format(opsh_link)
+
+
+        
         # Enhancements were already run at match time if
         # run_enhancements_first is set or
         # retried==True, which means this is a retry of a failed alert
@@ -1436,6 +1446,16 @@ class ElastAlerter(object):
             shorten = rule.get('shorten_kibana_discover_url')
             security_tenant = rule.get('kibana_discover_security_tenant')
             formatter = create_kibana_external_url_formatter(rule, shorten, security_tenant)
+            rule[key] = formatter
+        return formatter
+
+
+    def get_opensearch_discover_external_url_formatter(self, rule):
+        """ Gets or create the external url formatter for Opensearch discover links """
+        key = '__opensearch_discover_external_url_formatter__'
+        formatter = rule.get(key)
+        if formatter is None:
+            formatter = create_opensearch_external_url_formatter(rule)
             rule[key] = formatter
         return formatter
 

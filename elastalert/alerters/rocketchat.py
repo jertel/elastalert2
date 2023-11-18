@@ -31,6 +31,9 @@ class RocketChatAlerter(Alerter):
         self.rocket_chat_attach_kibana_discover_url = self.rule.get('rocket_chat_attach_kibana_discover_url', False)
         self.rocket_chat_kibana_discover_color = self.rule.get('rocket_chat_kibana_discover_color', '#ec4b98')
         self.rocket_chat_kibana_discover_title = self.rule.get('rocket_chat_kibana_discover_title', 'Discover in Kibana')
+        self.rocket_chat_attach_opensearch_discover_url = self.rule.get('rocket_chat_attach_opensearch_discover_url', False)
+        self.rocket_chat_opensearch_discover_color = self.rule.get('rocket_chat_opensearch_discover_color', '#ec4b98')
+        self.rocket_chat_opensearch_discover_title = self.rule.get('rocket_chat_opensearch_discover_title', 'Discover in opensearch')
         self.rocket_chat_ignore_ssl_errors = self.rule.get('rocket_chat_ignore_ssl_errors', False)
         self.rocket_chat_timeout = self.rule.get('rocket_chat_timeout', 10)
         self.rocket_chat_ca_certs = self.rule.get('rocket_chat_ca_certs')
@@ -90,6 +93,15 @@ class RocketChatAlerter(Alerter):
                     'color': self.rocket_chat_kibana_discover_color,
                     'title': self.rocket_chat_kibana_discover_title,
                     'title_link': kibana_discover_url
+                })
+
+        if self.rocket_chat_attach_opensearch_discover_url:
+            opensearch_discover_url = lookup_es_key(matches[0], 'opensearch_discover_url')
+            if opensearch_discover_url:
+                payload['attachments'].append({
+                    'color': self.rocket_chat_opensearch_discover_color,
+                    'title': self.rocket_chat_opensearch_discover_title,
+                    'title_link': opensearch_discover_url
                 })
 
         for url in self.rocket_chat_webhook_url:

@@ -36,6 +36,9 @@ class SlackAlerter(Alerter):
         self.slack_attach_kibana_discover_url = self.rule.get('slack_attach_kibana_discover_url', False)
         self.slack_kibana_discover_color = self.rule.get('slack_kibana_discover_color', '#ec4b98')
         self.slack_kibana_discover_title = self.rule.get('slack_kibana_discover_title', 'Discover in Kibana')
+        self.slack_attach_opensearch_discover_url = self.rule.get('slack_attach_opensearch_discover_url', False)
+        self.slack_opensearch_discover_color = self.rule.get('slack_opensearch_discover_color', '#ec4b98')
+        self.slack_opensearch_discover_title = self.rule.get('slack_opensearch_discover_title', 'Discover in Opensearch')
         self.slack_footer = self.rule.get('slack_footer', '')
         self.slack_footer_icon = self.rule.get('slack_footer_icon', '')
         self.slack_image_url = self.rule.get('slack_image_url', '')
@@ -140,6 +143,14 @@ class SlackAlerter(Alerter):
                     'color': self.slack_kibana_discover_color,
                     'title': self.slack_kibana_discover_title,
                     'title_link': kibana_discover_url
+                })
+        if self.slack_attach_opensearch_discover_url:
+            opensearch_discover_url = lookup_es_key(matches[0], 'opensearch_discover_url')
+            if opensearch_discover_url:
+                payload['attachments'].append({
+                    'color': self.slack_opensearch_discover_color,
+                    'title': self.slack_opensearch_discover_title,
+                    'title_link': opensearch_discover_url
                 })
 
         if self.slack_attach_jira_ticket_url and self.pipeline is not None and 'jira_ticket' in self.pipeline:

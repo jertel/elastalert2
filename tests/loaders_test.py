@@ -456,6 +456,26 @@ def test_kibana_discover_to_timedelta():
     assert test_rule_copy['kibana_discover_to_timedelta'] == datetime.timedelta(minutes=2)
 
 
+def test_opensearch_discover_from_timedelta():
+    test_config_copy = copy.deepcopy(test_config)
+    rules_loader = FileRulesLoader(test_config_copy)
+    test_rule_copy = copy.deepcopy(test_rule)
+    test_rule_copy['opensearch_discover_from_timedelta'] = {'minutes': 2}
+    rules_loader.load_options(test_rule_copy, test_config, 'filename.yaml')
+    assert isinstance(test_rule_copy['opensearch_discover_from_timedelta'], datetime.timedelta)
+    assert test_rule_copy['opensearch_discover_from_timedelta'] == datetime.timedelta(minutes=2)
+
+
+def test_opensearch_discover_to_timedelta():
+    test_config_copy = copy.deepcopy(test_config)
+    rules_loader = FileRulesLoader(test_config_copy)
+    test_rule_copy = copy.deepcopy(test_rule)
+    test_rule_copy['opensearch_discover_to_timedelta'] = {'minutes': 2}
+    rules_loader.load_options(test_rule_copy, test_config, 'filename.yaml')
+    assert isinstance(test_rule_copy['opensearch_discover_to_timedelta'], datetime.timedelta)
+    assert test_rule_copy['opensearch_discover_to_timedelta'] == datetime.timedelta(minutes=2)
+
+
 def test_custom_timestamp_type_timestamp_format():
     test_config_copy = copy.deepcopy(test_config)
     rules_loader = FileRulesLoader(test_config_copy)

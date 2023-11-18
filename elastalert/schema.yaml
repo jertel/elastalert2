@@ -284,7 +284,7 @@ properties:
   query_key: *arrayOfString
   replace_dots_in_field_names: {type: boolean}
   scan_entire_timeframe: {type: boolean}
-
+  
   ### summary table
   summary_table_fields: {type: array, items: {type: string}}
   summary_table_type: {type: string, enum: ['ascii', 'html', 'markdown']}
@@ -303,6 +303,16 @@ properties:
   kibana_discover_to_timedelta: *timedelta
   kibana_discover_security_tenant: {type:string}
 
+  ### Opensearch discover App Link
+  generate_opensearch_discover_url: {type: boolean}
+  opensearch_url: {type: string, format: uri}
+  opensearch_discover_app_url: {type: string}
+  opensearch_discover_version: {type: string, enum: ['2.11']}
+  opensearch_discover_index_pattern_id: {type: string, minLength: 1}
+  opensearch_discover_columns: {type: array, items: {type: string, minLength: 1}, minItems: 1}
+  opensearch_discover_from_timedelta: *timedelta
+  opensearch_discover_to_timedelta: *timedelta
+  
   # Alert Content
   alert_text: {type: string} # Python format string
   alert_text_args: {type: array, items: {type: string}}
@@ -609,6 +619,10 @@ properties:
   mattermost_attach_kibana_discover_url: {type: boolean}
   mattermost_kibana_discover_color: {type: string}
   mattermost_kibana_discover_title: {type: string}
+  mattermost_attach_opensearch_discover_url: {type: boolean}
+  mattermost_opensearch_discover_color: {type: string}
+  mattermost_opensearch_discover_title: {type: string}
+
 
   ### Microsoft Teams
   ms_teams_webhook_url: *arrayOfString
@@ -621,6 +635,8 @@ properties:
   ms_teams_kibana_discover_title: {type: string}
   ms_teams_ca_certs: {type: [boolean, string]}
   ms_teams_ignore_ssl_errors: {type: boolean}
+  ms_teams_attach_opensearch_discover_url: {type: boolean}
+  ms_teams_opensearch_discover_title: {type: string}
 
   ### Opsgenie
   opsgenie_key: {type: string}
@@ -718,6 +734,9 @@ properties:
   slack_attach_kibana_discover_url: {type: boolean}
   slack_kibana_discover_color: {type: string}
   slack_kibana_discover_title: {type: string}
+  slack_attach_opensearch_discover_url: {type: boolean}
+  slack_opensearch_discover_color: {type: string}
+  slack_opensearch_discover_title: {type: string}
   slack_attach_jira_ticket_url: {type: boolean}
   slack_jira_ticket_color: {type: string}
   slack_jira_ticket_title: {type: string}
