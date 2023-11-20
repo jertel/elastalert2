@@ -232,6 +232,15 @@ is "ElastAlert".
 ``smtp_host``: The SMTP host used to send email notifications. This value will be used for email alerts as well,
 unless overwritten in the rule config. The default is "localhost".
 
+``smtp_port``: The SMTP port used to send email notifications. This value will be used for email alerts as well,
+unless overwritten in the rule config. The default is SMTP_PORT or 25.
+
+``smtp_ssl``: Connect the SMTP host using TLS, defaults to ``false``. If ``smtp_ssl`` is not used, usual SMTP will be used.
+
+``smtp_username``: The username for SMTP server. It's only used with ``smtp_ssl``, otherwise usual SMTP must be used.
+
+``smtp_password``: The password for SMTP server. It's only used with ``smtp_ssl``, otherwise usual SMTP must be used.
+
 ``email_reply_to``: This sets the Reply-To header in emails. The default is the recipient address.
 
 ``aws_region``: This makes ElastAlert 2 to sign HTTP requests when using Amazon OpenSearch Service. It'll use instance role keys to sign the requests.

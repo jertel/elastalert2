@@ -13,7 +13,7 @@ import time
 import timeit
 import traceback
 from email.mime.text import MIMEText
-from smtplib import SMTP
+from smtplib import SMTP, SMTP_SSL, SMTP_PORT
 from smtplib import SMTPException
 from socket import error
 import statsd
@@ -140,6 +140,10 @@ class ElastAlerter(object):
         self.notify_email = self.conf.get('notify_email', [])
         self.from_addr = self.conf.get('from_addr', 'ElastAlert')
         self.smtp_host = self.conf.get('smtp_host', 'localhost')
+        self.smtp_port = self.conf.get('smtp_port', SMTP_PORT)
+        self.smtp_ssl = self.conf.get('smtp_ssl', False)
+        self.smtp_username = self.conf.get('smtp_username', '')
+        self.smtp_password = self.conf.get('smtp_password', '')
         self.max_aggregation = self.conf.get('max_aggregation', 10000)
         self.buffer_time = self.conf['buffer_time']
         self.silence_cache = {}
@@ -1827,7 +1831,12 @@ class ElastAlerter(object):
         email['Reply-To'] = self.conf.get('email_reply_to', email['To'])
 
         try:
-            smtp = SMTP(self.smtp_host)
+            if self.smtp_ssl:
+                smtp = SMTP_SSL(self.smtp_host, self.smtp_port)
+                if self.smtp_username and self.smtp_password:
+                    smtp.login(self.smtp_username, self.smtp_password)
+            else:
+                smtp = SMTP(self.smtp_host)
             smtp.sendmail(self.from_addr, recipients, email.as_string())
         except (SMTPException, error) as e:
             self.handle_error('Error connecting to SMTP host: %s' % (e), {'email_body': email_body})
