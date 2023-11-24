@@ -4,6 +4,17 @@
 - TBD
 
 ## New features
+- TBD
+
+## Other changes
+- TBD
+
+# 2.15.0
+
+## Breaking changes
+- None
+
+## New features
 - [Iris] Alerter added - [#1301](https://github.com/jertel/elastalert2/pull/1301) - @malinkinsa 
 - [Opensearch] Add the possibility to generate an opensearch discovery url - [#1310](https://github.com/jertel/elastalert2/pull/1310)
 ## Other changes
