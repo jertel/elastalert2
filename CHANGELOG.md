@@ -16,7 +16,8 @@
 
 ## New features
 - [Iris] Alerter added - [#1301](https://github.com/jertel/elastalert2/pull/1301) - @malinkinsa 
-- [Opensearch] Add the possibility to generate an opensearch discovery url - [#1310](https://github.com/jertel/elastalert2/pull/1310)
+- [Opensearch] Add the possibility to generate an opensearch discovery url - [#1310](https://github.com/jertel/elastalert2/pull/1310) - @luffynextgen
+
 ## Other changes
 - Refactored FlatlineRule to make it more extensible - [#1291](https://github.com/jertel/elastalert2/pull/1291) - @rundef 
 - Add support for Kibana 8.11 for Kibana Discover - [#1305](https://github.com/jertel/elastalert2/pull/1305) - @nsano-rururu
