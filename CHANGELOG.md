@@ -7,7 +7,7 @@
 - TBD
 
 ## Other changes
-- TBD
+- Update setup.py & requirements.txt & requirements-dev.txt - [#1316](https://github.com/jertel/elastalert2/pull/1316) - @nsano-rururu
 
 # 2.15.0
 
