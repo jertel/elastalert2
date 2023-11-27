@@ -51,7 +51,7 @@ class TelegramAlerter(Alerter):
             'text': body,
             'parse_mode': self.telegram_parse_mode,
             'disable_web_page_preview': True,
-            'message_thread_id': self.self.telegram_thread_id
+            'message_thread_id': self.telegram_thread_id
         }
 
         try:
