@@ -4,7 +4,7 @@
 - TBD
 
 ## New features
-- TBD
+- [Telegram] Added new telegram_thread_id setting for sending alerts to different threads of supergroup/forum. - [#???](https://github.com/jertel/elastalert2/pull/???) - @polshe-v
 
 ## Other changes
 - Update setup.py & requirements.txt & requirements-dev.txt - [#1316](https://github.com/jertel/elastalert2/pull/1316) - @nsano-rururu

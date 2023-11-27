@@ -23,6 +23,7 @@ class TelegramAlerter(Alerter):
         self.telegram_proxy_login = self.rule.get('telegram_proxy_login', None)
         self.telegram_proxy_password = self.rule.get('telegram_proxy_pass', None)
         self.telegram_parse_mode = self.rule.get('telegram_parse_mode', 'markdown')
+        self.telegram_thread_id = self.rule.get('telegram_thread_id', None)
 
     def alert(self, matches):
         if self.telegram_parse_mode != 'html':
@@ -49,7 +50,8 @@ class TelegramAlerter(Alerter):
             'chat_id': self.telegram_room_id,
             'text': body,
             'parse_mode': self.telegram_parse_mode,
-            'disable_web_page_preview': True
+            'disable_web_page_preview': True,
+            'message_thread_id': self.self.telegram_thread_id
         }
 
         try:
