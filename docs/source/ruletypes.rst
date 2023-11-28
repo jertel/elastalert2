@@ -1411,7 +1411,7 @@ default 50, unique terms.
 ``terms_size``: When used with ``use_terms_query``, this is the maximum number of terms returned per query. Default is 50.
 
 ``query_key``: With flatline rule, ``query_key`` means that an alert will be triggered if any value of ``query_key`` has been seen at least once
-and then falls below the threshold.
+and then falls below the threshold. To reference the query_key value within a flatline alert message, use ``key`` as the field name.
 
 ``forget_keys``: Only valid when used with ``query_key``. If this is set to true, ElastAlert 2 will "forget" about the ``query_key`` value that
 triggers an alert, therefore preventing any more alerts for it until it's seen again.
