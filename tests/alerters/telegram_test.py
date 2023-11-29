@@ -12,6 +12,46 @@ from elastalert.loaders import FileRulesLoader
 from elastalert.util import EAException
 
 
+def test_telegram_thread_id(caplog):
+    caplog.set_level(logging.INFO)
+    rule = {
+        'name': 'Test Telegram Rule',
+        'type': 'any',
+        'telegram_bot_token': 'xxxxx1',
+        'telegram_room_id': 'xxxxx2',
+        'telegram_thread_id': 2,
+        'alert': []
+    }
+    rules_loader = FileRulesLoader({})
+    rules_loader.load_modules(rule)
+    alert = TelegramAlerter(rule)
+    match = {
+        '@timestamp': '2021-01-01T00:00:00',
+        'somefield': 'foobarbaz'
+    }
+    with mock.patch('requests.post') as mock_post_request:
+        alert.alert([match])
+    expected_data = {
+        'chat_id': rule['telegram_room_id'],
+        'text': '⚠ *Test Telegram Rule* ⚠ ```\nTest Telegram Rule\n\n@timestamp: 2021-01-01T00:00:00\nsomefield: foobarbaz\n ```',
+        'parse_mode': 'markdown',
+        'disable_web_page_preview': True,
+        'message_thread_id': 2
+    }
+
+    mock_post_request.assert_called_once_with(
+        'https://api.telegram.org/botxxxxx1/sendMessage',
+        data=mock.ANY,
+        headers={'content-type': 'application/json'},
+        proxies=None,
+        auth=None
+    )
+
+    actual_data = json.loads(mock_post_request.call_args_list[0][1]['data'])
+    assert expected_data == actual_data
+    assert ('elastalert', logging.INFO, 'Alert sent to Telegram room xxxxx2') == caplog.record_tuples[0]
+
+
 def test_telegram_markdown(caplog):
     caplog.set_level(logging.INFO)
     rule = {
@@ -34,7 +74,8 @@ def test_telegram_markdown(caplog):
         'chat_id': rule['telegram_room_id'],
         'text': '⚠ *Test Telegram Rule* ⚠ ```\nTest Telegram Rule\n\n@timestamp: 2021-01-01T00:00:00\nsomefield: foobarbaz\n ```',
         'parse_mode': 'markdown',
-        'disable_web_page_preview': True
+        'disable_web_page_preview': True,
+        'message_thread_id': None
     }
 
     mock_post_request.assert_called_once_with(
@@ -73,7 +114,8 @@ def test_telegram_html(caplog):
         'chat_id': rule['telegram_room_id'],
         'text': '⚠ Test Telegram Rule ⚠ \nTest Telegram Rule\n\n@timestamp: 2021-01-01T00:00:00\nsomefield: foobarbaz\n',
         'parse_mode': 'html',
-        'disable_web_page_preview': True
+        'disable_web_page_preview': True,
+        'message_thread_id': None
     }
 
     mock_post_request.assert_called_once_with(
@@ -113,7 +155,8 @@ def test_telegram_proxy():
         'chat_id': rule['telegram_room_id'],
         'text': '⚠ *Test Telegram Rule* ⚠ ```\nTest Telegram Rule\n\n@timestamp: 2021-01-01T00:00:00\nsomefield: foobarbaz\n ```',
         'parse_mode': 'markdown',
-        'disable_web_page_preview': True
+        'disable_web_page_preview': True,
+        'message_thread_id': None
     }
 
     mock_post_request.assert_called_once_with(
@@ -150,7 +193,8 @@ def test_telegram_text_maxlength():
         'text': '⚠ *Test Telegram Rule' + ('a' * 3979) +
                 '\n⚠ *message was cropped according to telegram limits!* ⚠ ```',
         'parse_mode': 'markdown',
-        'disable_web_page_preview': True
+        'disable_web_page_preview': True,
+        'message_thread_id': None
     }
 
     mock_post_request.assert_called_once_with(
@@ -275,7 +319,8 @@ def test_telegram_matchs():
                 '----------------------------------------\n' +
                 ' ```',
         'parse_mode': 'markdown',
-        'disable_web_page_preview': True
+        'disable_web_page_preview': True,
+        'message_thread_id': None
     }
 
     mock_post_request.assert_called_once_with(
