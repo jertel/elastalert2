@@ -8,6 +8,7 @@
 
 ## Other changes
 - Update setup.py & requirements.txt & requirements-dev.txt - [#1316](https://github.com/jertel/elastalert2/pull/1316) - @nsano-rururu
+- [Docs] Clarify how to reference query_key values in flatline alerts - [#1320](https://github.com/jertel/elastalert2/pull/1320) - @jertel
 
 # 2.15.0
 
