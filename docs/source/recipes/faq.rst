@@ -37,6 +37,13 @@ to use ``foo.raw``. If you are still having trouble troubleshooting why your doc
 try running ElastAlert 2 with ``--es_debug_trace /path/to/file.log``. This will log the queries made
 to Elasticsearch in full so that you can see exactly what is happening.
 
+Finally, but very important, if you have enabled role-based access control in Elasticsearch: make 
+sure that the Elasticsearch user used by ElastAlert actually has the privileges to access the 
+index (at least ``read`` permission). See 
+[ES documentation page](https://www.elastic.co/guide/en/elasticsearch/reference/current/authorization.html) 
+on the topic of user authorization.
+
+
 I got hits, why didn't I get an alert?
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
