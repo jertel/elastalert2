@@ -466,7 +466,7 @@ class ElastAlerter(object):
     def get_hits_terms(self, rule, starttime, endtime, index, key, qk=None, size=None):
         rule_filter = copy.copy(rule['filter'])
         if qk:
-            qk_list = qk.split(",")
+            qk_list = qk.split(", ")
             end = '.keyword'
 
             if len(qk_list) == 1:
