@@ -3688,6 +3688,8 @@ Optional:
 
 ``telegram_parse_mode``: The Telegram parsing mode, which determines the format of the alert text body. Possible values are ``markdown``, ``markdownV2``, ``html``. Defaults to ``markdown``.
 
+``telegram_thread_id``: Unique identifier for the target thread of supergroup/forum using telegram message_thread_id (Optional, positive integer value, no default).
+
 Example usage::
 
     alert:
