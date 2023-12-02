@@ -477,11 +477,10 @@ class ElastAlerter(object):
                 rule_filter.extend([{'term': {filter_key: qk}}])
             else:
                 filter_keys = rule['compound_query_key']
-                for i in range(len(filter_keys)):
-                    key_with_postfix = filter_keys[i]
-                    if rule.get('raw_count_keys', True) and not key.endswith(end):
-                        key_with_postfix = add_keyword_postfix(key_with_postfix)
-                    rule_filter.extend([{'term': {key_with_postfix: qk_list[i]}}])
+                for i,filter_key in enumerate(filter_keys):
+                    if rule.get('raw_count_keys', True) and not filter_key.endswith(end):
+                        filter_key = add_keyword_postfix(filter_key)
+                    rule_filter.extend([{'term': {filter_key: qk_list[i]}}])
 
         base_query = self.get_query(
             rule_filter,
