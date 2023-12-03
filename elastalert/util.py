@@ -186,7 +186,8 @@ def dt_to_ts_with_format(dt, ts_format):
 
 
 def ts_now():
-    return datetime.datetime.utcnow().replace(tzinfo=dateutil.tz.tzutc())
+    now = datetime.datetime.now(tz=datetime.UTC)
+    return now.replace(tzinfo=dateutil.tz.tzutc())
 
 
 def ts_utc_to_tz(ts, tz_name):
@@ -268,8 +269,8 @@ def total_seconds(dt):
 
 
 def dt_to_int(dt):
-    dt = dt.replace(tzinfo=None)
-    return int(total_seconds((dt - datetime.datetime.utcfromtimestamp(0))) * 1000)
+    dt = dt.replace(tzinfo=datetime.UTC)
+    return int(total_seconds((dt - datetime.datetime.fromtimestamp(0, tz=datetime.UTC))) * 1000)
 
 
 def unixms_to_dt(ts):
@@ -277,7 +278,7 @@ def unixms_to_dt(ts):
 
 
 def unix_to_dt(ts):
-    dt = datetime.datetime.utcfromtimestamp(float(ts))
+    dt = datetime.datetime.fromtimestamp(float(ts), tz=datetime.UTC)
     dt = dt.replace(tzinfo=dateutil.tz.tzutc())
     return dt
 

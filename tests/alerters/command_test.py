@@ -20,7 +20,7 @@ def test_command_getinfo():
              'nested': {'field': 1}}
     with mock.patch("elastalert.alerters.command.subprocess.Popen") as mock_popen:
         alert.alert([match])
-    assert mock_popen.called_with(['/bin/test', '--arg', 'foobarbaz'], stdin=subprocess.PIPE, shell=False)
+    mock_popen.assert_called_with(['/bin/test/', '--arg', 'foobarbaz'], stdin=subprocess.PIPE, shell=False)
     expected_data = {
         'type': 'command',
         'command': '/bin/test/ --arg foobarbaz'
@@ -39,7 +39,7 @@ def test_command_old_style_string_format1(caplog):
     alert = CommandAlerter(rule)
     with mock.patch("elastalert.alerters.command.subprocess.Popen") as mock_popen:
         alert.alert([match])
-    assert mock_popen.called_with('/bin/test --arg foobarbaz', stdin=subprocess.PIPE, shell=False)
+    mock_popen.assert_called_with(['/bin/test/ --arg foobarbaz'], stdin=subprocess.PIPE, shell=True)
     assert ('elastalert', logging.WARNING, 'Warning! You could be vulnerable to shell injection!') == caplog.record_tuples[0]
     assert ('elastalert', logging.INFO, 'Alert sent to Command') == caplog.record_tuples[1]
 
@@ -53,7 +53,7 @@ def test_command_old_style_string_format2():
     alert = CommandAlerter(rule)
     with mock.patch("elastalert.alerters.command.subprocess.Popen") as mock_popen:
         alert.alert([match])
-    assert mock_popen.called_with('/bin/test/foo.sh', stdin=subprocess.PIPE, shell=True)
+    mock_popen.assert_called_with(['/bin/test/foo.sh'], stdin=subprocess.PIPE, shell=True)
 
 
 def test_command_pipe_match_json():
@@ -67,8 +67,8 @@ def test_command_pipe_match_json():
         mock_popen.return_value = mock_subprocess
         mock_subprocess.communicate.return_value = (None, None)
         alert.alert([match])
-    assert mock_popen.called_with(['/bin/test', '--arg', 'foobarbaz'], stdin=subprocess.PIPE, shell=False)
-    assert mock_subprocess.communicate.called_with(input=json.dumps(match))
+    mock_popen.assert_called_with(['/bin/test/', '--arg', 'foobarbaz'], stdin=subprocess.PIPE, shell=False)
+    mock_subprocess.communicate.assert_called_with(input=(json.dumps([match]) + '\n').encode())
 
 
 def test_command_pipe_alert_text():
@@ -83,8 +83,8 @@ def test_command_pipe_alert_text():
         mock_popen.return_value = mock_subprocess
         mock_subprocess.communicate.return_value = (None, None)
         alert.alert([match])
-    assert mock_popen.called_with(['/bin/test', '--arg', 'foobarbaz'], stdin=subprocess.PIPE, shell=False)
-    assert mock_subprocess.communicate.called_with(input=alert_text.encode())
+    mock_popen.assert_called_with(['/bin/test/', '--arg', 'foobarbaz'], stdin=subprocess.PIPE, shell=False)
+    mock_subprocess.communicate.assert_called_with(input=alert_text.encode())
 
 
 def test_command_fail_on_non_zero_exit():
@@ -99,7 +99,7 @@ def test_command_fail_on_non_zero_exit():
             mock_popen.return_value = mock_subprocess
             mock_subprocess.wait.return_value = 1
             alert.alert([match])
-    assert mock_popen.called_with(['/bin/test', '--arg', 'foobarbaz'], stdin=subprocess.PIPE, shell=False)
+    mock_popen.assert_called_with(['/bin/test/', '--arg', 'foobarbaz'], stdin=subprocess.PIPE, shell=False)
     assert "Non-zero exit code while running command" in str(exception)
 
 
