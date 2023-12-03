@@ -237,18 +237,24 @@ def format_index(index, start, end, add_extra=False):
     # Convert to UTC
     start -= start.utcoffset()
     end -= end.utcoffset()
-    original_start = start
-    indices = set()
-    while start.date() <= end.date():
-        indices.add(start.strftime(index))
-        start += datetime.timedelta(days=1)
-    num = len(indices)
+
+    if "%H" in index:
+        dt = datetime.timedelta(hours=1)
+        end = end.replace(second=0, microsecond=0, minute=0)
+    else:
+        dt = datetime.timedelta(days=1)
+        end = end.replace(second=0, microsecond=0, minute=0, hour=0)
     if add_extra:
-        while len(indices) == num:
-            original_start -= datetime.timedelta(days=1)
-            new_index = original_start.strftime(index)
-            assert new_index != index, "You cannot use a static index with search_extra_index"
-            indices.add(new_index)
+        start -= dt
+    indices = set()
+    indices.add(start.strftime(index))
+    while start <= end:
+        start += dt
+        indices.add(start.strftime(index))
+
+    if add_extra:
+        if index in indices:
+            raise EAException("You cannot use a static index {} with search_extra_index".format(index))
 
     return ','.join(indices)
 
