@@ -66,6 +66,12 @@ def _find_es_dict_by_key(lookup_dict, term):
     """
     if term in lookup_dict:
         return lookup_dict, term
+
+    if term.endswith('.keyword'):
+        term, _, _ = term.partition('.keyword')
+        if term in lookup_dict:
+            return lookup_dict, term
+
     # If the term does not match immediately, perform iterative lookup:
     # 1. Split the search term into tokens
     # 2. Recurrently concatenate these together to traverse deeper into the dictionary,
