@@ -245,6 +245,47 @@ def test_format_index():
     assert sorted(format_index(pattern2, date, date2, True).split(',')) == ['logstash-2018.25', 'logstash-2018.26']
 
 
+def test_format_hourly_index():
+    pattern = 'logstash-%Y.%m.%d.%H'
+    date = dt('2023-12-01T22:53:01Z')
+    date2 = dt('2023-12-02T00:10:01Z')
+    index_csv = format_index(pattern, date, date2, add_extra=False)
+    indexes = sorted(index_csv.split(','))
+    assert indexes == [
+        'logstash-2023.12.01.22',
+        'logstash-2023.12.01.23',
+        'logstash-2023.12.02.00'
+        ]
+
+
+def test_format_hourly_index_with_extra_index():
+    pattern = 'logstash-%Y.%m.%d.%H'
+    date = dt('2023-12-01T22:53:01Z')
+    date2 = dt('2023-12-02T00:10:01Z')
+    index_csv = format_index(pattern, date, date2, add_extra=True)
+    indexes = sorted(index_csv.split(','))
+
+    expected = [
+        'logstash-2023.12.01.21',  # added by add_extra=True
+        'logstash-2023.12.01.22',
+        'logstash-2023.12.01.23',
+        'logstash-2023.12.02.00',
+    ]
+
+    assert indexes == expected
+
+
+def test_format_index_with_static_throws_exception():
+    pattern = 'my-static-index-name'
+    date = dt('2023-12-01T22:53:01Z')
+    date2 = dt('2023-12-02T00:10:01Z')
+    works_when_add_extra_is_false = format_index(pattern, date, date2, add_extra=False)
+    assert works_when_add_extra_is_false
+    with pytest.raises(EAException) as e:
+        _ = format_index(pattern, date, date2, add_extra=True)
+    assert e.value.args[0] == "You cannot use a static index {} with search_extra_index".format(pattern)
+
+
 def test_should_scrolling_continue():
     rule_no_max_scrolling = {'max_scrolling_count': 0, 'scrolling_cycle': 1}
     rule_reached_max_scrolling = {'max_scrolling_count': 2, 'scrolling_cycle': 2}
