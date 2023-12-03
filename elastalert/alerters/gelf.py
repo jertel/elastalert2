@@ -31,7 +31,7 @@ class GelfAlerter(Alerter):
         self.gelf_version = self.rule.get('gelf_version', '1.1')
         self.gelf_log_level = self.rule.get('gelf_log_level', 5)
         self.additional_headers = self.rule.get('gelf_http_headers')
-        self.ca_cert = self.rule.get('gelf_ca_cert', False)
+        self.ca_cert = self.rule.get('gelf_ca_cert')
         self.http_ignore_ssl_errors = self.rule.get('gelf_http_ignore_ssl_errors', False)
         self.timeout = self.rule.get('gelf_timeout', 30)
 
@@ -43,7 +43,7 @@ class GelfAlerter(Alerter):
         if self.ca_cert:
             verify = self.ca_cert
         else:
-            verify = False
+            verify = not self.http_ignore_ssl_errors
 
         if self.http_ignore_ssl_errors:
             requests.packages.urllib3.disable_warnings()

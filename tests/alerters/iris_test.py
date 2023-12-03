@@ -406,7 +406,7 @@ def test_iris_alert_alert(caplog):
             'Authorization': f'Bearer {rule["iris_api_token"]}'
         },
         json=mock.ANY,
-        verify=False,
+        verify=True,
     )
 
     assert expected_data == mock_post_request.call_args_list[0][1]['json']

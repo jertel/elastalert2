@@ -2576,9 +2576,9 @@ Optional:
 
 ``gelf_http_headers``: Additional headers. (Only used if gelf_type=http)
 
-``gelf_ca_cert``: Path to custom CA certificate.
+``gelf_ca_cert``: Set this option to True or a path to a CA cert bundle or directory (eg: /etc/ssl/certs/ca-certificates.crt) to validate the SSL certificate.The default value is: False.
 
-``gelf_http_ignore_ssl_errors``: Ignore ssl error. (Only used if gelf_type=http)
+``gelf_http_ignore_ssl_errors``: Ignore ssl error. (Only used if gelf_type=http).The default value is: False.
 
 ``gelf_timeout``: Custom timeout.
 
@@ -2727,7 +2727,7 @@ The alerter requires the following option:
 
 Optional:
 
-``iris_ca_cert``: Path to custom CA certificate.
+``iris_ca_cert``: Set this option to True or a path to a CA cert bundle or directory (eg: /etc/ssl/certs/ca-certificates.crt) to validate the SSL certificate.The default value is: False.
 
 ``iris_ignore_ssl_errors``: Ignore ssl error. The default value is: ``False``.
 
