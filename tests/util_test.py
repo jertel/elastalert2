@@ -65,8 +65,8 @@ def test_parse_deadline(spec, expected_deadline):
     # Note: Can't mock ``utcnow`` directly because ``datetime`` is a built-in.
     class MockDatetime(datetime):
         @staticmethod
-        def utcnow():
-            return dt('2017-07-07T10:00:00.000Z')
+        def now(tz=None):
+            return datetime(2017, 7, 7, 10, 0, 0)
 
     with mock.patch('datetime.datetime', MockDatetime):
         assert parse_deadline(spec) == expected_deadline

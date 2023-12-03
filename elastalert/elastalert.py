@@ -18,8 +18,6 @@ from smtplib import SMTPException
 from socket import error
 import statsd
 
-
-import dateutil.tz
 import pytz
 from apscheduler.schedulers.background import BackgroundScheduler
 from apscheduler.executors.pool import ThreadPoolExecutor
@@ -1130,18 +1128,18 @@ class ElastAlerter(object):
                                name='Internal: Handle Config Change')
         self.scheduler.start()
         while self.running:
-            next_run = datetime.datetime.utcnow() + self.run_every
+            next_run = datetime.datetime.now(tz=datetime.UTC) + self.run_every
 
             # Quit after end_time has been reached
             if self.args.end:
                 endtime = ts_to_dt(self.args.end)
 
-                next_run_dt = next_run.replace(tzinfo=dateutil.tz.tzutc())
+                next_run_dt = next_run.replace(tzinfo=timezone.utc)
                 if next_run_dt > endtime:
                     elastalert_logger.info("End time '%s' falls before the next run time '%s', exiting." % (endtime, next_run_dt))
                     exit(0)
 
-            if next_run < datetime.datetime.utcnow():
+            if next_run < datetime.datetime.now(tz=datetime.UTC):
                 continue
 
             # Show disabled rules
@@ -1149,7 +1147,7 @@ class ElastAlerter(object):
                 elastalert_logger.info("Disabled rules are: %s" % (str(self.get_disabled_rules())))
 
             # Wait before querying again
-            sleep_duration = total_seconds(next_run - datetime.datetime.utcnow())
+            sleep_duration = total_seconds(next_run - datetime.datetime.now(tz=datetime.UTC))
             self.sleep_for(sleep_duration)
 
     def wait_until_responsive(self, timeout, clock=timeit.default_timer):
@@ -1209,7 +1207,7 @@ class ElastAlerter(object):
 
     def handle_rule_execution(self, rule):
         self.thread_data.alerts_sent = 0
-        next_run = datetime.datetime.utcnow() + rule['run_every']
+        next_run = datetime.datetime.now(tz=datetime.UTC) + rule['run_every']
         # Set endtime based on the rule's delay
         delay = rule.get('query_delay')
         if hasattr(self.args, 'end') and self.args.end:
@@ -1232,7 +1230,7 @@ class ElastAlerter(object):
             # That means that we need to pause execution after this run
             if endtime_epoch + rule['run_every'].total_seconds() < exec_next - 59:
                 # apscheduler requires pytz tzinfos, so don't use unix_to_dt here!
-                rule['next_starttime'] = datetime.datetime.utcfromtimestamp(exec_next).replace(tzinfo=pytz.utc)
+                rule['next_starttime'] = datetime.datetime.fromtimestamp(exec_next, tz=datetime.UTC).replace(tzinfo=pytz.utc)
                 if rule.get('limit_execution_coverage'):
                     rule['next_min_starttime'] = rule['next_starttime']
                 if not rule['has_run_once']:
@@ -1260,7 +1258,7 @@ class ElastAlerter(object):
 
             self.thread_data.alerts_sent = 0
 
-            if next_run < datetime.datetime.utcnow():
+            if next_run < datetime.datetime.now(tz=datetime.UTC):
                 # We were processing for longer than our refresh interval
                 # This can happen if --start was specified with a large time period
                 # or if we are running too slow to process events in real time.

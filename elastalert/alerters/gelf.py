@@ -65,7 +65,8 @@ class GelfAlerter(Alerter):
 
         try:
             if self.ca_cert:
-                tcp_socket = ssl.wrap_socket(tcp_socket, ca_certs=self.ca_cert)
+                ctx = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
+                tcp_socket = ctx.wrap_socket(tcp_socket, ca_certs=self.ca_cert)
                 tcp_socket.sendall(bytes_msg)
             else:
                 tcp_socket.sendall(bytes_msg)
