@@ -11,6 +11,8 @@
 - [Docs] Clarify how to reference query_key values in flatline alerts - [#1320](https://github.com/jertel/elastalert2/pull/1320) - @jertel
 - Fix percentiles aggregation type in Spike Metric Aggregation rules - [#1323](https://github.com/jertel/elastalert2/pull/1323) - @jertel
 - [Docs] Extend FAQ / troubleshooting section with information on Elasticsearch RBAC - [#1324](https://github.com/jertel/elastalert2/pull/1324) - @chr-b
+- Upgrade to Python 3.12 - [#1327](https://github.com/jertel/elastalert2/pull/1327) - @jertel
+- Correction in IRIS and GELF alerter [#1331](https://github.com/jertel/elastalert2/pull/1331) - @malinkinsa
 
 # 2.15.0
 
