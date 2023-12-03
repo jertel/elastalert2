@@ -238,16 +238,14 @@ def format_index(index, start, end, add_extra=False):
     start -= start.utcoffset()
     end -= end.utcoffset()
 
-    if add_extra:
-       start -= datetime.timedelta(days=1)
-
     if "%H" in index:
         dt = datetime.timedelta(hours=1)
         end = end.replace(second=0, microsecond=0, minute=0)
     else:
         dt = datetime.timedelta(days=1)
         end = end.replace(second=0, microsecond=0, minute=0, hour=0)
-
+    if add_extra:
+        start -= dt
     indices = set()
     indices.add(start.strftime(index))
     while start <= end:
