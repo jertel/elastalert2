@@ -258,23 +258,19 @@ def test_format_hourly_index():
         ]
 
 
-def test_format_hourly_index_with_extra_day():
+def test_format_hourly_index_with_extra_index():
     pattern = 'logstash-%Y.%m.%d.%H'
     date = dt('2023-12-01T22:53:01Z')
     date2 = dt('2023-12-02T00:10:01Z')
     index_csv = format_index(pattern, date, date2, add_extra=True)
     indexes = sorted(index_csv.split(','))
 
-    # with add_extra, first will be one day earlier logstash-2023.11.30.22
     expected = [
-        'logstash-2023.11.30.22',
-        'logstash-2023.11.30.23',
+        'logstash-2023.12.01.21',  # added by add_extra=True
+        'logstash-2023.12.01.22',
+        'logstash-2023.12.01.23',
+        'logstash-2023.12.02.00',
     ]
-    extra_24_hours_from_add_extra = ["logstash-2023.12.01.{:02d}".format(hour) for hour in range(24)]
-    expected.extend(extra_24_hours_from_add_extra)
-
-    # with add_extra, last should still include the index contaning date2
-    expected.append('logstash-2023.12.02.00')
 
     assert indexes == expected
 
