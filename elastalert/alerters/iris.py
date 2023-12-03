@@ -16,7 +16,7 @@ class IrisAlerter(Alerter):
         self.url = f"https://{self.rule.get('iris_host')}"
         self.api_token = self.rule.get('iris_api_token')
         self.customer_id = self.rule.get('iris_customer_id')
-        self.ca_cert = self.rule.get('iris_ca_cert', False)
+        self.ca_cert = self.rule.get('iris_ca_cert')
         self.ignore_ssl_errors = self.rule.get('iris_ignore_ssl_errors', False)
         self.description = self.rule.get('iris_description', None)
         self.overwrite_timestamp = self.rule.get('iris_overwrite_timestamp', False)
@@ -113,7 +113,7 @@ class IrisAlerter(Alerter):
         if self.ca_cert:
             verify = self.ca_cert
         else:
-            verify = False
+            verify = not self.ignore_ssl_errors
 
         if self.ignore_ssl_errors:
             requests.packages.urllib3.disable_warnings()
