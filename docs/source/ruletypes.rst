@@ -2723,9 +2723,9 @@ The alerter requires the following option:
 
 ``iris_api_token``: The API key of the user you created, which will be used to initiate alerts and cases on behalf of this user.
 
-``iris_customer_id``: The user ID associated with the API key mentioned above. You can find it on the same page where the API key is located.
-
 Optional:
+
+``iris_customer_id``: This field represents the unique identifier of the customer for whom an incident/case will be created within the system. Configure and view the existing options in the section ``Advanced -> Customers`` of your IRIS instance. The default value is: ``1``
 
 ``iris_ca_cert``: Set this option to True or a path to a CA cert bundle or directory (eg: /etc/ssl/certs/ca-certificates.crt) to validate the SSL certificate.The default value is: False.
 
