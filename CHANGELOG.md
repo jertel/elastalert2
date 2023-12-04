@@ -4,8 +4,27 @@
 - TBD
 
 ## New features
+- [Telegram] Added new telegram_thread_id setting for sending alerts to different threads of supergroup/forum. - [#1319](https://github.com/jertel/elastalert2/pull/1319) - @polshe-v
+
+## Other changes
+- Update setup.py & requirements.txt & requirements-dev.txt - [#1316](https://github.com/jertel/elastalert2/pull/1316) - @nsano-rururu
+- [Docs] Clarify how to reference query_key values in flatline alerts - [#1320](https://github.com/jertel/elastalert2/pull/1320) - @jertel
+- Fix percentiles aggregation type in Spike Metric Aggregation rules - [#1323](https://github.com/jertel/elastalert2/pull/1323) - @jertel
+- [Docs] Extend FAQ / troubleshooting section with information on Elasticsearch RBAC - [#1324](https://github.com/jertel/elastalert2/pull/1324) - @chr-b
+- Upgrade to Python 3.12 - [#1327](https://github.com/jertel/elastalert2/pull/1327) - @jertel
+- Support hourly index patterns - [#1328](https://github.com/jertel/elastalert2/pull/1328) - @jmacdone
+- Correction in IRIS and GELF alerter [#1331](https://github.com/jertel/elastalert2/pull/1331) - @malinkinsa
+- [Docs] Fix broken search function caused by sphinx upgrade a few releases ago - [#1332](https://github.com/jertel/elastalert2/pull/1332) - @jertel
+
+# 2.15.0
+
+## Breaking changes
+- None
+
+## New features
 - [Iris] Alerter added - [#1301](https://github.com/jertel/elastalert2/pull/1301) - @malinkinsa 
-- [Opensearch] Add the possibility to generate an opensearch discovery url - [#1310](https://github.com/jertel/elastalert2/pull/1310)
+- [Opensearch] Add the possibility to generate an opensearch discovery url - [#1310](https://github.com/jertel/elastalert2/pull/1310) - @luffynextgen
+
 ## Other changes
 - Refactored FlatlineRule to make it more extensible - [#1291](https://github.com/jertel/elastalert2/pull/1291) - @rundef 
 - Add support for Kibana 8.11 for Kibana Discover - [#1305](https://github.com/jertel/elastalert2/pull/1305) - @nsano-rururu

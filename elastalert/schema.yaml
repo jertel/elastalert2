@@ -511,7 +511,7 @@ properties:
             required: [ field ]
             properties:
               field: { type: string, minLength: 1 }
-  gelf_ca_cert: {type: string}
+  gelf_ca_cert: {type: [boolean, string]}
   gelf_http_ignore_ssl_errors: {type: boolean}
   gelf_timeout: {type: integer}
 
@@ -544,7 +544,7 @@ properties:
   iris_type: {type: string, enum: ['alert', 'case']}
   iris_customer_id: {type: integer}
   iris_ignore_ssl_errors: {type: boolean}
-  iris_ca_cert: {type: string}
+  iris_ca_cert: {type: [boolean, string]}
   iris_overwrite_timestamp: {type: boolean}
   iris_case_template_id: {type: integer}
   iris_description: {type: string}
@@ -773,6 +773,7 @@ properties:
   telegram_proxy_login: {type: string}
   telegram_proxy_pass: {type: string}
   telegram_parse_mode: {type: string, enum: ['markdown', 'markdownV2', 'html']}
+  telegram_thread_id: {type: number}
 
   ### Tencent SMS
   tencent_sms_secret_id: {type: string}

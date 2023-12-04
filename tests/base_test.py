@@ -215,7 +215,7 @@ def test_match(ea):
     with mock.patch('elastalert.elastalert.elasticsearch_client'):
         ea.run_rule(ea.rules[0], END, START)
 
-    ea.rules[0]['alert'][0].alert.called_with({'@timestamp': END_TIMESTAMP})
+    ea.rules[0]['alert'][0].alert.assert_called_with([{'@timestamp': END, 'num_hits': 0, 'num_matches': 1}])
     assert ea.rules[0]['alert'][0].alert.call_count == 1
 
 
@@ -375,7 +375,6 @@ def test_agg_matchtime_timestamp_field(ea):
     with mock.patch('elastalert.elastalert.elasticsearch_client') as mock_es:
         ea.send_pending_alerts()
         # Assert that current_es was refreshed from the aggregate rules
-        assert mock_es.called_with(host='', port='')
         assert mock_es.call_count == 2
     assert_alerts(ea, [hits_timestamps[:2], hits_timestamps[2:]])
 
@@ -505,7 +504,6 @@ def test_agg_matchtime(ea):
     with mock.patch('elastalert.elastalert.elasticsearch_client') as mock_es:
         ea.send_pending_alerts()
         # Assert that current_es was refreshed from the aggregate rules
-        assert mock_es.called_with(host='', port='')
         assert mock_es.call_count == 2
     assert_alerts(ea, [hits_timestamps[:2], hits_timestamps[2:]])
 
@@ -607,7 +605,6 @@ def test_agg_with_aggregation_key(ea):
         mock_es.return_value = ea.thread_data.current_es
         ea.send_pending_alerts()
         # Assert that current_es was refreshed from the aggregate rules
-        assert mock_es.called_with(host='', port='')
         assert mock_es.call_count == 2
     assert_alerts(ea, [[hits_timestamps[0], hits_timestamps[2]], [hits_timestamps[1]]])
 
@@ -641,7 +638,7 @@ def test_silence(ea):
     with mock.patch('elastalert.elastalert.ts_now') as mock_ts:
         with mock.patch('elastalert.elastalert.elasticsearch_client'):
             # Converted twice to add tzinfo
-            mock_ts.return_value = ts_to_dt(dt_to_ts(datetime.datetime.utcnow() + datetime.timedelta(hours=5)))
+            mock_ts.return_value = ts_to_dt(dt_to_ts(datetime.datetime.now(tz=datetime.UTC) + datetime.timedelta(hours=5)))
             ea.run_rule(ea.rules[0], END, START)
     assert ea.rules[0]['alert'][0].alert.call_count == 1
 
@@ -684,7 +681,7 @@ def test_silence_query_key(ea):
     with mock.patch('elastalert.elastalert.ts_now') as mock_ts:
         with mock.patch('elastalert.elastalert.elasticsearch_client'):
             # Converted twice to add tzinfo
-            mock_ts.return_value = ts_to_dt(dt_to_ts(datetime.datetime.utcnow() + datetime.timedelta(hours=5)))
+            mock_ts.return_value = ts_to_dt(dt_to_ts(datetime.datetime.now(tz=datetime.UTC) + datetime.timedelta(hours=5)))
             ea.run_rule(ea.rules[0], END, START)
     assert ea.rules[0]['alert'][0].alert.call_count == 2
 
@@ -711,7 +708,7 @@ def test_realert(ea):
     with mock.patch('elastalert.elastalert.ts_now') as mock_ts:
         with mock.patch('elastalert.elastalert.elasticsearch_client'):
             # mock_ts is converted twice to add tzinfo
-            mock_ts.return_value = ts_to_dt(dt_to_ts(datetime.datetime.utcnow() + datetime.timedelta(minutes=10)))
+            mock_ts.return_value = ts_to_dt(dt_to_ts(datetime.datetime.now(tz=datetime.UTC) + datetime.timedelta(minutes=10)))
             ea.rules[0]['type'].matches = matches
             ea.run_rule(ea.rules[0], END, START)
             assert ea.rules[0]['alert'][0].alert.call_count == 2

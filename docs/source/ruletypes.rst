@@ -1411,7 +1411,7 @@ default 50, unique terms.
 ``terms_size``: When used with ``use_terms_query``, this is the maximum number of terms returned per query. Default is 50.
 
 ``query_key``: With flatline rule, ``query_key`` means that an alert will be triggered if any value of ``query_key`` has been seen at least once
-and then falls below the threshold.
+and then falls below the threshold. To reference the query_key value within a flatline alert message, use ``key`` as the field name.
 
 ``forget_keys``: Only valid when used with ``query_key``. If this is set to true, ElastAlert 2 will "forget" about the ``query_key`` value that
 triggers an alert, therefore preventing any more alerts for it until it's seen again.
@@ -2576,9 +2576,9 @@ Optional:
 
 ``gelf_http_headers``: Additional headers. (Only used if gelf_type=http)
 
-``gelf_ca_cert``: Path to custom CA certificate.
+``gelf_ca_cert``: Set this option to True or a path to a CA cert bundle or directory (eg: /etc/ssl/certs/ca-certificates.crt) to validate the SSL certificate.The default value is: False.
 
-``gelf_http_ignore_ssl_errors``: Ignore ssl error. (Only used if gelf_type=http)
+``gelf_http_ignore_ssl_errors``: Ignore ssl error. (Only used if gelf_type=http).The default value is: False.
 
 ``gelf_timeout``: Custom timeout.
 
@@ -2727,7 +2727,7 @@ The alerter requires the following option:
 
 Optional:
 
-``iris_ca_cert``: Path to custom CA certificate.
+``iris_ca_cert``: Set this option to True or a path to a CA cert bundle or directory (eg: /etc/ssl/certs/ca-certificates.crt) to validate the SSL certificate.The default value is: False.
 
 ``iris_ignore_ssl_errors``: Ignore ssl error. The default value is: ``False``.
 
@@ -3687,6 +3687,8 @@ Optional:
 ``telegram_proxy_pass``: The Telegram proxy auth password.
 
 ``telegram_parse_mode``: The Telegram parsing mode, which determines the format of the alert text body. Possible values are ``markdown``, ``markdownV2``, ``html``. Defaults to ``markdown``.
+
+``telegram_thread_id``: Unique identifier for the target thread of supergroup/forum using telegram message_thread_id (Optional, positive integer value, no default).
 
 Example usage::
 

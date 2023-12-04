@@ -41,7 +41,7 @@ def test_gelf_sent_http(caplog):
         url=rule['gelf_endpoint'],
         headers={'Content-Type': 'application/json'},
         json=mock.ANY,
-        verify=False,
+        verify=True,
         timeout=30,
     )
 
@@ -211,7 +211,7 @@ def test_gelf_sent_tcp_with_custom_ca(caplog):
     expected_data = json.dumps(expected_data).encode('utf-8') + b'\x00'
 
     with mock.patch('socket.socket') as mock_socket:
-        with mock.patch('ssl.wrap_socket') as mock_ssl_wrap_socket:
+        with mock.patch('ssl.SSLContext.wrap_socket') as mock_ssl_wrap_socket:
             mock_ssl_wrap_socket.return_value = mock_socket
             alert.alert([match])
             mock_socket.assert_called_once_with(socket.AF_INET, socket.SOCK_STREAM)

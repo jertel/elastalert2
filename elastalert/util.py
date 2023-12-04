@@ -186,7 +186,8 @@ def dt_to_ts_with_format(dt, ts_format):
 
 
 def ts_now():
-    return datetime.datetime.utcnow().replace(tzinfo=dateutil.tz.tzutc())
+    now = datetime.datetime.now(tz=datetime.UTC)
+    return now.replace(tzinfo=dateutil.tz.tzutc())
 
 
 def ts_utc_to_tz(ts, tz_name):
@@ -236,18 +237,24 @@ def format_index(index, start, end, add_extra=False):
     # Convert to UTC
     start -= start.utcoffset()
     end -= end.utcoffset()
-    original_start = start
-    indices = set()
-    while start.date() <= end.date():
-        indices.add(start.strftime(index))
-        start += datetime.timedelta(days=1)
-    num = len(indices)
+
+    if "%H" in index:
+        dt = datetime.timedelta(hours=1)
+        end = end.replace(second=0, microsecond=0, minute=0)
+    else:
+        dt = datetime.timedelta(days=1)
+        end = end.replace(second=0, microsecond=0, minute=0, hour=0)
     if add_extra:
-        while len(indices) == num:
-            original_start -= datetime.timedelta(days=1)
-            new_index = original_start.strftime(index)
-            assert new_index != index, "You cannot use a static index with search_extra_index"
-            indices.add(new_index)
+        start -= dt
+    indices = set()
+    indices.add(start.strftime(index))
+    while start <= end:
+        start += dt
+        indices.add(start.strftime(index))
+
+    if add_extra:
+        if index in indices:
+            raise EAException("You cannot use a static index {} with search_extra_index".format(index))
 
     return ','.join(indices)
 
@@ -268,8 +275,8 @@ def total_seconds(dt):
 
 
 def dt_to_int(dt):
-    dt = dt.replace(tzinfo=None)
-    return int(total_seconds((dt - datetime.datetime.utcfromtimestamp(0))) * 1000)
+    dt = dt.replace(tzinfo=datetime.UTC)
+    return int(total_seconds((dt - datetime.datetime.fromtimestamp(0, tz=datetime.UTC))) * 1000)
 
 
 def unixms_to_dt(ts):
@@ -277,7 +284,7 @@ def unixms_to_dt(ts):
 
 
 def unix_to_dt(ts):
-    dt = datetime.datetime.utcfromtimestamp(float(ts))
+    dt = datetime.datetime.fromtimestamp(float(ts), tz=datetime.UTC)
     dt = dt.replace(tzinfo=dateutil.tz.tzutc())
     return dt
 
