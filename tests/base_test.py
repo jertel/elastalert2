@@ -1258,6 +1258,94 @@ def test_notify_email(ea):
         assert set(mock_smtp.sendmail.call_args_list[3][0][1]) == set(['baz@baz.baz'])
 
 
+def test_notify_email_auth(ea):
+    mock_smtp = mock.Mock()
+    ea.rules[0]['notify_email'] = ['foo@foo.foo', 'bar@bar.bar']
+    ea.smtp_username = ""
+    ea.smtp_password = ""
+    with mock.patch('elastalert.elastalert.SMTP') as mock_smtp_f:
+        mock_smtp_f.return_value = mock_smtp
+
+        # Notify_email from rules, array
+        ea.send_notification_email('omg', rule=ea.rules[0])
+        assert set(mock_smtp.sendmail.call_args_list[0][0][1]) == set(ea.rules[0]['notify_email'])
+
+        # With ea.notify_email
+        ea.notify_email = ['baz@baz.baz']
+        ea.send_notification_email('omg', rule=ea.rules[0])
+        assert set(mock_smtp.sendmail.call_args_list[1][0][1]) == set(['baz@baz.baz'] + ea.rules[0]['notify_email'])
+
+        # With ea.notify email but as single string
+        ea.rules[0]['notify_email'] = 'foo@foo.foo'
+        ea.send_notification_email('omg', rule=ea.rules[0])
+        assert set(mock_smtp.sendmail.call_args_list[2][0][1]) == set(['baz@baz.baz', 'foo@foo.foo'])
+
+        # None from rule
+        ea.rules[0].pop('notify_email')
+        ea.send_notification_email('omg', rule=ea.rules[0])
+        assert set(mock_smtp.sendmail.call_args_list[3][0][1]) == set(['baz@baz.baz'])
+
+
+def test_notify_email_ssl(ea):
+    mock_smtp = mock.Mock()
+    ea.rules[0]['notify_email'] = ['foo@foo.foo', 'bar@bar.bar']
+    ea.smtp_ssl = True
+    ea.smtp_host = ""
+    ea.smtp_port = 465
+    with mock.patch('elastalert.elastalert.SMTP_SSL') as mock_smtp_f:
+        mock_smtp_f.return_value = mock_smtp
+
+        # Notify_email from rules, array
+        ea.send_notification_email('omg', rule=ea.rules[0])
+        assert set(mock_smtp.sendmail.call_args_list[0][0][1]) == set(ea.rules[0]['notify_email'])
+
+        # With ea.notify_email
+        ea.notify_email = ['baz@baz.baz']
+        ea.send_notification_email('omg', rule=ea.rules[0])
+        assert set(mock_smtp.sendmail.call_args_list[1][0][1]) == set(['baz@baz.baz'] + ea.rules[0]['notify_email'])
+
+        # With ea.notify email but as single string
+        ea.rules[0]['notify_email'] = 'foo@foo.foo'
+        ea.send_notification_email('omg', rule=ea.rules[0])
+        assert set(mock_smtp.sendmail.call_args_list[2][0][1]) == set(['baz@baz.baz', 'foo@foo.foo'])
+
+        # None from rule
+        ea.rules[0].pop('notify_email')
+        ea.send_notification_email('omg', rule=ea.rules[0])
+        assert set(mock_smtp.sendmail.call_args_list[3][0][1]) == set(['baz@baz.baz'])
+
+
+def test_notify_email_ssl_auth(ea):
+    mock_smtp = mock.Mock()
+    ea.rules[0]['notify_email'] = ['foo@foo.foo', 'bar@bar.bar']
+    ea.smtp_ssl = True
+    ea.smtp_host = ""
+    ea.smtp_port = 465
+    ea.smtp_username = ""
+    ea.smtp_password = ""
+    with mock.patch('elastalert.elastalert.SMTP_SSL') as mock_smtp_f:
+        mock_smtp_f.return_value = mock_smtp
+
+        # Notify_email from rules, array
+        ea.send_notification_email('omg', rule=ea.rules[0])
+        assert set(mock_smtp.sendmail.call_args_list[0][0][1]) == set(ea.rules[0]['notify_email'])
+
+        # With ea.notify_email
+        ea.notify_email = ['baz@baz.baz']
+        ea.send_notification_email('omg', rule=ea.rules[0])
+        assert set(mock_smtp.sendmail.call_args_list[1][0][1]) == set(['baz@baz.baz'] + ea.rules[0]['notify_email'])
+
+        # With ea.notify email but as single string
+        ea.rules[0]['notify_email'] = 'foo@foo.foo'
+        ea.send_notification_email('omg', rule=ea.rules[0])
+        assert set(mock_smtp.sendmail.call_args_list[2][0][1]) == set(['baz@baz.baz', 'foo@foo.foo'])
+
+        # None from rule
+        ea.rules[0].pop('notify_email')
+        ea.send_notification_email('omg', rule=ea.rules[0])
+        assert set(mock_smtp.sendmail.call_args_list[3][0][1]) == set(['baz@baz.baz'])
+
+
 def test_uncaught_exceptions(ea):
     e = Exception("Errors yo!")
 
