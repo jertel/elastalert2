@@ -1836,7 +1836,9 @@ class ElastAlerter(object):
                 if self.smtp_username and self.smtp_password:
                     smtp.login(self.smtp_username, self.smtp_password)
             else:
-                smtp = SMTP(self.smtp_host)
+                smtp = SMTP(self.smtp_host, self.smtp_port)
+                if self.smtp_username and self.smtp_password:
+                    smtp.login(self.smtp_password, self.smtp_password)
             smtp.sendmail(self.from_addr, recipients, email.as_string())
         except (SMTPException, error) as e:
             self.handle_error('Error connecting to SMTP host: %s' % (e), {'email_body': email_body})
