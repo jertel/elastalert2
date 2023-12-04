@@ -15,6 +15,7 @@
 - Support hourly index patterns - [#1328](https://github.com/jertel/elastalert2/pull/1328) - @jmacdone
 - Correction in IRIS and GELF alerter [#1331](https://github.com/jertel/elastalert2/pull/1331) - @malinkinsa
 - [Docs] Fix broken search function caused by sphinx upgrade a few releases ago - [#1332](https://github.com/jertel/elastalert2/pull/1332) - @jertel
+- Added SSL & authentication support for ElastAlerter - [#1313](https://github.com/jertel/elastalert2/pull/1313) - @fazledyn-or
 
 # 2.15.0
 
