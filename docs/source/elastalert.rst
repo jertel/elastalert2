@@ -233,13 +233,13 @@ is "ElastAlert".
 unless overwritten in the rule config. The default is "localhost".
 
 ``smtp_port``: The SMTP port used to send email notifications. This value will be used for email alerts as well,
-unless overwritten in the rule config. The default is SMTP_PORT or 25.
+unless overwritten in the rule config. The default is SMTP_PORT or 25. STARTTLS is currently untested with error notification emails, but is supported in alert emails.
 
-``smtp_ssl``: Connect the SMTP host using TLS, defaults to ``false``. If ``smtp_ssl`` is not used, usual SMTP will be used.
+``smtp_ssl``: Connect the SMTP host using TLS, defaults to ``false``. If ``smtp_ssl`` is not used, plain-text SMTP will be used for at least the initial connection.
 
-``smtp_username``: The username for SMTP server. It's only used with ``smtp_ssl``, otherwise usual SMTP must be used.
+``smtp_username``: The username for SMTP server. Required if the mail server requires authentication. Currently only used for error notification emails; alert emails must use the smtp.auth credential file.
 
-``smtp_password``: The password for SMTP server. It's only used with ``smtp_ssl``, otherwise usual SMTP must be used.
+``smtp_password``: The password for SMTP server. Required if the mail server requires authentication. Currently only used for error notification emails; alert emails must use the smtp.auth credential file.
 
 ``email_reply_to``: This sets the Reply-To header in emails. The default is the recipient address.
 
