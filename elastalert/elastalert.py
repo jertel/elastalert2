@@ -463,24 +463,33 @@ class ElastAlerter(object):
         )
         return {endtime: res['count']}
 
+    @staticmethod
+    def query_key_filters(rule: dict, qk_value_csv: str) -> dict:
+        if qk_value_csv is None:
+            return
+
+        qk_values = qk_value_csv.split(", ")
+        end = '.keyword'
+
+        query_keys = []
+        try:
+            query_keys = rule['compound_query_key']
+        except KeyError:
+            query_key = rule.get('query_key')
+            if query_key is not None:
+                query_keys.append(query_key)
+
+        for key, value in zip(query_keys, qk_values):
+            if rule.get('raw_count_keys', True):
+                if not key.endswith(end):
+                    key += end
+            yield {'term': {key: value}}
+
     def get_hits_terms(self, rule, starttime, endtime, index, key, qk=None, size=None):
         rule_filter = copy.copy(rule['filter'])
-        if qk:
-            qk_list = qk.split(", ")
-            end = '.keyword'
 
-            if len(qk_list) == 1:
-                qk = qk_list[0]
-                filter_key = rule['query_key']
-                if rule.get('raw_count_keys', True) and not rule['query_key'].endswith(end):
-                    filter_key = add_keyword_postfix(filter_key)
-                rule_filter.extend([{'term': {filter_key: qk}}])
-            else:
-                filter_keys = rule['compound_query_key']
-                for i,filter_key in enumerate(filter_keys):
-                    if rule.get('raw_count_keys', True) and not filter_key.endswith(end):
-                        filter_key = add_keyword_postfix(filter_key)
-                    rule_filter.extend([{'term': {filter_key: qk_list[i]}}])
+        for filter in self.query_key_filters(rule=rule, qk_value_csv=qk):
+            rule_filter.append(filter)
 
         base_query = self.get_query(
             rule_filter,
