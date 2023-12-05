@@ -44,7 +44,7 @@ def new_get_event_ts(ts_field):
     return lambda event: lookup_es_key(event[0], ts_field)
 
 
-def _find_es_dict_by_key(lookup_dict, term):
+def _find_es_dict_by_key(lookup_dict: dict, term: str, string_multi_field_name: str = ".keyword") -> tuple[dict, str]:
     """ Performs iterative dictionary search based upon the following conditions:
 
     1. Subkeys may either appear behind a full stop (.) or at one lookup_dict level lower in the tree.
@@ -64,13 +64,15 @@ def _find_es_dict_by_key(lookup_dict, term):
     element which is the last subkey used to access the target specified by the term. None is
     returned for both if the key can not be found.
     """
+
+    # matching documents will not have .keyword fieldnames, even if a .keyword
+    # fieldname was used as a term in the search
+    # e.g. {"term": {"description.keyword": "Target Description Here"}}
+    # will return a document with {"_source": {"description": "Target Description Here"}}
+    term = term.removesuffix(string_multi_field_name)
+
     if term in lookup_dict:
         return lookup_dict, term
-
-    if term.endswith('.keyword'):
-        term, _, _ = term.partition('.keyword')
-        if term in lookup_dict:
-            return lookup_dict, term
 
     # If the term does not match immediately, perform iterative lookup:
     # 1. Split the search term into tokens
