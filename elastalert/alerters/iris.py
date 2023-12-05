@@ -9,13 +9,13 @@ from elastalert.util import EAException, elastalert_logger, lookup_es_key
 
 
 class IrisAlerter(Alerter):
-    required_options = set(['iris_host', 'iris_api_token', 'iris_customer_id'])
+    required_options = set(['iris_host', 'iris_api_token'])
 
     def __init__(self, rule):
         super(IrisAlerter, self).__init__(rule)
         self.url = f"https://{self.rule.get('iris_host')}"
         self.api_token = self.rule.get('iris_api_token')
-        self.customer_id = self.rule.get('iris_customer_id')
+        self.customer_id = self.rule.get('iris_customer_id', 1)
         self.ca_cert = self.rule.get('iris_ca_cert')
         self.ignore_ssl_errors = self.rule.get('iris_ignore_ssl_errors', False)
         self.description = self.rule.get('iris_description', None)
