@@ -391,6 +391,32 @@ def test_raises_on_missing_config():
                         rules['rules'] = rules['rules_loader'].load(rules)
 
 
+def test_no_raises_when_skip_invalid():
+    optional_keys = (
+        'aggregation', 'use_count_query', 'query_key', 'compare_key', 'filter', 'include', 'es_host', 'es_port',
+        'name', 'fields'
+    )
+    test_rule_copy = copy.deepcopy(test_rule)
+    for key in list(test_rule_copy.keys()):
+        test_rule_copy = copy.deepcopy(test_rule)
+        test_config_copy = copy.deepcopy(test_config)
+        test_rule_copy.pop(key)
+
+        # Non required keys
+        if key in optional_keys:
+            continue
+
+        with mock.patch('elastalert.config.read_yaml') as mock_conf_open:
+            mock_conf_open.return_value = test_config_copy
+            with mock.patch('elastalert.loaders.read_yaml') as mock_rule_open:
+                mock_rule_open.return_value = test_rule_copy
+                with mock.patch('os.walk') as mock_walk:
+                    mock_walk.return_value = [('', [], ['testrule.yaml'])]
+                    rules = load_conf(test_args)
+                    rules['skip_invalid'] = True
+                    rules['rules'] = rules['rules_loader'].load(rules)
+
+
 def test_compound_query_key():
     test_config_copy = copy.deepcopy(test_config)
     rules_loader = FileRulesLoader(test_config_copy)
