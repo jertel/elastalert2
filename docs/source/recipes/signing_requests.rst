@@ -1,3 +1,10 @@
+OpenSearch
+**********
+
+ElastAlert 2 supports Amazon OpenSearch. In general ElastAlert 2 will auto-detect
+OpenSearch and make adjustments internally to handle the differences between 
+OpenSearch and Elasticsearch.
+
 .. _signingrequests:
 
 Signing requests to Amazon OpenSearch Service
