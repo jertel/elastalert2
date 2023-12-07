@@ -13,16 +13,12 @@ Contents:
 
    elastalert
    running_elastalert
+   flags
+   configuration
    ruletypes
-   elastalert_status
-   elasticsearch_security_privileges
-   recipes/adding_rules
-   recipes/adding_alerts
-   recipes/writing_filters
-   recipes/adding_enhancements
-   recipes/adding_loaders
-   recipes/exposing_rule_metrics
-   recipes/signing_requests
+   alerts
+   logging
+   advanced
    recipes/faq
 
 Indices and Tables
