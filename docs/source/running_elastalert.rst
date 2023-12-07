@@ -176,7 +176,7 @@ See :doc:`configuration` for details on all the configuration options available.
 
 Save the file as ``config.yaml``
 
-Manually Creating the ElastAlert 2 Indicies
+Manually Creating the ElastAlert 2 Indices
 -------------------------------------------
 
 ElastAlert 2 saves information and metadata about its queries and its alerts back
