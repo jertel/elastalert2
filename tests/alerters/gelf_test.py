@@ -41,7 +41,7 @@ def test_gelf_sent_http(caplog):
         url=rule['gelf_endpoint'],
         headers={'Content-Type': 'application/json'},
         json=mock.ANY,
-        verify=False,
+        verify=True,
         timeout=30,
     )
 
