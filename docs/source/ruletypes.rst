@@ -320,7 +320,7 @@ or loaded from a module. For loading from a module, the type should be specified
 alert
 ^^^^^
 
-``alert``: The ``Alerter`` type to use. This may be one or more of the built in alerts, see :ref:`Alert Types <alerts>` section below for more information,
+``alert``: The ``Alerter`` type to use. This may be one or more of the built in alerts, see :ref:`Alert Types <alert_types>` section below for more information,
 or loaded from a module. For loading from a module, the alert should be specified as ``module.file.AlertName``. (Required, string or list, no default)
 
 Optional Settings

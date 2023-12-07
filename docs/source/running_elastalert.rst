@@ -258,7 +258,7 @@ information. If no filters are desired, it should be specified as an empty list:
 ``filter: []``
 
 ``alert`` is a list of alerts to run on each match. For more information on
-alert types, see :ref:`Alerts <alerts>`. The email alert requires an SMTP server
+alert types, see :ref:`Alert Types <alert_types>`. The email alert requires an SMTP server
 for sending mail. By default, it will attempt to use localhost. This can be
 changed with the ``smtp_host`` option.
 

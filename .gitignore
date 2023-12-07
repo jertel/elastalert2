@@ -6,7 +6,7 @@
 __pycache__/
 *.pyc
 virtualenv_run/
-.venv
+.venv*
 *.egg-info/
 dist/
 venv/

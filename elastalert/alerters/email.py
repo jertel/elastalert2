@@ -1,4 +1,5 @@
 import os
+import ssl
 
 from elastalert.alerts import Alerter
 from elastalert.util import elastalert_logger, lookup_es_key, EAException
@@ -91,12 +92,17 @@ class EmailAlerter(Alerter):
             to_addr = to_addr + self.rule['bcc']
 
         try:
+            ssl_context = None
+            if self.smtp_cert_file:
+                ssl_context = ssl.create_default_context()
+                ssl_context.load_cert_chain(certfile=self.smtp_cert_file, keyfile=self.smtp_key_file)
+
             if self.smtp_ssl:
                 if self.smtp_port:
-                    self.smtp = SMTP_SSL(self.smtp_host, self.smtp_port, keyfile=self.smtp_key_file, certfile=self.smtp_cert_file)
+                    self.smtp = SMTP_SSL(self.smtp_host, self.smtp_port, context=ssl_context)
                 else:
                     # default port : 465
-                    self.smtp = SMTP_SSL(self.smtp_host, keyfile=self.smtp_key_file, certfile=self.smtp_cert_file)
+                    self.smtp = SMTP_SSL(self.smtp_host, context=ssl_context)
             else:
                 if self.smtp_port:
                     self.smtp = SMTP(self.smtp_host, self.smtp_port)
@@ -105,7 +111,7 @@ class EmailAlerter(Alerter):
                     self.smtp = SMTP(self.smtp_host)
                 self.smtp.ehlo()
                 if self.smtp.has_extn('STARTTLS'):
-                    self.smtp.starttls(keyfile=self.smtp_key_file, certfile=self.smtp_cert_file)
+                    self.smtp.starttls(context=ssl_context)
             if 'smtp_auth_file' in self.rule:
                 self.smtp.login(self.user, self.password)
         except (SMTPException, error) as e:
