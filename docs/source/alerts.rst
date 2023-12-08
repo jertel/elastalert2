@@ -213,7 +213,7 @@ Example usage::
     jira_alert_owner: $owner$
 
 
-.. _alerts:
+.. _alert_types:
 
 Alert Types
 ===========

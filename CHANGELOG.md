@@ -19,6 +19,7 @@
 - [IRIS] Make parameter iris_customer_id optional with default value - [1334](https://github.com/jertel/elastalert2/pull/1334) @malinkinsa
 - (Re)Implement `skip_invalid` to continue loading rules if one is invalid - [#1338](https://github.com/jertel/elastalert2/pull/1338) - @jertel
 - [Docs] Refactor the docs structure for improved ease-of-use - [#1337](https://github.com/jertel/elastalert2/pull/1337) - @jertel
+- [Email] Refactor SMTP cert/key usage to support Python 3.12 - [#1341](https://github.com/jertel/elastalert2/pull/1341) - @jertel
 
 # 2.15.0
 
