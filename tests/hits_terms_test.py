@@ -56,7 +56,7 @@ def _mock_query_key_option_loader(rule):
             del(rule['query_key'])
 
 @pytest.mark.parametrize(
-    ["qk", "query_key"],
+    ["qk_value", "query_key"],
 
     #scenario A: 3 query keys
     [ ( ['172.16.1.10', '/api/v1/endpoint-foo', 'us-east-2'],
@@ -67,6 +67,7 @@ def _mock_query_key_option_loader(rule):
         ['server_ip', 'service_name'] ),
 
     #scenario C: 1 query key, but it was given as a list of one fieldname in the rule options
+    #as of this writing, 707b2a5 shouldn't allow this to happen, but here is a test regardless
       ( ['172.16.1.10'],
         ['server_ip'] ),
 
@@ -79,7 +80,7 @@ def _mock_query_key_option_loader(rule):
         None )
    ],
 )
-def test_query_key_filter_happy_path(ea, example_agg_response, qk, query_key):
+def test_get_hits_terms_with_factored_out_filters(ea, example_agg_response, qk_value, query_key):
 
     if query_key is not None:
         ea.rules[0]['query_key'] = query_key
@@ -89,9 +90,9 @@ def test_query_key_filter_happy_path(ea, example_agg_response, qk, query_key):
     _mock_query_key_option_loader(ea.rules[0])
 
     try:
-        # todo: why are these values being passed as a commaspace-join and not a
-        # comma-join like everything else?
-        qk_csv = ", ".join(qk)
+        # ElastAlert.process_hits() is expected to insert the filedname values
+        # from _hits as a commaspace csv
+        qk_csv = ", ".join(qk_value)
     except TypeError:
         qk_csv = None
     index = 'foo-2023-13-13' #lousy Smarch weather
@@ -118,14 +119,14 @@ def test_query_key_filter_happy_path(ea, example_agg_response, qk, query_key):
     ]
     try:
         cqk = ea.rules[0]['compound_query_key']
-        for fieldname, value in zip(cqk, qk):
+        for fieldname, value in zip(cqk, qk_value):
             filter = {'term': {f'{fieldname}.keyword': value}}
             expected_filters.append(filter)
     except KeyError:
         #not a compound, eh?  it must be a string of a single filedname
         try:
             fieldname = ea.rules[0]['query_key']
-            filter = {'term': {f'{fieldname}.keyword': qk[0]}}
+            filter = {'term': {f'{fieldname}.keyword': qk_value[0]}}
             expected_filters.append(filter)
         except KeyError:
             pass # maybe the rule never had a query_key, or it was an empty list and purged
