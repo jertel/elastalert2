@@ -1,9 +1,12 @@
 import pytest
-from datetime import datetime,timedelta
+from datetime import datetime, timedelta
 
 from elastalert.util import dt_to_ts
 from elastalert.elastalert import ElastAlerter
 
+# I like the dictionary whitespace the way it is, thank you
+# but I'm not going to tag all the lines with #noqa: E201
+# flake8: noqa
 
 @pytest.fixture
 def example_agg_response():
@@ -15,7 +18,7 @@ def example_agg_response():
             'total': {'value': 9, 'relation': 'eq'},
             'max_score': None,
             'hits': []},
-        'aggregations':{
+        'aggregations': {
             'counts': {
                 'doc_count_error_upper_bound': 0,
                 'sum_other_doc_count': 0,
@@ -53,29 +56,30 @@ def _mock_query_key_option_loader(rule):
         elif len(raw_query_key) == 1:
             rule['query_key'] = raw_query_key[0]
         else:
-            del(rule['query_key'])
+            del rule['query_key']
+
 
 @pytest.mark.parametrize(
     ["qk_value", "query_key"],
 
-    #scenario A: 3 query keys
+    # scenario A: 3 query keys
     [ ( ['172.16.1.10', '/api/v1/endpoint-foo', 'us-east-2'],
         ['server_ip', 'service_name', 'region'] ),
 
-    #scenario B: 2 query keys
+    # scenario B: 2 query keys
       ( ['172.16.1.10', '/api/v1/endpoint-foo'],
         ['server_ip', 'service_name'] ),
 
-    #scenario C: 1 query key, but it was given as a list of one fieldname in the rule options
-    #as of this writing, 707b2a5 shouldn't allow this to happen, but here is a test regardless
+    # scenario C: 1 query key, but it was given as a list of one fieldname in the rule options
+    # as of this writing, 707b2a5 shouldn't allow this to happen, but here is a test regardless
       ( ['172.16.1.10'],
         ['server_ip'] ),
 
-    #scenario D: 1 query key, given as a string
+    # scenario D: 1 query key, given as a string
       ( ['172.16.1.10'],
         'server_ip' ),
 
-    #scenario E: no query key
+    # scenario E: no query key
       ( None,
         None )
    ],
