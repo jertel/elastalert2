@@ -2,6 +2,7 @@ import pytest
 from datetime import datetime,timedelta
 
 from elastalert.util import dt_to_ts
+from elastalert.elastalert import ElastAlerter
 
 
 @pytest.fixture
@@ -135,3 +136,47 @@ def test_query_key_filter_happy_path(ea, example_agg_response, qk, query_key):
         'aggs': {'counts': {'terms': {'field': top_term_key, 'size': 50, 'min_doc_count': 1}}}
     }
     ea.thread_data.current_es.search.assert_called_with(index=index,body=expected_query, size=0, ignore_unavailable=True)
+
+
+def test_query_key_filters_single_query_key():
+    rule = { 'query_key': 'a_single_key_as_a_string' }
+    qk_value_csv = 'a single value'
+    filters = list(ElastAlerter.query_key_filters(rule,qk_value_csv))
+    expected_filters = [{'term': {f'{rule['query_key']}.keyword': qk_value_csv}}]
+    assert filters == expected_filters
+
+def test_query_key_filters_compound_query_key():
+    rule = { 'query_key': 'compound,key',
+             'compound_query_key': ['compound', 'key'] }
+    qk_value_csv = 'combined value, by commaspace'
+    filters = list(ElastAlerter.query_key_filters(rule,qk_value_csv))
+    expected_filters = [
+        {'term': {'compound.keyword': 'combined value'}},
+        {'term': {'key.keyword': 'by commaspace'}},
+    ]
+    assert filters == expected_filters
+
+def test_query_key_filters_brittle_query_key_value_logs_warning(caplog):
+    rule = { 'query_key': 'university,state',
+             'compound_query_key': ['university', 'state'] }
+    #uh oh, a commaspace we didn't expect
+    qk_value_csv = 'California State University, San Bernardino, California'
+    filters = list(ElastAlerter.query_key_filters(rule,qk_value_csv))
+    log = caplog.records[0]
+    assert log.levelname == "WARNING"
+    assert 'Received 3 value(s) for 2 key(s).' in log.message
+
+def test_query_key_filters_none_values():
+    rule = { 'query_key': 'something'}
+    qk_value_csv = None
+    filters = list(ElastAlerter.query_key_filters(rule,qk_value_csv))
+    assert len(filters) == 0
+
+def test_query_key_filters_unexpected_passed_values_for_a_rule_without_query_keys(caplog):
+    rule = { }
+    qk_value_csv = 'value'
+    filters = list(ElastAlerter.query_key_filters(rule,qk_value_csv))
+    assert len(filters) == 0
+    log = caplog.records[0]
+    assert log.levelname == "WARNING"
+    assert 'Received 1 value(s) for 0 key(s).' in log.message
