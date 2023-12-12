@@ -6,6 +6,7 @@ import json
 import logging
 import os
 import random
+import re
 import signal
 import sys
 import threading
@@ -468,7 +469,10 @@ class ElastAlerter(object):
         if qk_value_csv is None:
             return
 
-        qk_values = qk_value_csv.split(", ")
+        # Split on comma followed by zero or more whitespace characters. It's
+        # expected to be commaspace separated. However 76ab593 suggests there
+        # are cases when it is only comma and not commaspace
+        qk_values = re.split(r',\s*',qk_value_csv)
         end = '.keyword'
 
         query_keys = []
@@ -478,6 +482,12 @@ class ElastAlerter(object):
             query_key = rule.get('query_key')
             if query_key is not None:
                 query_keys.append(query_key)
+
+        if len(qk_values) != len(query_keys):
+            msg = ( f"Received {len(qk_values)} value(s) for {len(query_keys)} key(s)."
+                    f" Did '{qk_value_csv}' have a value with a comma?"
+                    " See https://github.com/jertel/elastalert2/pull/1330#issuecomment-1849962106" )
+            elastalert_logger.warning( msg )
 
         for key, value in zip(query_keys, qk_values):
             if rule.get('raw_count_keys', True):
