@@ -80,7 +80,8 @@ def _mock_query_key_option_loader(rule):
         None )
    ],
 )
-def test_get_hits_terms_with_factored_out_filters(ea, example_agg_response, qk_value, query_key):
+@pytest.mark.parametrize("query_key_values_separator", [",", ", ", ",      ", ",\t"])
+def test_get_hits_terms_with_factored_out_filters(ea, example_agg_response, qk_value, query_key, query_key_values_separator):
 
     if query_key is not None:
         ea.rules[0]['query_key'] = query_key
@@ -92,7 +93,7 @@ def test_get_hits_terms_with_factored_out_filters(ea, example_agg_response, qk_v
     try:
         # ElastAlert.process_hits() is expected to insert the filedname values
         # from _hits as a commaspace csv
-        qk_csv = ", ".join(qk_value)
+        qk_csv = query_key_values_separator.join(qk_value)
     except TypeError:
         qk_csv = None
     index = 'foo-2023-13-13' #lousy Smarch weather
@@ -146,10 +147,11 @@ def test_query_key_filters_single_query_key():
     expected_filters = [{'term': {f'{rule['query_key']}.keyword': qk_value_csv}}]
     assert filters == expected_filters
 
-def test_query_key_filters_compound_query_key():
+@pytest.mark.parametrize("query_key_values_separator", [",", ", ", ",      ", ",\t"])
+def test_query_key_filters_compound_query_key(query_key_values_separator):
     rule = { 'query_key': 'compound,key',
              'compound_query_key': ['compound', 'key'] }
-    qk_value_csv = 'combined value, by commaspace'
+    qk_value_csv = query_key_values_separator.join( ['combined value', 'by commaspace'] )
     filters = list(ElastAlerter.query_key_filters(rule,qk_value_csv))
     expected_filters = [
         {'term': {'compound.keyword': 'combined value'}},
