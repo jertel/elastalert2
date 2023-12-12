@@ -65,12 +65,27 @@ def _find_es_dict_by_key(lookup_dict: dict, term: str, string_multi_field_name: 
     returned for both if the key can not be found.
     """
 
-    # matching documents will not have .keyword fieldnames, even if a .keyword
-    # fieldname was used as a term in the search
+    # For compound fieldnames added by ElastAlert.process_hits()
+    #
+    # For example, when query_key is a list of fieldnames it will insert a term
+    #     'key_1,other_fieldname,a_third_name'
+    # and if the rule is set for raw_query_keys, the query_key values may end
+    # with .keyword it will insert instead something like
+    #     'key_1_ip,other_fieldname_number,a_third_name.keyword'
+    # and we need to check for that synthentic compound fielname, including the
+    # .keyword suffix before contnuing
+    #
+    # Of course, it also handles happy path, non-ambuiguous fieldnames like
+    # 'ip_address' and 'src_displayname' that don't have . or [] characters
+    if term in lookup_dict:
+        return lookup_dict, term
+
+    # If not synthetically added by ElastAlert, matching documents will not have
+    # .keyword fieldnames, even if a .keyword fieldname was used as a term in
+    # the search
     # e.g. {"term": {"description.keyword": "Target Description Here"}}
     # will return a document with {"_source": {"description": "Target Description Here"}}
     term = term.removesuffix(string_multi_field_name)
-
     if term in lookup_dict:
         return lookup_dict, term
 
