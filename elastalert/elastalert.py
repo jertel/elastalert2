@@ -6,6 +6,7 @@ import json
 import logging
 import os
 import random
+import re
 import signal
 import sys
 import threading
@@ -463,25 +464,42 @@ class ElastAlerter(object):
         )
         return {endtime: res['count']}
 
+    @staticmethod
+    def query_key_filters(rule: dict, qk_value_csv: str) -> dict:
+        if qk_value_csv is None:
+            return
+
+        # Split on comma followed by zero or more whitespace characters. It's
+        # expected to be commaspace separated. However 76ab593 suggests there
+        # are cases when it is only comma and not commaspace
+        qk_values = re.split(r',\s*',qk_value_csv)
+        end = '.keyword'
+
+        query_keys = []
+        try:
+            query_keys = rule['compound_query_key']
+        except KeyError:
+            query_key = rule.get('query_key')
+            if query_key is not None:
+                query_keys.append(query_key)
+
+        if len(qk_values) != len(query_keys):
+            msg = ( f"Received {len(qk_values)} value(s) for {len(query_keys)} key(s)."
+                    f" Did '{qk_value_csv}' have a value with a comma?"
+                    " See https://github.com/jertel/elastalert2/pull/1330#issuecomment-1849962106" )
+            elastalert_logger.warning( msg )
+
+        for key, value in zip(query_keys, qk_values):
+            if rule.get('raw_count_keys', True):
+                if not key.endswith(end):
+                    key += end
+            yield {'term': {key: value}}
+
     def get_hits_terms(self, rule, starttime, endtime, index, key, qk=None, size=None):
         rule_filter = copy.copy(rule['filter'])
-        if qk:
-            qk_list = qk.split(",")
-            end = '.keyword'
 
-            if len(qk_list) == 1:
-                qk = qk_list[0]
-                filter_key = rule['query_key']
-                if rule.get('raw_count_keys', True) and not rule['query_key'].endswith(end):
-                    filter_key = add_keyword_postfix(filter_key)
-                rule_filter.extend([{'term': {filter_key: qk}}])
-            else:
-                filter_keys = rule['compound_query_key']
-                for i in range(len(filter_keys)):
-                    key_with_postfix = filter_keys[i]
-                    if rule.get('raw_count_keys', True) and not key.endswith(end):
-                        key_with_postfix = add_keyword_postfix(key_with_postfix)
-                    rule_filter.extend([{'term': {key_with_postfix: qk_list[i]}}])
+        for filter in self.query_key_filters(rule=rule, qk_value_csv=qk):
+            rule_filter.append(filter)
 
         base_query = self.get_query(
             rule_filter,

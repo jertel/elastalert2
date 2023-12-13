@@ -117,6 +117,7 @@ def test_looking_up_nested_keys(ea):
     }
 
     assert lookup_es_key(record, 'Fields.ts') == expected
+    assert lookup_es_key(record, 'Fields.ts.keyword') == expected
 
 
 def test_looking_up_nested_composite_keys(ea):
@@ -131,6 +132,7 @@ def test_looking_up_nested_composite_keys(ea):
     }
 
     assert lookup_es_key(record, 'Fields.ts.value') == expected
+    assert lookup_es_key(record, 'Fields.ts.value.keyword') == expected
 
 
 def test_looking_up_arrays(ea):
@@ -148,10 +150,14 @@ def test_looking_up_arrays(ea):
     assert lookup_es_key(record, 'flags[0]') == 1
     assert lookup_es_key(record, 'flags[1]') == 2
     assert lookup_es_key(record, 'objects[0]foo') == 'bar'
+    assert lookup_es_key(record, 'objects[0]foo.keyword') == 'bar'
     assert lookup_es_key(record, 'objects[1]foo[0]bar') == 'baz'
     assert lookup_es_key(record, 'objects[2]foo.bar') == 'baz'
+    assert lookup_es_key(record, 'objects[2]foo.bar.keyword') == 'baz'
     assert lookup_es_key(record, 'objects[1]foo[1]bar') is None
+    assert lookup_es_key(record, 'objects[1]foo[1]bar.keyword') is None
     assert lookup_es_key(record, 'objects[1]foo[0]baz') is None
+    assert lookup_es_key(record, 'objects[1]foo[0]baz.keyword') is None
     assert lookup_es_key(record, 'nested.foo[0]') == 'bar'
     assert lookup_es_key(record, 'nested.foo[1]') == 'baz'
 
