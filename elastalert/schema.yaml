@@ -539,7 +539,7 @@ properties:
   http_post2_timeout: {type: integer}
 
   ### IRIS
-  iris_url: {type: string}
+  iris_host: {type: string}
   iris_api_token: {type: string}
   iris_type: {type: string, enum: ['alert', 'case']}
   iris_customer_id: {type: integer}
