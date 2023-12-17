@@ -22,6 +22,7 @@
 - (Re)Implement `skip_invalid` to continue loading rules if one is invalid - [#1338](https://github.com/jertel/elastalert2/pull/1338) - @jertel
 - [Docs] Refactor the docs structure for improved ease-of-use - [#1337](https://github.com/jertel/elastalert2/pull/1337) - @jertel
 - [Email] Refactor SMTP cert/key usage to support Python 3.12 - [#1341](https://github.com/jertel/elastalert2/pull/1341) - @jertel
+- [IRIS] Fix schema.yaml(iris_url to iris_host) - [#1346](https://github.com/jertel/elastalert2/pull/1346) - @nsano-rururu
 
 # 2.15.0
 
