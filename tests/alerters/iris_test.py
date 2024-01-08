@@ -215,6 +215,86 @@ def test_iris_make_alert_maximal(caplog):
     assert expected_data == actual_data
 
 
+def test_iris_make_alert_maximal_with_nested_json(caplog):
+    caplog.set_level(logging.INFO)
+    rule = {
+        'name': 'Test Maximal Alert Body',
+        'type': 'any',
+        'iris_host': '127.0.0.1',
+        'iris_api_token': 'token 12345',
+        'iris_customer_id': 1,
+        'iris_description': 'test description in alert',
+        'iris_alert_note': 'test note',
+        'iris_alert_tags': 'test, alert',
+        'iris_overwrite_timestamp': True,
+        'iris_alert_source_link': 'https://example.com',
+        'iris_iocs': [
+            {
+                'ioc_description': 'source address',
+                'ioc_tags': 'ip, ipv4',
+                'ioc_tlp_id': 1,
+                'ioc_type_id': 76,
+                'ioc_value': 'host.src_ip'
+            },
+            {
+                'ioc_description': 'target username',
+                'ioc_tags': 'login, username',
+                'ioc_tlp_id': 3,
+                'ioc_type_id': 3,
+                'ioc_value': 'username'
+            }
+        ],
+        'iris_alert_context': {'username': 'username', 'ip': 'host.src_ip', 'login_status': 'event_status'},
+        'alert': [],
+    }
+
+    rules_loader = FileRulesLoader({})
+    rules_loader.load_modules(rule)
+    alert = IrisAlerter(rule)
+
+    match = {
+        '@timestamp': '2023-10-21 20:00:00.000', 'username': 'evil_user', 'host': {'src_ip': '172.20.1.1'}, 'dst_ip': '10.0.0.1',
+        'event_type': 'login', 'event_status': 'success'
+    }
+
+    expected_data = {
+        "alert_title": 'Test Maximal Alert Body',
+        "alert_description": 'test description in alert',
+        "alert_source": "ElastAlert2",
+        "alert_severity_id": 1,
+        "alert_status_id": 2,
+        "alert_source_event_time": '2023-10-21 20:00:00.000',
+        "alert_note": 'test note',
+        "alert_tags": 'test, alert',
+        "alert_customer_id": 1,
+        "alert_source_link": 'https://example.com',
+        "alert_iocs": [
+            {
+                'ioc_description': 'source address',
+                'ioc_tags': 'ip, ipv4',
+                'ioc_tlp_id': 1,
+                'ioc_type_id': 76,
+                'ioc_value': '172.20.1.1'
+            },
+            {
+                'ioc_description': 'target username',
+                'ioc_tags': 'login, username',
+                'ioc_tlp_id': 3,
+                'ioc_type_id': 3,
+                'ioc_value': 'evil_user'
+            }
+        ],
+        "alert_context": {
+            'username': 'evil_user',
+            'ip': '172.20.1.1',
+            'login_status': 'success'
+        },
+    }
+
+    actual_data = alert.make_alert([match])
+    assert expected_data == actual_data
+
+
 def test_iris_make_case_minimal(caplog):
     caplog.set_level(logging.INFO)
     rule = {
