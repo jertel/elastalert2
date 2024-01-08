@@ -34,13 +34,28 @@ class IrisAlerter(Alerter):
         self.alert_context = self.rule.get('iris_alert_context', None)
         self.iocs = self.rule.get('iris_iocs', None)
 
+    def lookup_field(self, match: dict, field_name: str, default):
+        """Populates a field with values depending on the contents of the Elastalert match
+        provided to it.
+
+        Uses a similar algorithm to that implemented to populate the `alert_text_args`.
+        First checks any fields found in the match provided, then any fields defined in
+        the rule, finally returning the default value provided if no value can be found.
+        """
+        field_value = lookup_es_key(match, field_name)
+        if field_value is None:
+            field_value = self.rule.get(field_name, default)
+
+        return field_value
+
     def make_alert_context_records(self, matches):
         alert_context = {}
 
         for key, value in self.alert_context.items():
+            data = str(self.lookup_field(matches[0], value, ''))
             alert_context.update(
                 {
-                    key: matches[0].get(value)
+                    key: data
                 }
             )
 
