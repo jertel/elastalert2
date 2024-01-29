@@ -4,6 +4,17 @@
 - TBD
 
 ## New features
+- TBD
+
+## Other changes
+- TBD
+
+# 2.16.0
+
+## Breaking changes
+- None
+
+## New features
 - [Telegram] Added new telegram_thread_id setting for sending alerts to different threads of supergroup/forum. - [#1319](https://github.com/jertel/elastalert2/pull/1319) - @polshe-v
 - Support hourly index patterns - [#1328](https://github.com/jertel/elastalert2/pull/1328) - @jmacdone
 
