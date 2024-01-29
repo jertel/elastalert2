@@ -26,6 +26,7 @@
 - [IRIS] Fix issue with document with nested json inside. See [#1348](https://github.com/jertel/elastalert2/discussions/1348) - [#1352](https://github.com/jertel/elastalert2/pull/1352) - @malinkinsa
 - [Docs] Clarify `jinja_template_path` documentation - [20a05f9](https://github.com/jertel/elastalert2/commit/20a05f995f566f8719d6e4bf7b8a3977c7ab9e23) - @jertel
 - Add support for Kibana 8.12 for Kibana Discover - [#1364](https://github.com/jertel/elastalert2/pull/1364) - @nsano-rururu
+- Upgrade pylint 3.0.2 to 3.0.3, pytest 7.4.3 to 8.0.0, sphinx_rtd_theme 1.3.0 to 2.0.0, tox 4.11.3 to 4.12.1 - [#1365](https://github.com/jertel/elastalert2/pull/1365) - @nsano-rururu
 
 # 2.15.0
 
