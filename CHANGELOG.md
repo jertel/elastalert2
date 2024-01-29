@@ -23,7 +23,8 @@
 - [Docs] Refactor the docs structure for improved ease-of-use - [#1337](https://github.com/jertel/elastalert2/pull/1337) - @jertel
 - [Email] Refactor SMTP cert/key usage to support Python 3.12 - [#1341](https://github.com/jertel/elastalert2/pull/1341) - @jertel
 - [IRIS] Fix schema.yaml(iris_url to iris_host) - [#1346](https://github.com/jertel/elastalert2/pull/1346) - @nsano-rururu
-- [IRIS] Fix issue with document with nested json inside. See [#1348](https://github.com/jertel/elastalert2/discussions/1348) - [#1352](https://github.com/jertel/elastalert2/pull/1352) @malinkinsa
+- [IRIS] Fix issue with document with nested json inside. See [#1348](https://github.com/jertel/elastalert2/discussions/1348) - [#1352](https://github.com/jertel/elastalert2/pull/1352) - @malinkinsa
+- [Docs] Clarify `jinja_template_path` documentation - [20a05f9](https://github.com/jertel/elastalert2/commit/20a05f995f566f8719d6e4bf7b8a3977c7ab9e23) - @jertel
 
 # 2.15.0
 

@@ -1152,7 +1152,7 @@ class ElastAlerter(object):
             if self.args.end:
                 endtime = ts_to_dt(self.args.end)
 
-                next_run_dt = next_run.replace(tzinfo=timezone.utc)
+                next_run_dt = next_run.replace(tzinfo=datetime.timezone.utc)
                 if next_run_dt > endtime:
                     elastalert_logger.info("End time '%s' falls before the next run time '%s', exiting." % (endtime, next_run_dt))
                     exit(0)

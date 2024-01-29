@@ -134,7 +134,7 @@ The default value is ``.keyword``.
 
 ``jinja_root_name``: When using a Jinja template, specify the name of the root field name in the template. The default is ``_data``.
 
-``jinja_template_path``: When using a Jinja template, specify filesystem path to template, this overrides the default behaviour of using alert_text as the template.
+``jinja_template_path``: When using a Jinja template, specify relative (based on current working directory) filesystem path to template, this overrides the default behaviour of using alert_text as the template.
 
 ``custom_pretty_ts_format``: This option provides a way to define custom format of timestamps printed in log messages and in alert messages.
 If this option is not set, default timestamp format ('%Y-%m-%d %H:%M %Z') will be used. (Optional, string, default None)
