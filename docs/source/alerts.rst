@@ -2274,7 +2274,7 @@ Example with SMS usage::
     twilio_account_sid: "ABCDEFGHIJKLMNOPQRSTUVWXYZ01234567"
 
 WorkWechat
-~~~~~~~~
+~~~~~~~~~~
 
 WorkWechat alerter will send notification to a predefined bot in WorkWechat application. The body of the notification is formatted the same as with other alerters.
 
