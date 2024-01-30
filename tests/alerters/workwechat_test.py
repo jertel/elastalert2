@@ -22,7 +22,7 @@ def test_work_wechat_text(caplog):
     rules_loader.load_modules(rule)
     alert = WorkWechatAlerter(rule)
     match = {
-        '@timestamp': '2024-01-030T00:00:00',
+        '@timestamp': '2024-01-30T00:00:00',
         'somefield': 'foobar'
     }
     with mock.patch('requests.post') as mock_post_request:
