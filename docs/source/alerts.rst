@@ -49,6 +49,7 @@ or
       - tencent_sms
       - twilio
       - victorops
+      - workwechat  
       - zabbix
 
 Options for each alerter can either defined at the top level of the YAML file, or nested within the alert name, allowing for different settings
@@ -2271,6 +2272,21 @@ Example with SMS usage::
     twilio_from_number: "9876543210"
     twilio_auth_token: "abcdefghijklmnopqrstuvwxyz012345"
     twilio_account_sid: "ABCDEFGHIJKLMNOPQRSTUVWXYZ01234567"
+
+WorkWechat
+~~~~~~~~
+
+WorkWechat alerter will send notification to a predefined bot in WorkWechat application. The body of the notification is formatted the same as with other alerters.
+
+Required:
+
+``work_wechat_bot_id``:  WorkWechat bot id.
+
+Example usage::
+
+    alert:
+      - "workwechat"
+    work_wechat_bot_id: "your workwechat bot id"
 
 Zabbix
 ~~~~~~

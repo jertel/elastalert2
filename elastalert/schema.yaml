@@ -793,6 +793,9 @@ properties:
   twilio_message_service_sid: {type: string}
   twilio_use_copilot: {type: boolean}
 
+  ### WorkWechat
+  work_wechat_bot_id: { type: string }
+
   ### Zabbix
   zbx_sender_host: {type: string}
   zbx_sender_port: {type: integer}
