@@ -35,7 +35,7 @@ class WorkWechatAlerter(Alerter):
 
         try:
             response = requests.post(
-                self.wechat_webhook_url,
+                self.work_wechat_webhook_url,
                 data=json.dumps(payload, cls=DateTimeEncoder),
                 headers=headers)
             warnings.resetwarnings()
