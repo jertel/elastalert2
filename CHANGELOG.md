@@ -4,7 +4,7 @@
 - TBD
 
 ## New features
-- TBD
+- Add workwechat alerter - [#1367](https://github.com/jertel/elastalert2/pull/1367) - @wufeiqun
 
 ## Other changes
 - TBD
