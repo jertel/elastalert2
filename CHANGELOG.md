@@ -4,6 +4,7 @@
 - TBD
 
 ## New features
+- [workwechat] add workwechat msgtype - [#1369](https://github.com/jertel/elastalert2/pull/1369) - @bitqiu
 - Add workwechat alerter - [#1367](https://github.com/jertel/elastalert2/pull/1367) - @wufeiqun
 
 ## Other changes
