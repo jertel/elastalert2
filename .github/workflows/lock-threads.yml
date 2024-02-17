@@ -28,7 +28,7 @@ jobs:
           close-issue-message: "This issue was closed because it has been inactive for over a year since being marked as stale. It will be automatically locked after an additional 30 days, after which no further commenting will be available."
           days-before-pr-stale: 30
           days-before-pr-close: 30
-          stale-pr-message: "This PR is stale because it has been open for 30 days with no activity. Stale PRs convey that the author no longer has time, capability, or interest in completing the required checklist items. The longer a PR remains stale the more out of date with the main branch it becomes."
+          stale-pr-message: "This PR is stale because it has been open for 30 days with no activity. The longer a PR remains stale the more out of date with the main branch it becomes."
           close-pr-message: "This PR was closed because it has been inactive for 30 days since being marked as stale. It will be automatically locked after an additional 30 days. If there is still a commitment to finishing this PR please re-open it, or request that a project maintainer re-open it before it becomes locked."
           exempt-assignees: jertel
 
