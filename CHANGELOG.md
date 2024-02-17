@@ -7,7 +7,7 @@
 - Add workwechat alerter - [#1367](https://github.com/jertel/elastalert2/pull/1367) - @wufeiqun
 
 ## Other changes
-- TBD
+- [IRIS] Remove empty IOC in alerts that are not accepted by the API - [#1374](https://github.com/jertel/elastalert2/pull/1374) - @yaksnip425
 
 # 2.16.0
 

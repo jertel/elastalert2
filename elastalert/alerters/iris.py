@@ -65,7 +65,8 @@ class IrisAlerter(Alerter):
         iocs = []
         for record in self.iocs:
             record['ioc_value'] = lookup_es_key(matches[0], record['ioc_value'])
-            iocs.append(record)
+            if record['ioc_value'] is not None:
+                iocs.append(record)
         return iocs
 
     def make_alert(self, matches):
