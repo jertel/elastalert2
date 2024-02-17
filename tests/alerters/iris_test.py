@@ -64,6 +64,13 @@ def test_iris_make_iocs_records(caplog):
                 'ioc_tlp_id': 3,
                 'ioc_type_id': 3,
                 'ioc_value': 'username'
+            },
+            {
+                'ioc_description': 'empty ioc',
+                'ioc_tags': 'ioc',
+                'ioc_tlp_id': 3,
+                'ioc_type_id': 3,
+                'ioc_value': 'non_existent_data'
             }
         ],
         'alert': []
