@@ -49,7 +49,7 @@ or
       - tencent_sms
       - twilio
       - victorops
-      - workwechat  
+      - workwechat
       - zabbix
 
 Options for each alerter can either defined at the top level of the YAML file, or nested within the alert name, allowing for different settings
@@ -188,7 +188,7 @@ come from an individual event, usually the one which triggers the alert.
 
 When using ``alert_text_args``, you can access nested fields and index into arrays. For example, if your match was ``{"data": {"ips": ["127.0.0.1", "12.34.56.78"]}}``, then by using ``"data.ips[1]"`` in ``alert_text_args``, it would replace value with ``"12.34.56.78"``. This can go arbitrarily deep into fields and will still work on keys that contain dots themselves.
 
-Further, accessing subfields within a nested array structure is accomplished by specifying the subfield name directly after the array index brackets. 
+Further, accessing subfields within a nested array structure is accomplished by specifying the subfield name directly after the array index brackets.
 
 For example, given the below data::
 
@@ -369,7 +369,7 @@ Labels are sent as either static values or a single field value lookup. So if yo
 
 The first labels will be static, but the two field will be replaced with the corresponding field values from the Elastic record that triggered the alert, and then merged back into the list of labels sent to Alertmanager.
 
-Annotations are slightly different. You can have many static (hardcoded) annotations and only two annotations that will be formatted according to the `alert_text` and `alert_subject` [documentation](https://elastalert2.readthedocs.io/en/latest/ruletypes.html#alert-subject). 
+Annotations are slightly different. You can have many static (hardcoded) annotations and only two annotations that will be formatted according to the `alert_text` and `alert_subject` [documentation](https://elastalert2.readthedocs.io/en/latest/ruletypes.html#alert-subject).
 
 For example::
 
@@ -1181,7 +1181,7 @@ This alert requires four additional options:
 
 ``jira_account_file``: The path to the file which contains Jira account credentials.
 
-  For an example Jira account file, see ``examples/rules/jira_acct.yaml``. The account file is a YAML formatted file. 
+  For an example Jira account file, see ``examples/rules/jira_acct.yaml``. The account file is a YAML formatted file.
 
   When using user/password authentication, or when using Jira Cloud the Jira account file must contain two fields:
 
@@ -1453,7 +1453,7 @@ Optional:
 
 ``ms_teams_alert_fixed_width``: By default this is ``False`` and the notification will be sent to MS Teams as-is. Teams supports a partial Markdown implementation, which means asterisk, underscore and other characters may be interpreted as Markdown. Currenlty, Teams does not fully implement code blocks. Setting this attribute to ``True`` will enable line by line code blocks. It is recommended to enable this to get clearer notifications in Teams.
 
-``ms_teams_alert_facts``: You can add additional facts to your MS Teams alerts using this field. Specify the title using `name` and a value for the field or arbitrary text using `value`. 
+``ms_teams_alert_facts``: You can add additional facts to your MS Teams alerts using this field. Specify the title using `name` and a value for the field or arbitrary text using `value`.
 
 Example ms_teams_alert_facts::
 
@@ -1868,7 +1868,7 @@ ElastAlert 2 rule. Any Apple emoji can be used, see http://emojipedia.org/apple/
 ``slack_icon_url_override``: By default ElastAlert 2 will use the ``:ghost:`` emoji when posting to the channel. You can provide icon_url to use custom image.
 Provide absolute address of the pciture.
 
-``slack_msg_color``: By default the alert will be posted with the 'danger' color. You can also use 'good' or 'warning' colors.
+``slack_msg_color``: Changes the color of the border on the left side of the message. Default is gray. Can either be one of good (green), warning (yellow), danger (red), or any hex color code (eg. #439FE0).
 
 ``slack_parse_override``: By default the notification message is escaped 'none'. You can also use 'full'.
 
@@ -2085,7 +2085,7 @@ Required:
 
 Example: +8613711112222, which has a + sign followed by 86 (country/region code) and then by 13711112222 (mobile number). Up to 200 mobile numbers are supported
 
-``tencent_sms_template_id``: Template ID. You must enter the ID of an approved template, which can be viewed in the `SMS console <https://console.cloud.tencent.com/smsv2>`_. 
+``tencent_sms_template_id``: Template ID. You must enter the ID of an approved template, which can be viewed in the `SMS console <https://console.cloud.tencent.com/smsv2>`_.
 
 If you need to send SMS messages to global mobile numbers, you can only use a Global SMS template.
 
@@ -2097,7 +2097,7 @@ Note: this parameter is required for Mainland China SMS.
 ``tencent_sms_region``: Region parameter, which is used to identify the region(`Mainland China <https://intl.cloud.tencent.com/document/api/382/40466#region-list>`_ or
 `Global <https://cloud.tencent.com/document/api/382/52071#.E5.9C.B0.E5.9F.9F.E5.88.97.E8.A1.A8>`_) to which the data you want to work with belongs.
 
-``tencent_sms_template_parm``: The number of template parameters needs to be consistent with the number of variables of the template corresponding to TemplateId.  
+``tencent_sms_template_parm``: The number of template parameters needs to be consistent with the number of variables of the template corresponding to TemplateId.
 this value format by `rfc6901 <https://datatracker.ietf.org/doc/html/rfc6901>`_
 
 .. code-block:: json
@@ -2322,7 +2322,7 @@ Example usage::
       - "zabbix"
     zbx_sender_host: "zabbix-server"
     zbx_sender_port: 10051
-    zbx_host_from_field: True 
+    zbx_host_from_field: True
     zbx_host: "hostname"
     zbx_key: "sender_load1"
 
