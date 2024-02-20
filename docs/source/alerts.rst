@@ -1868,7 +1868,7 @@ ElastAlert 2 rule. Any Apple emoji can be used, see http://emojipedia.org/apple/
 ``slack_icon_url_override``: By default ElastAlert 2 will use the ``:ghost:`` emoji when posting to the channel. You can provide icon_url to use custom image.
 Provide absolute address of the pciture.
 
-``slack_msg_color``: Changes the color of the border on the left side of the message. Default is gray. Can either be one of good (green), warning (yellow), danger (red), or any hex color code (eg. #439FE0).
+``slack_msg_color``: Changes the color of the border on the left side of the message. Default is danger. Can either be one of good (green), warning (yellow), danger (red), or any hex color code (eg. #439FE0).
 
 ``slack_parse_override``: By default the notification message is escaped 'none'. You can also use 'full'.
 
