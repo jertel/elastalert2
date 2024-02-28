@@ -524,8 +524,8 @@ class SpikeRule(RuleType):
         """ Determines if an event spike or dip happening. """
         # Apply threshold limits
         if self.field_value is None:
-            if (cur < self.rules.get('threshold_cur', 0) or
-                    ref < self.rules.get('threshold_ref', 0)):
+            if ((cur and cur < self.rules.get('threshold_cur', 0)) or
+                    (ref and ref < self.rules.get('threshold_ref', 0))):
                 return False
         elif ref is None or ref == 0 or cur is None or cur == 0:
             return False
