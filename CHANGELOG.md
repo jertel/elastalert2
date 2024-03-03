@@ -8,6 +8,20 @@
 
 ## Other changes
 - [IRIS] Remove empty IOC in alerts that are not accepted by the API - [#1374](https://github.com/jertel/elastalert2/pull/1374) - @yaksnip425
+- Upgrade boto3 to 1.34.54 - [#1388](https://github.com/jertel/elastalert2/pull/1388) - @jertel
+- Upgrade croniter to 2.0.2 - [#1388](https://github.com/jertel/elastalert2/pull/1388) - @jertel
+- Upgrade jinja2 to 3.1.3 - [#1388](https://github.com/jertel/elastalert2/pull/1388) - @jertel
+- Upgrade jira to 3.6.0 - [#1388](https://github.com/jertel/elastalert2/pull/1388) - @jertel
+- Upgrade jsonschema to 4.21.1 - [#1388](https://github.com/jertel/elastalert2/pull/1388) - @jertel
+- Upgrade prettytable to 3.10.0 - [#1388](https://github.com/jertel/elastalert2/pull/1388) - @jertel
+- Upgrade prometheus-client to 0.20.0 - [#1388](https://github.com/jertel/elastalert2/pull/1388) - @jertel
+- Upgrade pylint to 3.1.0 - [#1388](https://github.com/jertel/elastalert2/pull/1388) - @jertel
+- Upgrade pytest to 8.0.2 - [#1388](https://github.com/jertel/elastalert2/pull/1388) - @jertel
+- Upgrade python-dateutil to 2.9.0.post0 - [#1388](https://github.com/jertel/elastalert2/pull/1388) - @jertel
+- Upgrade tencentcloud-sdk-python to 3.0.1098 - [#1388](https://github.com/jertel/elastalert2/pull/1388) - @jertel
+- Upgrade tox to 4.13.0 - [#1388](https://github.com/jertel/elastalert2/pull/1388) - @jertel
+- Upgrade twilio to 9.0.0 - [#1388](https://github.com/jertel/elastalert2/pull/1388) - @jertel
+- Removed explicit tzlocal lib dependency - [#1388](https://github.com/jertel/elastalert2/pull/1388) - @jertel
 
 # 2.16.0
 
