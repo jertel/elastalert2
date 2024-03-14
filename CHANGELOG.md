@@ -20,7 +20,7 @@
 - Upgrade python-dateutil to 2.9.0.post0 - [#1388](https://github.com/jertel/elastalert2/pull/1388) - @jertel
 - Upgrade tencentcloud-sdk-python to 3.0.1098 - [#1388](https://github.com/jertel/elastalert2/pull/1388) - @jertel
 - Upgrade tox to 4.13.0 - [#1388](https://github.com/jertel/elastalert2/pull/1388) - @jertel
-- Upgrade twilio to 9.0.0 - [#1388](https://github.com/jertel/elastalert2/pull/1388) - @jertel
+- Upgrade twilio to 8.13.0 - [#1388](https://github.com/jertel/elastalert2/pull/1395) - @jertel
 - Removed explicit tzlocal lib dependency - [#1388](https://github.com/jertel/elastalert2/pull/1388) - @jertel
 
 # 2.16.0

@@ -57,6 +57,6 @@ setup(
         'stomp.py>=8.1.0',
         'tencentcloud-sdk-python>=3.0.1098',
         'texttable>=1.7.0',
-        'twilio>=9.0.0',
+        'twilio>=8.13.0',
     ]
 )
