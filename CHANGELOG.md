@@ -1,7 +1,18 @@
 # 2.TBD.TBD
 
 ## Breaking changes
-- TBD
+- None
+
+## New features
+- None
+
+## Other changes
+- None
+
+# 2.17.0
+
+## Breaking changes
+- None
 
 ## New features
 - Add workwechat alerter - [#1367](https://github.com/jertel/elastalert2/pull/1367) - @wufeiqun
