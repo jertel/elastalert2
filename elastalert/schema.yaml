@@ -722,7 +722,7 @@ properties:
   slack_channel_override: *arrayOfString
   slack_emoji_override: {type: string}
   slack_icon_url_override: {type: string}
-  slack_msg_color: {enum: [good, warning, danger]}
+  slack_msg_color: {type: string}
   slack_parse_override: {enum: [none, full]}
   slack_text_string: {type: string}
   slack_proxy: {type: string}
