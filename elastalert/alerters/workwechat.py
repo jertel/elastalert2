@@ -15,8 +15,7 @@ class WorkWechatAlerter(Alerter):
         super(WorkWechatAlerter, self).__init__(rule)
         self.work_wechat_bot_id = self.rule.get('work_wechat_bot_id', None)
         self.work_wechat_webhook_url = f'https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key={self.work_wechat_bot_id}'
-        self.work_wechat_msg_type = 'text'
-
+        self.work_wechat_msgtype = self.rule.get('work_wechat_msgtype', 'text')
     def alert(self, matches):
         title = self.create_title(matches)
         body = self.create_alert_body(matches)
@@ -26,12 +25,22 @@ class WorkWechatAlerter(Alerter):
             'Accept': 'application/json;charset=utf-8'
         }
 
-        payload = {
-            'msgtype': self.work_wechat_msg_type,
-            "text": {
-                "content": body
-            },
-        }
+        if self.work_wechat_msgtype == 'text':
+            # text
+            payload = {
+                'msgtype': self.work_wechat_msgtype,
+                'text': {
+                    'content': body
+                }
+            }
+        if self.work_wechat_msgtype == 'markdown':
+            # markdown
+            payload = {
+                'msgtype': self.work_wechat_msgtype,
+                'markdown': {
+                    'content': body
+                }
+            }
 
         try:
             response = requests.post(

@@ -2281,12 +2281,14 @@ WorkWechat alerter will send notification to a predefined bot in WorkWechat appl
 Required:
 
 ``work_wechat_bot_id``:  WorkWechat bot id.
+``work_wechat_msgtype``:  WorkWechat msgtype. default to ``text``. ``markdown``
 
 Example usage::
 
     alert:
       - "workwechat"
     work_wechat_bot_id: "your workwechat bot id"
+    work_wechat_msgtype: "text"
 
 Zabbix
 ~~~~~~
