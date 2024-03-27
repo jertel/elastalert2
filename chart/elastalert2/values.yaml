@@ -61,6 +61,10 @@ deploymentAnnotations: {}
 # Annotations to be added to pods
 podAnnotations: {}
 
+quickwit:
+  # enable quickwit interoperability
+  enable: false
+
 elasticsearch:
   # elasticsearch endpoint e.g. (svc.namespace||svc)
   host: elasticsearch

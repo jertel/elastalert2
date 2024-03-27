@@ -1,0 +1,14 @@
+es_host: quickwit
+es_port: 7280
+es_use_ssl: false
+qw_enable: true
+
+run_every:
+  seconds: 10
+
+buffer_time:
+  minutes: 15
+
+writeback_index: elastalert_status
+
+rules_folder: /opt/elastalert/rules

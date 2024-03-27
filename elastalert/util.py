@@ -19,6 +19,10 @@ logging.basicConfig()
 logging.captureWarnings(True)
 elastalert_logger = logging.getLogger('elastalert')
 
+_elastic7_version = "7.10.2"
+_elastic8_version = "8.2.0"
+_quickwit_url_prefix = "/api/v1/_elastic"
+
 
 def get_module(module_name):
     """ Loads a module and returns a specific object.
@@ -349,6 +353,46 @@ def replace_dots_in_field_names(document):
     return document
 
 
+def is_not_empty(var):
+    """ test if a value is empty, taking care of string that can be parsed as empty values """
+    if isinstance(var, bool):
+        return var
+    elif isinstance(var, int):
+        return not var == 0
+    elif isinstance(var, list):
+        return len(var) > 0
+    empty_chars = ["", "null", "nil", "false", "none"]
+    return var is not None and not any(c == "{}".format(var).lower() for c in empty_chars)
+
+def is_empty(var):
+    return not is_not_empty(var)
+
+def is_true(var):
+    """ test if a value is true, taking care of string that can be parsed as boolean values """
+    if isinstance(var, bool):
+        return var
+    false_char = ["false", "ko", "no", "off"]
+    return is_not_empty(var) and not any(c == "{}".format(var).lower() for c in false_char)
+
+
+def is_response_ok(code):
+    """ test if an http response code is ok """
+    return code >= 200 and code < 400
+
+
+def parse_boolean_conf(key, conf):
+    """ return a boolean parsed configuration. 
+    It will also check if the config exists in the environment variables """
+    qw_enable = os.getenv(key.upper(), False)
+    if is_true(qw_enable):
+        return True
+
+    if key in conf:
+        return is_true(conf['qw_enable'])
+    
+    return False
+
+
 def elasticsearch_client(conf):
     """ returns an :class:`ElasticSearchClient` instance configured using an es_conn_config """
     es_conn_conf = build_es_conn_config(conf)
@@ -358,6 +402,7 @@ def elasticsearch_client(conf):
     if es_conn_conf['es_bearer'] or es_conn_conf['es_api_key']:
         username = None
         password = None
+
     es_conn_conf['http_auth'] = auth(host=es_conn_conf['es_host'],
                                      username=username,
                                      password=password,
@@ -390,7 +435,9 @@ def build_es_conn_config(conf):
     parsed_conf['aws_region'] = None
     parsed_conf['profile'] = None
     parsed_conf['headers'] = None
+    parsed_conf['qw_enable'] = parse_boolean_conf('qw_enable', conf)
     parsed_conf['es_host'] = os.environ.get('ES_HOST', conf['es_host'])
+
     parsed_conf['es_port'] = int(os.environ.get('ES_PORT', conf['es_port']))
 
     es_hosts = os.environ.get('ES_HOSTS')
@@ -439,6 +486,9 @@ def build_es_conn_config(conf):
 
     if 'client_key' in conf:
         parsed_conf['client_key'] = conf['client_key']
+
+    if parsed_conf['qw_enable']:
+        parsed_conf['es_url_prefix'] = _quickwit_url_prefix
 
     if 'es_url_prefix' in conf:
         parsed_conf['es_url_prefix'] = conf['es_url_prefix']
@@ -596,14 +646,22 @@ def get_version_from_cluster_info(client):
         try:
             esinfo = client.info()['version']
             esversion = esinfo['number']
-            if esinfo.get('distribution') == "opensearch":
+            distribution = esinfo.get('distribution')
+            if is_empty(distribution):
+                distribution = "elasticsearch"
+
+            if distribution == "opensearch":
                 # https://opensearch.org/
                 if esversion[0] == "1":
                     # OpenSearch 1.x is based on Elasticsearch 7.10.2
-                    esversion = "7.10.2"
+                    esversion = _elastic7_version
                 else:
                     # OpenSearch 2.x has qualities similar to 8.2.0
-                    esversion = "8.2.0"
+                    esversion = _elastic8_version
+            elif distribution == "quickwit":
+                # Quickwit is aligned with the last opensearch version
+                # which has qualities similar to 8.2.0
+                esversion = _elastic8_version
             break
         except TransportError:
             if retry == 2:
@@ -611,4 +669,4 @@ def get_version_from_cluster_info(client):
             elastalert_logger.warning('Failed to retrieve cluster version information, retrying in 3 seconds')
             time.sleep(3)
 
-    return esversion
+    return (distribution, esversion)

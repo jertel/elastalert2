@@ -1,0 +1,29 @@
+version: "3.9"
+
+services:
+  quickwit:
+    image: quickwit/quickwit
+    container_name: quickwit
+    volumes:
+     - qwdata:/quickwit/qwdata
+    ports: 
+      - 7280:7280
+    networks:
+     - elastalert-net
+    command: run
+  elastalert:
+    build:
+      context: ../..
+      dockerfile: Dockerfile
+    volumes:
+      - ./config.yaml:/opt/elastalert/config.yaml
+      - ./rules:/opt/elastalert/rules
+    networks:
+     - elastalert-net
+
+networks:
+  elastalert-net:
+    name: elastalert_network
+
+volumes:
+  qwdata:

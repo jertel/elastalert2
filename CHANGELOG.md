@@ -4,10 +4,10 @@
 - None
 
 ## New features
-- None
+- [Quicwit](https://quickwit.io/) integration
 
 ## Other changes
-- None
+- Remove unused import
 
 # 2.17.0
 

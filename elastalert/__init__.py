@@ -6,7 +6,6 @@ from elasticsearch import Elasticsearch
 from elasticsearch import RequestsHttpConnection
 from elasticsearch.client import _make_path
 from elasticsearch.client import query_params
-from elasticsearch.exceptions import TransportError
 
 
 class ElasticSearchClient(Elasticsearch):
@@ -47,7 +46,8 @@ class ElasticSearchClient(Elasticsearch):
         Returns the reported version from the Elasticsearch server.
         """
         if self._es_version is None:
-            self._es_version = util.get_version_from_cluster_info(self)
+            (_, version) = util.get_version_from_cluster_info(self)
+            self._es_version = version
 
         return self._es_version
 

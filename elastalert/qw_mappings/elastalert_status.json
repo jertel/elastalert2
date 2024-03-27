@@ -1,0 +1,34 @@
+{
+  "doc_mapping": {
+    "dynamic_mapping": {
+      "description": "status alerts from elastalert2",
+      "expand_dots": true,
+      "fast": true,
+      "indexed": true,
+      "record": "basic",
+      "stored": true,
+      "tokenizer": "raw"
+    },
+    "field_mappings": [
+      {
+        "name": "rule_name",
+        "type": "text"
+      },
+      {
+        "name": "@timestamp",
+        "type": "datetime",
+        "fast": true
+      }
+    ],
+    "store_source": true,
+    "timestamp_field": "@timestamp"
+  },
+  "index_id": "elastalert_status",
+  "search_settings": {
+    "default_search_fields": [
+      "rule_name",
+      "@timestamp"
+    ]
+  },
+  "version": "0.8"
+}

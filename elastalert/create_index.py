@@ -5,9 +5,11 @@ import getpass
 import json
 import os
 import time
+import yaml
+import requests
 
 import elasticsearch.helpers
-import yaml
+
 from elasticsearch import RequestsHttpConnection
 from elasticsearch.client import Elasticsearch
 from elasticsearch.client import IndicesClient
@@ -15,15 +17,41 @@ from elasticsearch.exceptions import NotFoundError
 from envparse import Env
 
 from elastalert.auth import Auth
-from elastalert.util import get_version_from_cluster_info
+from elastalert.util import _quickwit_url_prefix, get_version_from_cluster_info, is_true, is_empty, is_response_ok
 
 env = Env(ES_USE_SSL=bool)
 
+def create_quickwit_mappings(client_infos, recreate):
+    qw_index_mappings = read_qw_index_mappings()
+    for index_id in qw_index_mappings:
+        if not recreate:
+            r = requests.get("{}/api/v1/indexes/{}/describe".format(client_infos['url'], index_id), auth=client_infos['http_auth'], headers=client_infos['headers'])
+            if is_response_ok(r.status_code):
+                print('Index ' + index_id + ' already exists. Skipping index creation.')
+                continue
 
-def create_index_mappings(es_client, ea_index, recreate=False, old_ea_index=None):
-    esversion = get_version_from_cluster_info(es_client)
+        r = requests.post("{}/api/v1/indexes".format(client_infos['url']), json=qw_index_mappings[index_id], auth=client_infos['http_auth'], headers=client_infos['headers'])
+        if is_response_ok(r.status_code):
+            print('Index ' + index_id + ' successfully created.')
+        else:
+            print('Index ' + index_id + ' not created because of error. Attempting to recreate index...')
+            requests.delete("{}/api/v1/indexes/{}".format(client_infos['url'], index_id), auth=client_infos['http_auth'], headers=client_infos['headers'])
+            r = requests.post("{}/api/v1/indexes".format(client_infos['url']), json=qw_index_mappings[index_id], auth=client_infos['http_auth'], headers=client_infos['headers'])
+            if is_response_ok(r.status_code):
+                print('Index ' + index_id + ' successfully created.')
+            else:
+                print('Index ' + index_id + ' not created because of error. Skipping...')
+
+def create_index_mappings(es_client, ea_index, client_infos, recreate=False, old_ea_index=None):
+    (distribution, esversion) = get_version_from_cluster_info(es_client)
 
     es_index_mappings = {}
+
+    if distribution == "quickwit":
+        create_quickwit_mappings(client_infos, recreate)
+        print('Done!')
+        return
+
     if is_atleasteight(esversion):
         es_index_mappings = read_es_index_mappings()
     elif is_atleastseven(esversion):
@@ -94,6 +122,24 @@ def create_index_mappings(es_client, ea_index, recreate=False, old_ea_index=None
 
     print('Done!')
 
+def read_qw_index_mappings():
+    print('Reading Quickwit index mappings:')
+    return {
+        'silence': read_qw_index_mapping('silence'),
+        'elastalert_status': read_qw_index_mapping('elastalert_status'),
+        'elastalert': read_qw_index_mapping('elastalert'),
+        'past_elastalert': read_qw_index_mapping('past_elastalert'),
+        'elastalert_error': read_qw_index_mapping('elastalert_error')
+    }
+
+def read_qw_index_mapping(mapping):
+    base_path = os.path.abspath(os.path.dirname(__file__))
+    mapping_path = 'qw_mappings/{0}.json'.format(mapping)
+    path = os.path.join(base_path, mapping_path)
+    with open(path, 'r') as f:
+        print("Reading index mapping '{0}'".format(mapping_path))
+        return json.load(f)
+
 
 def read_es_index_mappings(es_version=8):
     print('Reading Elastic {0} index mappings:'.format(es_version))
@@ -104,7 +150,6 @@ def read_es_index_mappings(es_version=8):
         'past_elastalert': read_es_index_mapping('past_elastalert', es_version),
         'elastalert_error': read_es_index_mapping('elastalert_error', es_version)
     }
-
 
 def read_es_index_mapping(mapping, es_version=7):
     base_path = os.path.abspath(os.path.dirname(__file__))
@@ -128,6 +173,7 @@ def main():
     parser.add_argument('--password', default=os.environ.get('ES_PASSWORD', None), help='Elasticsearch password')
     parser.add_argument('--bearer', default=os.environ.get('ES_BEARER', None), help='Elasticsearch bearer token')
     parser.add_argument('--api-key', default=os.environ.get('ES_API_KEY', None), help='Elasticsearch api-key token')
+    parser.add_argument('--quickwit', default=os.environ.get('QW_ENABLE', False), type=bool, help='Quickwit interoperability')
     parser.add_argument('--url-prefix', help='Elasticsearch URL prefix')
     parser.add_argument('--no-auth', action='store_const', const=True, help='Suppress prompt for basic auth')
     parser.add_argument('--ssl', action='store_true', default=env('ES_USE_SSL', None), help='Use TLS')
@@ -165,6 +211,7 @@ def main():
             data = yaml.load(config_file, Loader=yaml.FullLoader)
         host = args.host if args.host else data.get('es_host')
         port = args.port if args.port else data.get('es_port')
+        qw_enable = is_true(args.quickwit) if is_true(args.quickwit) else is_true(data.get('qw_enable'))
         username = args.username if args.username else data.get('es_username')
         password = args.password if args.password else data.get('es_password')
         bearer = args.bearer if args.bearer else data.get('es_bearer')
@@ -187,6 +234,7 @@ def main():
         aws_region = args.aws_region
         host = args.host if args.host else input('Enter Elasticsearch host: ')
         port = args.port if args.port else int(input('Enter Elasticsearch port: '))
+        qw_enable = is_true(args.quickwit)
         use_ssl = (args.ssl if args.ssl is not None
                    else input('Use SSL? t/f: ').lower() in ('t', 'true'))
         if use_ssl:
@@ -224,6 +272,9 @@ def main():
     if api_key is not None:
         headers.update({'Authorization': f'ApiKey {api_key}'})
 
+    if is_true(qw_enable) and not is_empty(url_prefix):
+        url_prefix=_quickwit_url_prefix
+
     es = Elasticsearch(
         host=host,
         port=port,
@@ -238,8 +289,13 @@ def main():
         client_cert=client_cert,
         ca_certs=ca_certs,
         client_key=client_key)
-
-    create_index_mappings(es_client=es, ea_index=index, recreate=args.recreate, old_ea_index=old_index)
+    
+    client_infos = {
+        'url': "{}://{}:{}".format("https" if use_ssl else "http", host, port),
+        'headers': headers,
+        'http_auth': http_auth
+    }
+    create_index_mappings(es_client=es, ea_index=index, client_infos=client_infos, recreate=args.recreate, old_ea_index=old_index)
 
 
 if __name__ == '__main__':

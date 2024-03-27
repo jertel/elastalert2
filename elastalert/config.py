@@ -24,6 +24,7 @@ env_settings = {'ES_USE_SSL': 'use_ssl',
                 'ES_HOSTS': 'es_hosts',
                 'ES_PORT': 'es_port',
                 'ES_URL_PREFIX': 'es_url_prefix',
+                'QW_ENABLE': 'qw_enable',
                 'STATSD_INSTANCE_TAG': 'statsd_instance_tag',
                 'STATSD_HOST': 'statsd_host'}
 

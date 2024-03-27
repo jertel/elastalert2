@@ -1,0 +1,34 @@
+{
+    "doc_mapping": {
+      "dynamic_mapping": {
+        "description": "containers message test",
+        "expand_dots": true,
+        "fast": true,
+        "indexed": true,
+        "record": "basic",
+        "stored": true,
+        "tokenizer": "raw"
+      },
+      "field_mappings": [
+        {
+          "name": "message",
+          "type": "text"
+        },
+        {
+          "name": "@timestamp",
+          "type": "datetime",
+          "fast": true
+        }
+      ],
+      "store_source": true,
+      "timestamp_field": "@timestamp"
+    },
+    "index_id": "containers",
+    "search_settings": {
+      "default_search_fields": [
+        "message",
+        "@timestamp"
+      ]
+    },
+    "version": "0.8"
+  }

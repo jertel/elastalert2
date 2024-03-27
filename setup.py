@@ -30,7 +30,7 @@ setup(
                             'elastalert-test-rule=elastalert.test_rule:main',
                             'elastalert=elastalert.elastalert:main']},
     packages=find_packages(exclude=["tests"]),
-    package_data={'elastalert': ['schema.yaml', 'es_mappings/**/*.json']},
+    package_data={'elastalert': ['schema.yaml', 'es_mappings/**/*.json', 'qw_mappings/*.json']},
     python_requires='>=3.9',
     install_requires=[
         'apscheduler>=3.10.4,<4.0',

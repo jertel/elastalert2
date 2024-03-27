@@ -1,7 +1,7 @@
 Introduction
 ************
 
-ElastAlert 2 is a simple framework for alerting on anomalies, spikes, or other patterns of interest from data in `Elasticsearch <https://www.elastic.co/elasticsearch/>`_ and `OpenSearch <https://opensearch.org/>`_.
+ElastAlert 2 is a simple framework for alerting on anomalies, spikes, or other patterns of interest from data in `Elasticsearch <https://www.elastic.co/elasticsearch/>`_, `OpenSearch <https://opensearch.org/>`_ and `Quickwit <https://quickwit.io>`_.
 
 If you have data being written into Elasticsearch in near real time and want to be alerted when that data matches certain patterns, ElastAlert 2 is the tool for you.
 

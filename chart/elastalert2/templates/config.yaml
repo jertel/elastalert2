@@ -30,6 +30,9 @@ data:
 {{- if .Values.elasticsearch.password }}
     es_password: {{ .Values.elasticsearch.password }}
 {{- end }}
+{{- if .Values.quickwit.enable }}
+    qw_enable: "True"
+{{- end }}
     writeback_index: {{ .Values.writebackIndex }}
     use_ssl: {{ .Values.elasticsearch.useSsl }}
     verify_certs: {{ .Values.elasticsearch.verifyCerts }}

@@ -22,6 +22,8 @@ be specified in the ``es_host`` parameter. The ``es_hosts`` parameter can be ove
 within each rule. This value can be specified as ``host:port`` if overriding the default port.
 The environment variable ``ES_HOSTS`` will override this field, and can be specified as a comma-separated value to denote multiple hosts.
 
+``qw_enable``: (``true`` or ``false``), it will indicate that we're using quickwit and add ``/api/v1/_elastic`` to the URL to ensure interoperability
+
 ``use_ssl``: Optional; whether or not to connect to ``es_host`` using TLS; set to ``True`` or ``False``.
 The environment variable ``ES_USE_SSL`` will override this field.
 

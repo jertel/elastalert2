@@ -1,0 +1,43 @@
+{
+  "doc_mapping": {
+    "dynamic_mapping": {
+      "description": "past alerts from elastalert2",
+      "expand_dots": true,
+      "fast": true,
+      "indexed": true,
+      "record": "basic",
+      "stored": true,
+      "tokenizer": "raw"
+    },
+    "field_mappings": [
+      {
+        "name": "rule_name",
+        "type": "text"
+      },
+      {
+        "name": "aggregate_id",
+        "type": "text"
+      },
+      {
+        "name": "match_body",
+        "type": "json"
+      },
+      {
+        "name": "@timestamp",
+        "type": "datetime",
+        "fast": true
+      }
+    ],
+    "store_source": true,
+    "timestamp_field": "@timestamp"
+  },
+  "index_id": "past_elastalert",
+  "search_settings": {
+    "default_search_fields": [
+      "rule_name",
+      "aggregate_id",
+      "@timestamp"
+    ]
+  },
+  "version": "0.8"
+}

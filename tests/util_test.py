@@ -40,6 +40,10 @@ from elastalert.util import format_string
 from elastalert.util import pretty_ts
 from elastalert.util import parse_hosts
 from elastalert.util import get_version_from_cluster_info
+from elastalert.util import is_true
+from elastalert.util import is_not_empty
+from elastalert.util import is_empty
+from elastalert.util import is_response_ok
 
 from elasticsearch.client import Elasticsearch
 
@@ -397,7 +401,8 @@ test_build_es_conn_config_param += 'ca_certs, client_cert,client_key,es_url_pref
             'es_url_prefix': '',
             'es_conn_timeout': 20,
             'send_get_body_as': 'GET',
-            'ssl_show_warn': True
+            'ssl_show_warn': True,
+            'qw_enable': False
         }),
     ('localhost', 9200, 30, 'POST', False, 'user', 'pass', 'key', 'bearer', 'us-east-1', 'default',
      True, False, '/path/to/cacert.pem', '/path/to/client_cert.pem', '/path/to/client_key.key', 'elasticsearch',
@@ -421,7 +426,8 @@ test_build_es_conn_config_param += 'ca_certs, client_cert,client_key,es_url_pref
             'es_url_prefix': 'elasticsearch',
             'es_conn_timeout': 30,
             'send_get_body_as': 'POST',
-            'ssl_show_warn': False
+            'ssl_show_warn': False,
+            'qw_enable': False
         }),
 ])
 def test_build_es_conn_config(es_host, es_port, es_conn_timeout, es_send_get_body_as, ssl_show_warn, es_username,
@@ -497,7 +503,8 @@ def test_build_es_conn_config2():
         'es_url_prefix': '',
         'es_conn_timeout': 20,
         'send_get_body_as': 'GET',
-        'ssl_show_warn': True
+        'ssl_show_warn': True,
+        'qw_enable': False
     }
     actual = build_es_conn_config(conf)
     assert expected == actual
@@ -532,7 +539,8 @@ def test_build_es_conn_config_es_hosts_list():
         'es_url_prefix': '',
         'es_conn_timeout': 20,
         'send_get_body_as': 'GET',
-        'ssl_show_warn': True
+        'ssl_show_warn': True,
+        'qw_enable': False
     }
     actual = build_es_conn_config(conf)
     assert expected == actual
@@ -567,7 +575,8 @@ def test_build_es_conn_config_es_hosts_csv():
         'es_url_prefix': '',
         'es_conn_timeout': 20,
         'send_get_body_as': 'GET',
-        'ssl_show_warn': True
+        'ssl_show_warn': True,
+        'qw_enable': False
     }
     actual = build_es_conn_config(conf)
     assert expected == actual
@@ -659,14 +668,15 @@ def test_parse_host():
                                                             "host3:9300"]
 
 
-@pytest.mark.parametrize('version, distro, expectedversion', [
-    ('7.10.0', None, '7.10.0'),
-    ('8.2.0', None, '8.2.0'),
-    ('1.2.0', 'opensearch', '7.10.2'),
-    ('2.0.0', 'opensearch', '8.2.0')
+@pytest.mark.parametrize('version, distro, expectedVersion, expectedDistribution', [
+    ('7.10.0', None, '7.10.0', 'elasticsearch'),
+    ('8.2.0', None, '8.2.0', 'elasticsearch'),
+    ('1.2.0', 'opensearch', '7.10.2', 'opensearch'),
+    ('2.0.0', 'opensearch', '8.2.0', 'opensearch'),
+    ('0.7.1', 'quickwit', '8.2.0', 'quickwit')
 ])
 @mock.patch.dict(os.environ, {'AWS_DEFAULT_REGION': ''})
-def test_get_version(version, distro, expectedversion):
+def test_get_version(version, distro, expectedVersion, expectedDistribution):
     mockInfo = {}
     versionData = {}
     versionData['number'] = version
@@ -677,5 +687,68 @@ def test_get_version(version, distro, expectedversion):
 
     with mock.patch('elasticsearch.client.Elasticsearch.info', new=MagicMock(return_value=mockInfo)):
         client = Elasticsearch()
-        actualversion = get_version_from_cluster_info(client)
-    assert expectedversion == actualversion
+        (actualDistribution, actualVersion) = get_version_from_cluster_info(client)
+    assert expectedVersion == actualVersion
+    assert expectedDistribution == actualDistribution
+
+
+@pytest.mark.parametrize('input, result', [
+    ('', False),
+    (False, False),
+    (None, False),
+    ('null', False),
+    (0, False),
+    ([], False),
+    ('foo', True),
+    (True, True),
+    (123, True),
+    ([123], True)
+])
+def test_is_not_empty(input, result):
+    assert is_not_empty(input) == result
+
+
+@pytest.mark.parametrize('input, result', [
+    ('', True),
+    (False, True),
+    (None, True),
+    ('null', True),
+    (0, True),
+    ([], True),
+    ('foo', False),
+    (True, False),
+    (123, False),
+    ([123], False)
+])
+def test_is_empty(input, result):
+    assert is_empty(input) == result
+
+
+@pytest.mark.parametrize('input, result', [
+    (True, True),
+    ("true", True),
+    ("ok", True),
+    ("on", True),
+    (False, False),
+    ("false", False),
+    ("ko", False),
+    ("off", False),
+    (None, False),
+    ([], False),
+    (True, True),
+    (123, True),
+    ([123], True)
+])
+def test_is_true(input, result):
+    assert is_true(input) == result
+
+
+@pytest.mark.parametrize('code, result', [
+    (200, True),
+    (201, True),
+    (302, True),
+    (400, False),
+    (500, False)
+])
+def test_is_response_ok(code, result):
+    assert is_response_ok(code) == result
