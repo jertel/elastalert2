@@ -46,7 +46,7 @@ test_rule = {'es_host': 'test_host',
              'email': 'test@test.test',
              'aggregation': {'hours': 2},
              'include': ['comparekey', '@timestamp'],
-             'fields': ['test_runtime_field']}
+             'include_fields': ['test_runtime_field']}
 
 test_args = mock.Mock()
 test_args.config = 'test_config'
@@ -276,8 +276,8 @@ def test_load_rules():
                 assert isinstance(rules['rules'][0]['alert'][0], elastalert.alerts.Alerter)
                 assert isinstance(rules['rules'][0]['timeframe'], datetime.timedelta)
                 assert isinstance(rules['run_every'], datetime.timedelta)
-                assert isinstance(rules['rules'][0]['fields'], list)
-                assert 'test_runtime_field' in rules['rules'][0]['fields']
+                assert isinstance(rules['rules'][0]['include_fields'], list)
+                assert 'test_runtime_field' in rules['rules'][0]['include_fields']
                 for included_key in ['comparekey', 'testkey', '@timestamp']:
                     assert included_key in rules['rules'][0]['include']
 
@@ -368,7 +368,7 @@ def test_load_disabled_rules():
 def test_raises_on_missing_config():
     optional_keys = (
         'aggregation', 'use_count_query', 'query_key', 'compare_key', 'filter', 'include', 'es_host', 'es_port',
-        'name', 'fields'
+        'name', 'include_fields'
     )
     test_rule_copy = copy.deepcopy(test_rule)
     for key in list(test_rule_copy.keys()):

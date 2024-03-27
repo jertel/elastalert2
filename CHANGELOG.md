@@ -1,7 +1,7 @@
 # 2.TBD.TBD
 
 ## Breaking changes
-- None
+- Corrected 'fields' rule option collision introduced by PR #1193- [#1408](https://github.com/jertel/elastalert2/pull/1408) - @jertel
 
 ## New features
 - None
