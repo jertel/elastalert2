@@ -5,9 +5,10 @@ import getpass
 import json
 import os
 import time
+import yaml
 
 import elasticsearch.helpers
-import yaml
+
 from elasticsearch import RequestsHttpConnection
 from elasticsearch.client import Elasticsearch
 from elasticsearch.client import IndicesClient
@@ -19,11 +20,20 @@ from elastalert.util import get_version_from_cluster_info
 
 env = Env(ES_USE_SSL=bool)
 
+def create_quickwit_mappings(es_client, ea_index, recreate=False, old_ea_index=None):
+    # TODO
+    return
 
 def create_index_mappings(es_client, ea_index, recreate=False, old_ea_index=None):
-    esversion = get_version_from_cluster_info(es_client)
+    (esversion, distribution) = get_version_from_cluster_info(es_client)
 
     es_index_mappings = {}
+
+    if distribution == "quickwit":
+        create_quickwit_mappings(es_client, ea_index, recreate, old_ea_index)
+        print('Done!')
+        return
+
     if is_atleasteight(esversion):
         es_index_mappings = read_es_index_mappings()
     elif is_atleastseven(esversion):
