@@ -112,8 +112,8 @@ def test_query_with_stored_fields(ea):
         size=ea.rules[0]['max_query_size'], scroll=ea.conf['scroll_keepalive'])
 
 
-def test_query_with_fields(ea):
-    ea.rules[0]['fields'] = ['test_runtime_field']
+def test_query_with_include_fields(ea):
+    ea.rules[0]['include_fields'] = ['test_runtime_field']
     ea.thread_data.current_es.search.return_value = {'hits': {'total': {'value': 0}, 'hits': []}}
     ea.run_query(ea.rules[0], START, END)
     ea.thread_data.current_es.search.assert_called_with(body={

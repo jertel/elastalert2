@@ -366,8 +366,8 @@ class ElastAlerter(object):
             query['stored_fields'] = rule['include']
             extra_args = {}
 
-        if rule.get('fields', None) is not None:
-            query['fields'] = rule['fields']
+        if rule.get('include_fields', None) is not None:
+            query['fields'] = rule['include_fields']
 
         try:
             if scroll:

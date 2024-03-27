@@ -1,7 +1,7 @@
 # 2.TBD.TBD
 
 ## Breaking changes
-- None
+- Renamed PR #1193's `fields` common rule option to `include_fields` due to collision with `new_term` rule type's existing `field` parameter - [#1408](https://github.com/jertel/elastalert2/pull/1408) - @jertel
 
 ## New features
 - None
