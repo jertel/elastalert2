@@ -270,7 +270,7 @@ properties:
     items: *filter
 
   include: {type: array, items: {type: string}}
-  fields: {type: array, item: {type: string}}
+  include_fields: {type: array, item: {type: string}}
   top_count_keys: {type: array, items: {type: string}}
   top_count_number: {type: integer}
   raw_count_keys: {type: boolean}
@@ -795,6 +795,7 @@ properties:
 
   ### WorkWechat
   work_wechat_bot_id: { type: string }
+  work_wechat_msgtype: { type: string }
 
   ### Zabbix
   zbx_sender_host: {type: string}

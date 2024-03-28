@@ -16,6 +16,7 @@ def test_work_wechat_text(caplog):
         'name': 'Test WorkWechat Rule',
         'type': 'any',
         'work_wechat_bot_id': 'xxxxxxx',
+        'work_wechat_msgtype': 'text',
         'alert': [],
     }
     rules_loader = FileRulesLoader({})
@@ -55,6 +56,7 @@ def test_work_wechat_ea_exception():
             'name': 'Test WorkWechat Rule',
             'type': 'any',
             'work_wechat_bot_id': 'xxxxxxx',
+            'work_wechat_msgtype': 'text',
             'alert': [],
         }
         rules_loader = FileRulesLoader({})
@@ -75,6 +77,7 @@ def test_work_wechat_getinfo():
         'name': 'Test WorkWechat Rule',
         'type': 'any',
         'work_wechat_bot_id': 'xxxxxxx',
+        'work_wechat_msgtype': 'text',
         'alert': [],
     }
     rules_loader = FileRulesLoader({})
@@ -89,15 +92,15 @@ def test_work_wechat_getinfo():
     assert expected_data == actual_data
 
 
-@pytest.mark.parametrize('work_wechat_bot_id, expected_data', [
-    ('', 'Missing required option(s): work_wechat_bot_id'),
-    ('xxxxxxx',
+@pytest.mark.parametrize('work_wechat_bot_id, work_wechat_msgtype, expected_data', [
+    ('', '', 'Missing required option(s): work_wechat_bot_id, work_wechat_msgtype'),
+    ('xxxxxxx', 'yyyyyy',
      {
          'type': 'workwechat',
          'work_wechat_webhook_url': 'https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=xxxxxxx'
      }),
 ])
-def test_work_wechat_required_error(work_wechat_bot_id, expected_data):
+def test_work_wechat_required_error(work_wechat_bot_id, work_wechat_msgtype, expected_data):
     try:
         rule = {
             'name': 'Test WorkWechat Rule',
@@ -107,6 +110,9 @@ def test_work_wechat_required_error(work_wechat_bot_id, expected_data):
 
         if work_wechat_bot_id:
             rule['work_wechat_bot_id'] = work_wechat_bot_id
+
+        if work_wechat_msgtype:
+            rule['work_wechat_msgtype'] = work_wechat_msgtype
 
         rules_loader = FileRulesLoader({})
         rules_loader.load_modules(rule)
