@@ -7,7 +7,7 @@
 - None
 
 ## Other changes
-- None
+- [workwechat] add workwechat msgtype - [#1369](https://github.com/jertel/elastalert2/pull/1369) - @bitqiu
 
 # 2.17.0
 
