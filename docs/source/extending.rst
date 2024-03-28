@@ -8,6 +8,5 @@ ElastAlert 2 offers a variety of ways to extend the functionality. This includes
 
    recipes/adding_rules
    recipes/adding_alerts
-   recipes/writing_filters
    recipes/adding_enhancements
    recipes/adding_loaders
