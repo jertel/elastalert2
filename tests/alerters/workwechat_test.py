@@ -93,8 +93,8 @@ def test_work_wechat_getinfo():
 
 
 @pytest.mark.parametrize('work_wechat_bot_id, work_wechat_msgtype, expected_data', [
-    ('', 'Missing required option(s): work_wechat_bot_id, work_wechat_msgtype'),
-    ('xxxxxxx',
+    ('', '', 'Missing required option(s): work_wechat_bot_id, work_wechat_msgtype'),
+    ('xxxxxxx', 'yyyyyy',
      {
          'type': 'workwechat',
          'work_wechat_webhook_url': 'https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=xxxxxxx'
