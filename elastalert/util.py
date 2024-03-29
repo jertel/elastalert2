@@ -670,3 +670,11 @@ def get_version_from_cluster_info(client):
             time.sleep(3)
 
     return (distribution, esversion)
+
+
+def http_client_infos(host, port, use_ssl, headers, http_auth):
+    return {
+        'url': "{}://{}:{}".format("https" if use_ssl else "http", host, port),
+        'headers': headers if is_not_empty(headers) else {},
+        'auth': http_auth
+    }

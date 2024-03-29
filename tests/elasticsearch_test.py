@@ -39,6 +39,34 @@ def test_es_version(es_client):
         assert version == "1.2.3"
 
 
+def test_es_distribution_notempty(es_client):
+    mockInfo = {}
+    versionData = {}
+    versionData['number'] = "1.2.3"
+    versionData['distribution'] = "quickwit"
+    mockInfo['version'] = versionData
+
+    with mock.patch('elasticsearch.client.Elasticsearch.info', new=MagicMock(return_value=mockInfo)):
+        distribution = es_client.es_distribution
+        assert distribution == "quickwit"
+
+
+def test_es_distribution_empty(es_client):
+    mockInfo = {}
+    versionData = {}
+    versionData['number'] = "1.2.3"
+    mockInfo['version'] = versionData
+
+    with mock.patch('elasticsearch.client.Elasticsearch.info', new=MagicMock(return_value=mockInfo)):
+        distribution = es_client.es_distribution
+        assert distribution == "elasticsearch"
+
+
+def test_es_http_client_info(es_client):
+    http_client_infos = es_client.http_client_infos
+    assert http_client_infos['url'] == "http://127.0.0.1:9200"
+
+
 @pytest.mark.elasticsearch
 class TestElasticsearch(object):
     # TODO perform teardown removing data inserted into Elasticsearch

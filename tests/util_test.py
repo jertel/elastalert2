@@ -44,6 +44,7 @@ from elastalert.util import is_true
 from elastalert.util import is_not_empty
 from elastalert.util import is_empty
 from elastalert.util import is_response_ok
+from elastalert.util import http_client_infos
 
 from elasticsearch.client import Elasticsearch
 
@@ -752,3 +753,11 @@ def test_is_true(input, result):
 ])
 def test_is_response_ok(code, result):
     assert is_response_ok(code) == result
+
+
+@pytest.mark.parametrize('use_ssl, expected', [
+    (True, 'https://host:9200'),
+    (False, 'http://host:9200')
+])
+def test_http_client_infos(use_ssl, expected):
+    assert http_client_infos('host', 9200, use_ssl, {}, None)['url'] == expected

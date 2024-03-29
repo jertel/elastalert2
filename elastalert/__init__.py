@@ -9,7 +9,7 @@ from elasticsearch.client import query_params
 
 
 class ElasticSearchClient(Elasticsearch):
-    """ Extension of low level :class:`Elasticsearch` client with additional version resolving features """
+    """ Extension of low level :class:`Elasticsearch` client with additional features """
 
     def __init__(self, conf):
         """
@@ -31,7 +31,9 @@ class ElasticSearchClient(Elasticsearch):
                                                   client_cert=conf['client_cert'],
                                                   client_key=conf['client_key'])
         self._conf = copy.copy(conf)
+        self._http_client_infos = util.http_client_infos(conf.get('es_host'), conf['es_port'], conf['use_ssl'], conf['headers'], conf['http_auth'])
         self._es_version = None
+        self._es_distribution = None
 
     @property
     def conf(self):
@@ -39,6 +41,26 @@ class ElasticSearchClient(Elasticsearch):
         Returns the provided es_conn_config used when initializing the class instance.
         """
         return self._conf
+
+    @property
+    def http_client_infos(self):
+        """
+        Returns the http client infos
+        Useful when the elastic client is not handling some endpoints
+        """
+        return self._http_client_infos
+
+
+    @property
+    def es_distribution(self):
+        """
+        Returns the reported distribution from the Elasticsearch server.
+        """
+        if self._es_version is None:
+            (distribution, _) = util.get_version_from_cluster_info(self)
+            self._es_distribution = distribution if util.is_not_empty(distribution) else "elasticsearch"
+
+        return self._es_distribution
 
     @property
     def es_version(self):

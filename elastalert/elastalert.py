@@ -2,7 +2,6 @@
 import argparse
 import copy
 import datetime
-import json
 import logging
 import os
 import random
@@ -13,6 +12,8 @@ import threading
 import time
 import timeit
 import traceback
+import requests
+
 from email.mime.text import MIMEText
 from smtplib import SMTP
 from smtplib import SMTPException
@@ -38,7 +39,7 @@ from elastalert.opensearch_external_url_formatter import create_opensearch_exter
 from elastalert.prometheus_wrapper import PrometheusWrapper
 from elastalert.ruletypes import FlatlineRule
 from elastalert.util import (add_keyword_postfix, cronite_datetime_to_timestamp, dt_to_ts, dt_to_unix, EAException,
-                             elastalert_logger, elasticsearch_client, format_index, lookup_es_key, parse_deadline,
+                             elastalert_logger, elasticsearch_client, format_index, is_response_ok, lookup_es_key, parse_deadline,
                              parse_duration, pretty_ts, replace_dots_in_field_names, seconds, set_es_key,
                              should_scrolling_continue, total_seconds, ts_add, ts_now, ts_to_dt, unix_to_dt,
                              ts_utc_to_tz)
@@ -1474,6 +1475,18 @@ class ElastAlerter(object):
             formatter = create_opensearch_external_url_formatter(rule)
             rule[key] = formatter
         return formatter
+    
+    def quickwit_ingest(self, index, body):
+        http_client_infos = self.writeback_es.http_client_infos
+        headers = http_client_infos['headers']
+        headers['Content-Type'] = "application/json"
+        r = requests.post("{}/api/v1/{}/ingest".format(http_client_infos['url'], index), data=body, headers=headers, auth=http_client_infos['auth'])
+        if not is_response_ok(r.status_code):
+            elastalert_logger.exception("Error ingesting alert info into Quickwit, status_code = {}".format(r.status_code))
+
+        # quickwit is asynchronous in any case
+        return {'_id': ''}
+
 
     def writeback(self, doc_type, body, rule=None, match_body=None):
         # ES 2.0 - 2.3 does not support dots in field names.
@@ -1496,7 +1509,13 @@ class ElastAlerter(object):
 
         try:
             index = self.writeback_es.resolve_writeback_index(self.writeback_index, doc_type)
-            res = self.writeback_es.index(index=index, body=body)
+            if self.writeback_es.es_distribution != "quickwit":
+                res = self.writeback_es.index(index=index, body=body)
+            else:
+                # In case of quickwit the index name is not dynamic and it's the doc_type
+                # in order to avoid dynamic mapping creation
+                res = self.quickwit_ingest(index=doc_type, body=body)
+
             return res
         except ElasticsearchException as e:
             elastalert_logger.exception("Error writing alert info to Elasticsearch: %s" % (e))

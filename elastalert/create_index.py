@@ -17,7 +17,7 @@ from elasticsearch.exceptions import NotFoundError
 from envparse import Env
 
 from elastalert.auth import Auth
-from elastalert.util import _quickwit_url_prefix, get_version_from_cluster_info, is_true, is_empty, is_response_ok
+from elastalert.util import _quickwit_url_prefix, get_version_from_cluster_info, http_client_infos, is_true, is_empty, is_response_ok
 
 env = Env(ES_USE_SSL=bool)
 
@@ -25,18 +25,18 @@ def create_quickwit_mappings(client_infos, recreate):
     qw_index_mappings = read_qw_index_mappings()
     for index_id in qw_index_mappings:
         if not recreate:
-            r = requests.get("{}/api/v1/indexes/{}/describe".format(client_infos['url'], index_id), auth=client_infos['http_auth'], headers=client_infos['headers'])
+            r = requests.get("{}/api/v1/indexes/{}/describe".format(client_infos['url'], index_id), auth=client_infos['auth'], headers=client_infos['headers'])
             if is_response_ok(r.status_code):
                 print('Index ' + index_id + ' already exists. Skipping index creation.')
                 continue
 
-        r = requests.post("{}/api/v1/indexes".format(client_infos['url']), json=qw_index_mappings[index_id], auth=client_infos['http_auth'], headers=client_infos['headers'])
+        r = requests.post("{}/api/v1/indexes".format(client_infos['url']), json=qw_index_mappings[index_id], auth=client_infos['auth'], headers=client_infos['headers'])
         if is_response_ok(r.status_code):
             print('Index ' + index_id + ' successfully created.')
         else:
             print('Index ' + index_id + ' not created because of error. Attempting to recreate index...')
-            requests.delete("{}/api/v1/indexes/{}".format(client_infos['url'], index_id), auth=client_infos['http_auth'], headers=client_infos['headers'])
-            r = requests.post("{}/api/v1/indexes".format(client_infos['url']), json=qw_index_mappings[index_id], auth=client_infos['http_auth'], headers=client_infos['headers'])
+            requests.delete("{}/api/v1/indexes/{}".format(client_infos['url'], index_id), auth=client_infos['auth'], headers=client_infos['headers'])
+            r = requests.post("{}/api/v1/indexes".format(client_infos['url']), json=qw_index_mappings[index_id], auth=client_infos['auth'], headers=client_infos['headers'])
             if is_response_ok(r.status_code):
                 print('Index ' + index_id + ' successfully created.')
             else:
@@ -272,8 +272,10 @@ def main():
     if api_key is not None:
         headers.update({'Authorization': f'ApiKey {api_key}'})
 
-    if is_true(qw_enable) and not is_empty(url_prefix):
+    if is_true(qw_enable) and is_empty(url_prefix):
         url_prefix=_quickwit_url_prefix
+
+    print("Open an Elasticsearch connection to host = {}, port = {}, url_prefix = {}, use_ssl = {}".format(host, port, url_prefix, use_ssl))
 
     es = Elasticsearch(
         host=host,
@@ -290,11 +292,7 @@ def main():
         ca_certs=ca_certs,
         client_key=client_key)
     
-    client_infos = {
-        'url': "{}://{}:{}".format("https" if use_ssl else "http", host, port),
-        'headers': headers,
-        'http_auth': http_auth
-    }
+    client_infos = http_client_infos(host, port, use_ssl, headers, http_auth)
     create_index_mappings(es_client=es, ea_index=index, client_infos=client_infos, recreate=args.recreate, old_ea_index=old_index)
 
 
