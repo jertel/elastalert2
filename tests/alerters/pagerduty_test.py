@@ -39,7 +39,7 @@ def test_pagerduty_alerter():
         'service_key': 'magicalbadgers',
     }
     mock_post_request.assert_called_once_with('https://events.pagerduty.com/generic/2010-04-15/create_event.json',
-                                              data=mock.ANY, headers={'content-type': 'application/json'}, proxies=None)
+                                              data=mock.ANY, headers={'content-type': 'application/json'}, proxies=None, verify=True)
     assert expected_data == json.loads(mock_post_request.call_args_list[0][1]['data'])
 
 
@@ -85,7 +85,7 @@ def test_pagerduty_alerter_v2():
         'routing_key': 'magicalbadgers',
     }
     mock_post_request.assert_called_once_with('https://events.pagerduty.com/v2/enqueue',
-                                              data=mock.ANY, headers={'content-type': 'application/json'}, proxies=None)
+                                              data=mock.ANY, headers={'content-type': 'application/json'}, proxies=None, verify=True)
     assert expected_data == json.loads(mock_post_request.call_args_list[0][1]['data'])
 
 
@@ -132,7 +132,7 @@ def test_pagerduty_alerter_v2_payload_class_args():
         'routing_key': 'magicalbadgers',
     }
     mock_post_request.assert_called_once_with('https://events.pagerduty.com/v2/enqueue',
-                                              data=mock.ANY, headers={'content-type': 'application/json'}, proxies=None)
+                                              data=mock.ANY, headers={'content-type': 'application/json'}, proxies=None, verify=True)
     assert expected_data == json.loads(mock_post_request.call_args_list[0][1]['data'])
 
 
@@ -179,7 +179,7 @@ def test_pagerduty_alerter_v2_payload_component_args():
         'routing_key': 'magicalbadgers',
     }
     mock_post_request.assert_called_once_with('https://events.pagerduty.com/v2/enqueue',
-                                              data=mock.ANY, headers={'content-type': 'application/json'}, proxies=None)
+                                              data=mock.ANY, headers={'content-type': 'application/json'}, proxies=None, verify=True)
     assert expected_data == json.loads(mock_post_request.call_args_list[0][1]['data'])
 
 
@@ -226,7 +226,7 @@ def test_pagerduty_alerter_v2_payload_group_args():
         'routing_key': 'magicalbadgers',
     }
     mock_post_request.assert_called_once_with('https://events.pagerduty.com/v2/enqueue',
-                                              data=mock.ANY, headers={'content-type': 'application/json'}, proxies=None)
+                                              data=mock.ANY, headers={'content-type': 'application/json'}, proxies=None, verify=True)
     assert expected_data == json.loads(mock_post_request.call_args_list[0][1]['data'])
 
 
@@ -273,7 +273,7 @@ def test_pagerduty_alerter_v2_payload_source_args():
         'routing_key': 'magicalbadgers',
     }
     mock_post_request.assert_called_once_with('https://events.pagerduty.com/v2/enqueue',
-                                              data=mock.ANY, headers={'content-type': 'application/json'}, proxies=None)
+                                              data=mock.ANY, headers={'content-type': 'application/json'}, proxies=None, verify=True)
     assert expected_data == json.loads(mock_post_request.call_args_list[0][1]['data'])
 
 
@@ -322,7 +322,7 @@ def test_pagerduty_alerter_v2_payload_custom_details():
         'routing_key': 'magicalbadgers',
     }
     mock_post_request.assert_called_once_with('https://events.pagerduty.com/v2/enqueue',
-                                              data=mock.ANY, headers={'content-type': 'application/json'}, proxies=None)
+                                              data=mock.ANY, headers={'content-type': 'application/json'}, proxies=None, verify=True)
     assert expected_data == json.loads(mock_post_request.call_args_list[0][1]['data'])
 
 
@@ -367,7 +367,7 @@ def test_pagerduty_alerter_v2_payload_include_all_info():
         'routing_key': 'magicalbadgers',
     }
     mock_post_request.assert_called_once_with('https://events.pagerduty.com/v2/enqueue',
-                                              data=mock.ANY, headers={'content-type': 'application/json'}, proxies=None)
+                                              data=mock.ANY, headers={'content-type': 'application/json'}, proxies=None, verify=True)
     assert expected_data == json.loads(mock_post_request.call_args_list[0][1]['data'])
 
 
@@ -399,7 +399,7 @@ def test_pagerduty_alerter_custom_incident_key():
         'incident_key': 'custom key',
         'service_key': 'magicalbadgers',
     }
-    mock_post_request.assert_called_once_with(alert.url, data=mock.ANY, headers={'content-type': 'application/json'}, proxies=None)
+    mock_post_request.assert_called_once_with(alert.url, data=mock.ANY, headers={'content-type': 'application/json'}, proxies=None, verify=True)
     assert expected_data == json.loads(mock_post_request.call_args_list[0][1]['data'])
 
 
@@ -432,7 +432,7 @@ def test_pagerduty_alerter_custom_incident_key_with_args():
         'incident_key': 'custom foobarbaz',
         'service_key': 'magicalbadgers',
     }
-    mock_post_request.assert_called_once_with(alert.url, data=mock.ANY, headers={'content-type': 'application/json'}, proxies=None)
+    mock_post_request.assert_called_once_with(alert.url, data=mock.ANY, headers={'content-type': 'application/json'}, proxies=None, verify=True)
     assert expected_data == json.loads(mock_post_request.call_args_list[0][1]['data'])
 
 
@@ -466,7 +466,7 @@ def test_pagerduty_alerter_custom_alert_subject():
         'incident_key': 'custom foobarbaz',
         'service_key': 'magicalbadgers',
     }
-    mock_post_request.assert_called_once_with(alert.url, data=mock.ANY, headers={'content-type': 'application/json'}, proxies=None)
+    mock_post_request.assert_called_once_with(alert.url, data=mock.ANY, headers={'content-type': 'application/json'}, proxies=None, verify=True)
     assert expected_data == json.loads(mock_post_request.call_args_list[0][1]['data'])
 
 
@@ -502,7 +502,7 @@ def test_pagerduty_alerter_custom_alert_subject_with_args():
         'incident_key': 'custom foobarbaz',
         'service_key': 'magicalbadgers',
     }
-    mock_post_request.assert_called_once_with(alert.url, data=mock.ANY, headers={'content-type': 'application/json'}, proxies=None)
+    mock_post_request.assert_called_once_with(alert.url, data=mock.ANY, headers={'content-type': 'application/json'}, proxies=None, verify=True)
     assert expected_data == json.loads(mock_post_request.call_args_list[0][1]['data'])
 
 
@@ -539,7 +539,7 @@ def test_pagerduty_alerter_custom_alert_subject_with_args_specifying_trigger():
         'incident_key': 'custom foobarbaz',
         'service_key': 'magicalbadgers',
     }
-    mock_post_request.assert_called_once_with(alert.url, data=mock.ANY, headers={'content-type': 'application/json'}, proxies=None)
+    mock_post_request.assert_called_once_with(alert.url, data=mock.ANY, headers={'content-type': 'application/json'}, proxies=None, verify=True)
     assert expected_data == json.loads(mock_post_request.call_args_list[0][1]['data'])
 
 
@@ -578,7 +578,7 @@ def test_pagerduty_alerter_proxy():
         'service_key': 'magicalbadgers',
     }
     mock_post_request.assert_called_once_with(alert.url, data=mock.ANY, headers={'content-type': 'application/json'},
-                                              proxies={'https': 'http://proxy.url'})
+                                              proxies={'https': 'http://proxy.url'}, verify=True)
     assert expected_data == json.loads(mock_post_request.call_args_list[0][1]['data'])
 
 
@@ -676,7 +676,7 @@ def test_pagerduty_alerter_v2_payload_severity(severity, except_severity):
         'routing_key': 'magicalbadgers',
     }
     mock_post_request.assert_called_once_with('https://events.pagerduty.com/v2/enqueue',
-                                              data=mock.ANY, headers={'content-type': 'application/json'}, proxies=None)
+                                              data=mock.ANY, headers={'content-type': 'application/json'}, proxies=None, verify=True)
     assert expected_data == json.loads(mock_post_request.call_args_list[0][1]['data'])
 
 
@@ -773,7 +773,7 @@ def test_pagerduty_alerter_event_type(pagerduty_event_type, excepted_pagerduty_e
         'service_key': 'magicalbadgers',
     }
     mock_post_request.assert_called_once_with('https://events.pagerduty.com/generic/2010-04-15/create_event.json',
-                                              data=mock.ANY, headers={'content-type': 'application/json'}, proxies=None)
+                                              data=mock.ANY, headers={'content-type': 'application/json'}, proxies=None, verify=True)
     assert expected_data == json.loads(mock_post_request.call_args_list[0][1]['data'])
     assert ('elastalert', logging.INFO, excepted_log_message) == caplog.record_tuples[0]
 
@@ -812,7 +812,7 @@ def test_pagerduty_alerter_match_timestamp_none():
         'service_key': 'magicalbadgers',
     }
     mock_post_request.assert_called_once_with(alert.url, data=mock.ANY, headers={'content-type': 'application/json'},
-                                              proxies={'https': 'http://proxy.url'})
+                                              proxies={'https': 'http://proxy.url'}, verify=True)
     assert expected_data == json.loads(mock_post_request.call_args_list[0][1]['data'])
 
 
@@ -856,5 +856,53 @@ def test_pagerduty_alerter_v2_match_timestamp_none():
         'routing_key': 'magicalbadgers',
     }
     mock_post_request.assert_called_once_with('https://events.pagerduty.com/v2/enqueue',
-                                              data=mock.ANY, headers={'content-type': 'application/json'}, proxies=None)
+                                              data=mock.ANY, headers={'content-type': 'application/json'}, proxies=None, verify=True)
+    assert expected_data == json.loads(mock_post_request.call_args_list[0][1]['data'])
+
+@pytest.mark.parametrize('ca_certs, ignore_ssl_errors, expect_verify', [
+    ('',    '',    True),
+    ('',    True,  False),
+    ('',    False, True),
+    (True,  '',    True),
+    (True,  True,  True),
+    (True,  False, True),
+    (False, '',    True),
+    (False, True,  False),
+    (False, False, True)
+])
+def test_pagerduty_ca_certs(ca_certs, ignore_ssl_errors, expect_verify):
+    rule = {
+        'name': 'Test PD Rule',
+        'type': 'any',
+        'pagerduty_service_key': 'magicalbadgers',
+        'pagerduty_client_name': 'ponies inc.',
+        'alert': []
+    }
+    if ca_certs:
+        rule['pagerduty_ca_certs'] = ca_certs
+
+    if ignore_ssl_errors:
+        rule['pagerduty_ignore_ssl_errors'] = ignore_ssl_errors
+
+    rules_loader = FileRulesLoader({})
+    rules_loader.load_modules(rule)
+    alert = PagerDutyAlerter(rule)
+    match = {
+        '@timestamp': '2017-01-01T00:00:00',
+        'somefield': 'foobarbaz'
+    }
+    with mock.patch('requests.post') as mock_post_request:
+        alert.alert([match])
+    expected_data = {
+        'client': 'ponies inc.',
+        'description': 'Test PD Rule',
+        'details': {
+            'information': 'Test PD Rule\n\n@timestamp: 2017-01-01T00:00:00\nsomefield: foobarbaz\n'
+        },
+        'event_type': 'trigger',
+        'incident_key': '',
+        'service_key': 'magicalbadgers',
+    }
+    mock_post_request.assert_called_once_with('https://events.pagerduty.com/generic/2010-04-15/create_event.json',
+                                              data=mock.ANY, headers={'content-type': 'application/json'}, proxies=None, verify=expect_verify)
     assert expected_data == json.loads(mock_post_request.call_args_list[0][1]['data'])
