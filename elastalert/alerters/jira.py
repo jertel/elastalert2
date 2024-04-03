@@ -46,6 +46,7 @@ class JiraAlerter(Alerter):
         'jira_server',
         'jira_transition_to',
         'jira_watchers',
+        'jira_parent'
     ]
 
     # Some built-in Jira types that can be used as custom fields require special handling
@@ -66,6 +67,8 @@ class JiraAlerter(Alerter):
         self.get_account(self.rule['jira_account_file'])
         self.project = self.rule['jira_project']
         self.issue_type = self.rule['jira_issuetype']
+        # this parameter use to create subtasks
+        self.parent = self.rule.get('jira_parent', None)
 
         # Deferred settings refer to values that can only be resolved when a match
         # is found and as such loading them will be delayed until we find a match
@@ -126,8 +129,13 @@ class JiraAlerter(Alerter):
             elastalert_logger.error("Priority %s not found. Valid priorities are %s" % (self.priority, list(self.priority_ids.keys())))
 
     def reset_jira_args(self):
-        self.jira_args = {'project': {'key': self.project},
-                          'issuetype': {'name': self.issue_type}}
+        if self.parent:
+            self.jira_args = {'project': {'key': self.project},
+                                'parent': {'key': self.parent},
+                                'issuetype': {'name': self.issue_type}}
+        else:
+            self.jira_args = {'project': {'key': self.project},
+                            'issuetype': {'name': self.issue_type}}
 
         if self.components:
             # Support single component or list

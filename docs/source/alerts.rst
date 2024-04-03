@@ -1195,6 +1195,26 @@ This alert requires four additional options:
 
 Optional:
 
+``jira_parent``: Specify an existing ticket that will be used as a parent to create a new subtask in it
+
+  For example, if you have this issue hierarchy:
+    Epic
+    Story, Task, Bug
+    Subtask
+
+  Then:
+    As a parent issue, an epic can have stories, tasks, and bugs as subtask (child issues).
+    As a parent issues, task, stories and bugs can have subtasks as subtask (child issues).
+    A subtask can’t have any subtask (child issues).
+
+  Example usage::
+
+      jira_server: "https://example.atlassian.net/"
+      jira_project: "XXX"
+      jira_assignee: user@example.com
+      jira_issuetype: "Sub-task"
+      jira_parent: "XXX-3164"
+
 ``jira_assignee``: Assigns an issue to a user.
 
 ``jira_component``: The name of the component or components to set the ticket to. This can be a single string or a list of strings. This is provided for backwards compatibility and will eventually be deprecated. It is preferable to use the plural ``jira_components`` instead.
