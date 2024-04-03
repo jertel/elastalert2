@@ -734,13 +734,13 @@ def test_pagerduty_required_error(pagerduty_service_key, pagerduty_client_name, 
         assert expected_data in str(ea)
 
 
-@pytest.mark.parametrize('pagerduty_event_type, excepted_pagerduty_event_type, excepted_log_message', [
+@pytest.mark.parametrize('pagerduty_event_type, expected_pagerduty_event_type, expected_log_message', [
     ('',            'trigger',     'Trigger sent to PagerDuty'),
     ('trigger',     'trigger',     'Trigger sent to PagerDuty'),
     ('resolve',     'resolve',     'Resolve sent to PagerDuty'),
     ('acknowledge', 'acknowledge', 'acknowledge sent to PagerDuty')
 ])
-def test_pagerduty_alerter_event_type(pagerduty_event_type, excepted_pagerduty_event_type, excepted_log_message, caplog):
+def test_pagerduty_alerter_event_type(pagerduty_event_type, expected_pagerduty_event_type, expected_log_message, caplog):
     caplog.set_level(logging.INFO)
     rule = {
         'name': 'Test PD Rule',
@@ -768,14 +768,14 @@ def test_pagerduty_alerter_event_type(pagerduty_event_type, excepted_pagerduty_e
         'details': {
             'information': 'Test PD Rule\n\n@timestamp: 2017-01-01T00:00:00\nsomefield: foobarbaz\n'
         },
-        'event_type': excepted_pagerduty_event_type,
+        'event_type': expected_pagerduty_event_type,
         'incident_key': '',
         'service_key': 'magicalbadgers',
     }
     mock_post_request.assert_called_once_with('https://events.pagerduty.com/generic/2010-04-15/create_event.json',
                                               data=mock.ANY, headers={'content-type': 'application/json'}, proxies=None, verify=True)
     assert expected_data == json.loads(mock_post_request.call_args_list[0][1]['data'])
-    assert ('elastalert', logging.INFO, excepted_log_message) == caplog.record_tuples[0]
+    assert ('elastalert', logging.INFO, expected_log_message) == caplog.record_tuples[0]
 
 
 def test_pagerduty_alerter_match_timestamp_none():

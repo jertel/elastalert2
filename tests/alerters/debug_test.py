@@ -39,12 +39,12 @@ def test_debug_alerter(caplog):
     }
     alert.alert([match])
 
-    excepted1 = 'Alert for Test Debug Event Alerter at None:'
-    assert ('elastalert', logging.INFO, excepted1) == caplog.record_tuples[0]
+    expected1 = 'Alert for Test Debug Event Alerter at None:'
+    assert ('elastalert', logging.INFO, expected1) == caplog.record_tuples[0]
 
-    excepted2 = 'Test Debug Event Alerter\n\n@timestamp: 2021-01-01T00:00:00\n'
-    excepted2 += 'name: debug-test-name\n'
-    assert ('elastalert', logging.INFO, excepted2) == caplog.record_tuples[1]
+    expected2 = 'Test Debug Event Alerter\n\n@timestamp: 2021-01-01T00:00:00\n'
+    expected2 += 'name: debug-test-name\n'
+    assert ('elastalert', logging.INFO, expected2) == caplog.record_tuples[1]
 
 
 def test_debug_alerter_querykey(caplog):
@@ -66,9 +66,9 @@ def test_debug_alerter_querykey(caplog):
     }
     alert.alert([match])
 
-    excepted1 = 'Alert for Test Debug Event Alerter, aProbe at None:'
-    assert ('elastalert', logging.INFO, excepted1) == caplog.record_tuples[0]
+    expected1 = 'Alert for Test Debug Event Alerter, aProbe at None:'
+    assert ('elastalert', logging.INFO, expected1) == caplog.record_tuples[0]
 
-    excepted2 = 'Test Debug Event Alerter\n\n@timestamp: 2021-01-01T00:00:00\n'
-    excepted2 += 'hostname: aProbe\nname: debug-test-name\n'
-    assert ('elastalert', logging.INFO, excepted2) == caplog.record_tuples[1]
+    expected2 = 'Test Debug Event Alerter\n\n@timestamp: 2021-01-01T00:00:00\n'
+    expected2 += 'hostname: aProbe\nname: debug-test-name\n'
+    assert ('elastalert', logging.INFO, expected2) == caplog.record_tuples[1]
