@@ -399,7 +399,8 @@ def test_pagerduty_alerter_custom_incident_key():
         'incident_key': 'custom key',
         'service_key': 'magicalbadgers',
     }
-    mock_post_request.assert_called_once_with(alert.url, data=mock.ANY, headers={'content-type': 'application/json'}, proxies=None, verify=True)
+    mock_post_request.assert_called_once_with(alert.url, data=mock.ANY, headers={'content-type': 'application/json'},
+                                              proxies=None, verify=True)
     assert expected_data == json.loads(mock_post_request.call_args_list[0][1]['data'])
 
 
@@ -432,7 +433,8 @@ def test_pagerduty_alerter_custom_incident_key_with_args():
         'incident_key': 'custom foobarbaz',
         'service_key': 'magicalbadgers',
     }
-    mock_post_request.assert_called_once_with(alert.url, data=mock.ANY, headers={'content-type': 'application/json'}, proxies=None, verify=True)
+    mock_post_request.assert_called_once_with(alert.url, data=mock.ANY, headers={'content-type': 'application/json'},
+                                              proxies=None, verify=True)
     assert expected_data == json.loads(mock_post_request.call_args_list[0][1]['data'])
 
 
@@ -466,7 +468,8 @@ def test_pagerduty_alerter_custom_alert_subject():
         'incident_key': 'custom foobarbaz',
         'service_key': 'magicalbadgers',
     }
-    mock_post_request.assert_called_once_with(alert.url, data=mock.ANY, headers={'content-type': 'application/json'}, proxies=None, verify=True)
+    mock_post_request.assert_called_once_with(alert.url, data=mock.ANY, headers={'content-type': 'application/json'},
+                                              proxies=None, verify=True)
     assert expected_data == json.loads(mock_post_request.call_args_list[0][1]['data'])
 
 
@@ -502,7 +505,8 @@ def test_pagerduty_alerter_custom_alert_subject_with_args():
         'incident_key': 'custom foobarbaz',
         'service_key': 'magicalbadgers',
     }
-    mock_post_request.assert_called_once_with(alert.url, data=mock.ANY, headers={'content-type': 'application/json'}, proxies=None, verify=True)
+    mock_post_request.assert_called_once_with(alert.url, data=mock.ANY, headers={'content-type': 'application/json'},
+                                              proxies=None, verify=True)
     assert expected_data == json.loads(mock_post_request.call_args_list[0][1]['data'])
 
 
@@ -539,7 +543,8 @@ def test_pagerduty_alerter_custom_alert_subject_with_args_specifying_trigger():
         'incident_key': 'custom foobarbaz',
         'service_key': 'magicalbadgers',
     }
-    mock_post_request.assert_called_once_with(alert.url, data=mock.ANY, headers={'content-type': 'application/json'}, proxies=None, verify=True)
+    mock_post_request.assert_called_once_with(alert.url, data=mock.ANY, headers={'content-type': 'application/json'},
+                                              proxies=None, verify=True)
     assert expected_data == json.loads(mock_post_request.call_args_list[0][1]['data'])
 
 
@@ -859,6 +864,7 @@ def test_pagerduty_alerter_v2_match_timestamp_none():
                                               data=mock.ANY, headers={'content-type': 'application/json'}, proxies=None, verify=True)
     assert expected_data == json.loads(mock_post_request.call_args_list[0][1]['data'])
 
+
 @pytest.mark.parametrize('ca_certs, ignore_ssl_errors, expect_verify', [
     ('',    '',    True),
     ('',    True,  False),
@@ -904,5 +910,6 @@ def test_pagerduty_ca_certs(ca_certs, ignore_ssl_errors, expect_verify):
         'service_key': 'magicalbadgers',
     }
     mock_post_request.assert_called_once_with('https://events.pagerduty.com/generic/2010-04-15/create_event.json',
-                                              data=mock.ANY, headers={'content-type': 'application/json'}, proxies=None, verify=expect_verify)
+                                              data=mock.ANY, headers={'content-type': 'application/json'},
+                                              proxies=None, verify=expect_verify)
     assert expected_data == json.loads(mock_post_request.call_args_list[0][1]['data'])
