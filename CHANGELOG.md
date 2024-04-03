@@ -8,7 +8,7 @@
 
 ## Other changes
 - [workwechat] add workwechat msgtype - [#1369](https://github.com/jertel/elastalert2/pull/1369) - @bitqiu
-- Add options: pagerduty_ca_certs, pagerduty_ignore_ssl_errors - [#1418](https://github.com/jertel/elastalert2/pull/1418) - @kexin-zhai
+- [Pager Duty] Add options: pagerduty_ca_certs, pagerduty_ignore_ssl_errors - [#1418](https://github.com/jertel/elastalert2/pull/1418) - @kexin-zhai
 
 # 2.17.0
 
