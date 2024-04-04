@@ -1110,7 +1110,7 @@ def test_slack_alert_fields():
     assert expected_data == json.loads(mock_post_request.call_args_list[0][1]['data'])
 
 
-@pytest.mark.parametrize('ca_certs, ignore_ssl_errors, excpet_verify', [
+@pytest.mark.parametrize('ca_certs, ignore_ssl_errors, expect_verify', [
     ('', '', True),
     ('', True, False),
     ('', False, True),
@@ -1121,7 +1121,7 @@ def test_slack_alert_fields():
     (False, True, False),
     (False, False, True)
 ])
-def test_slack_ca_certs(ca_certs, ignore_ssl_errors, excpet_verify):
+def test_slack_ca_certs(ca_certs, ignore_ssl_errors, expect_verify):
     rule = {
         'name': 'Test Rule',
         'type': 'any',
@@ -1166,7 +1166,7 @@ def test_slack_ca_certs(ca_certs, ignore_ssl_errors, excpet_verify):
         data=mock.ANY,
         headers={'content-type': 'application/json'},
         proxies=None,
-        verify=excpet_verify,
+        verify=expect_verify,
         timeout=10
     )
     assert expected_data == json.loads(mock_post_request.call_args_list[0][1]['data'])

@@ -1387,9 +1387,9 @@ def test_add_aggregated_alert_error(ea, caplog):
     with mock.patch('elastalert.elastalert.elasticsearch_client'):
         ea.run_rule(ea.rules[0], END, START)
         user, level, message = caplog.record_tuples[0]
-        exceptd = "[add_aggregated_alert]"
-        exceptd += "Error parsing aggregate send time format unsupported operand type(s) for +: 'datetime.datetime' and 'dict'"
-        assert exceptd in message
+        expected_data = "[add_aggregated_alert]"
+        expected_data += "Error parsing aggregate send time format unsupported operand type(s) for +: 'datetime.datetime' and 'dict'"
+        assert expected_data in message
 
 
 def test_get_elasticsearch_client_same_rule(ea):
@@ -1426,8 +1426,8 @@ def test_time_enhancement(ea):
         'somefield': 'foobarbaz'
     }
     te.process(match)
-    excepted = '2021-01-01 00:00 UTC'
-    assert match['@timestamp'] == excepted
+    expected_data = '2021-01-01 00:00 UTC'
+    assert match['@timestamp'] == expected_data
 
 
 def test_get_kibana_discover_external_url_formatter_same_rule(ea):

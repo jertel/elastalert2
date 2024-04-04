@@ -217,7 +217,7 @@ def test_http_alerter_headers():
     assert expected_data == json.loads(mock_post_request.call_args_list[0][1]['data'])
 
 
-@pytest.mark.parametrize('ca_certs, ignore_ssl_errors, excpet_verify', [
+@pytest.mark.parametrize('ca_certs, ignore_ssl_errors, expect_verify', [
     ('',    '',    True),
     ('',    True,  False),
     ('',    False, True),
@@ -228,7 +228,7 @@ def test_http_alerter_headers():
     (False, True,  False),
     (False, False, True)
 ])
-def test_http_alerter_post_ca_certs(ca_certs, ignore_ssl_errors, excpet_verify):
+def test_http_alerter_post_ca_certs(ca_certs, ignore_ssl_errors, expect_verify):
     rule = {
         'name': 'Test HTTP Post Alerter Without Payload',
         'type': 'any',
@@ -262,7 +262,7 @@ def test_http_alerter_post_ca_certs(ca_certs, ignore_ssl_errors, excpet_verify):
         headers={'Content-Type': 'application/json', 'Accept': 'application/json;charset=utf-8'},
         proxies=None,
         timeout=10,
-        verify=excpet_verify
+        verify=expect_verify
     )
     assert expected_data == json.loads(mock_post_request.call_args_list[0][1]['data'])
 
