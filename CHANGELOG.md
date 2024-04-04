@@ -4,7 +4,7 @@
 - Renamed PR #1193's `fields` common rule option to `include_fields` due to collision with `new_term` rule type's existing `field` parameter - [#1408](https://github.com/jertel/elastalert2/pull/1408) - @jertel
 
 ## New features
-- None
+- [Jira] Add ability to create a subtask, etc of an existing parent - [#1417](https://github.com/jertel/elastalert2/pull/1417) - @olehpalanskyi
 
 ## Other changes
 - [workwechat] add workwechat msgtype - [#1369](https://github.com/jertel/elastalert2/pull/1369) - @bitqiu
