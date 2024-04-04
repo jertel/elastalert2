@@ -1036,8 +1036,8 @@ def test_opsgenie_parse_responders(caplog):
             match,
             rule['opsgenie_default_teams']
         )
-    excepted = ['Test']
-    assert excepted == actual
+    expected = ['Test']
+    assert expected == actual
     user, level, message = caplog.record_tuples[0]
     assert logging.WARNING == level
     assert "Cannot create responder for OpsGenie Alert. Key not foud: 'RECEIPIENT_PREFIX'." in message
@@ -1081,8 +1081,8 @@ def test_opsgenie_create_custom_title():
     ]
     alert = OpsGenieAlerter(rule)
     actual = alert.create_custom_title(match)
-    excepted = 'abc Testing 2014-10-31T00:00:00'
-    assert excepted == actual
+    expected = 'abc Testing 2014-10-31T00:00:00'
+    assert expected == actual
 
 
 def test_opsgenie_create_custom_description():
@@ -1159,8 +1159,8 @@ def test_opsgenie_get_details():
     ]
     alert = OpsGenieAlerter(rule)
     actual = alert.get_details(match)
-    excepted = {'Message': 'Testing', 'abc': 'test'}
-    assert excepted == actual
+    expected = {'Message': 'Testing', 'abc': 'test'}
+    assert expected == actual
 
 
 def test_opsgenie_get_details2():
@@ -1185,5 +1185,5 @@ def test_opsgenie_get_details2():
     ]
     alert = OpsGenieAlerter(rule)
     actual = alert.get_details(match)
-    excepted = {}
-    assert excepted == actual
+    expected = {}
+    assert expected == actual

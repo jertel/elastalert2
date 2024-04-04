@@ -670,6 +670,8 @@ properties:
   pagerduty_incident_key: {type: string}
   pagerduty_incident_key_args: {type: array, items: {type: string}}
   pagerduty_proxy: {type: string}
+  pagerduty_ca_certs: {type: [boolean, string]}
+  pagerduty_ignore_ssl_errors: {type: boolean}
   pagerduty_api_version: {type: string, enum: ['v1', 'v2']}
   pagerduty_v2_payload_class: {type: string}
   pagerduty_v2_payload_class_args: {type: array, items: {type: string}}

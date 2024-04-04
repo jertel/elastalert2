@@ -24,12 +24,12 @@ def test_tencentsms_get_info():
     rules_loader.load_modules(rule)
     alert = TencentSMSAlerter(rule)
 
-    excepted = {
+    expected = {
         'type': 'tencent sms',
         'to_number': ["+8613711112222"]
     }
     actual = alert.get_info()
-    assert excepted == actual
+    assert expected == actual
 
 
 @pytest.mark.parametrize('tencent_sms_template_parm, expected_data', [

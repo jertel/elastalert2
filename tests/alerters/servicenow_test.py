@@ -212,21 +212,21 @@ def test_servicenow_getinfo():
 
 servicenow_required_error_param = 'username, password, servicenow_rest_url, short_description, comments, '
 servicenow_required_error_param += 'assignment_group, category, subcategory, cmdb_ci, caller_id, expected_data'
-servicenow_required_error_excepted = 'username, password, servicenow_rest_url, short_description, comments, '
-servicenow_required_error_excepted += 'assignment_group, category, subcategory, cmdb_ci, caller_id'
+servicenow_required_error_expected = 'username, password, servicenow_rest_url, short_description, comments, '
+servicenow_required_error_expected += 'assignment_group, category, subcategory, cmdb_ci, caller_id'
 
 
 @pytest.mark.parametrize(servicenow_required_error_param, [
-    ('',  '',  '',  '',  '',  '',  ''  '',  '',  '',  '', 'Missing required option(s): ' + servicenow_required_error_excepted),
-    ('a', '',  '',  '',  '',  '',  ''  '',  '',  '',  '', 'Missing required option(s): ' + servicenow_required_error_excepted),
-    ('a', 'b', '',  '',  '',  '',  ''  '',  '',  '',  '', 'Missing required option(s): ' + servicenow_required_error_excepted),
-    ('a', 'b', 'c', '',  '',  '',  ''  '',  '',  '',  '', 'Missing required option(s): ' + servicenow_required_error_excepted),
-    ('a', 'b', 'c', 'd', '',  '',  ''  '',  '',  '',  '', 'Missing required option(s): ' + servicenow_required_error_excepted),
-    ('a', 'b', 'c', 'd', 'e', '',  ''  '',  '',  '',  '', 'Missing required option(s): ' + servicenow_required_error_excepted),
-    ('a', 'b', 'c', 'd', 'e', 'f', ''  '',  '',  '',  '', 'Missing required option(s): ' + servicenow_required_error_excepted),
-    ('a', 'b', 'c', 'd', 'e', 'f', 'g' '',  '',  '',  '', 'Missing required option(s): ' + servicenow_required_error_excepted),
-    ('a', 'b', 'c', 'd', 'e', 'f', 'g' 'h', '',  '',  '', 'Missing required option(s): ' + servicenow_required_error_excepted),
-    ('a', 'b', 'c', 'd', 'e', 'f', 'g' 'h', 'i', '',  '', 'Missing required option(s): ' + servicenow_required_error_excepted),
+    ('',  '',  '',  '',  '',  '',  ''  '',  '',  '',  '', 'Missing required option(s): ' + servicenow_required_error_expected),
+    ('a', '',  '',  '',  '',  '',  ''  '',  '',  '',  '', 'Missing required option(s): ' + servicenow_required_error_expected),
+    ('a', 'b', '',  '',  '',  '',  ''  '',  '',  '',  '', 'Missing required option(s): ' + servicenow_required_error_expected),
+    ('a', 'b', 'c', '',  '',  '',  ''  '',  '',  '',  '', 'Missing required option(s): ' + servicenow_required_error_expected),
+    ('a', 'b', 'c', 'd', '',  '',  ''  '',  '',  '',  '', 'Missing required option(s): ' + servicenow_required_error_expected),
+    ('a', 'b', 'c', 'd', 'e', '',  ''  '',  '',  '',  '', 'Missing required option(s): ' + servicenow_required_error_expected),
+    ('a', 'b', 'c', 'd', 'e', 'f', ''  '',  '',  '',  '', 'Missing required option(s): ' + servicenow_required_error_expected),
+    ('a', 'b', 'c', 'd', 'e', 'f', 'g' '',  '',  '',  '', 'Missing required option(s): ' + servicenow_required_error_expected),
+    ('a', 'b', 'c', 'd', 'e', 'f', 'g' 'h', '',  '',  '', 'Missing required option(s): ' + servicenow_required_error_expected),
+    ('a', 'b', 'c', 'd', 'e', 'f', 'g' 'h', 'i', '',  '', 'Missing required option(s): ' + servicenow_required_error_expected),
     ('a', 'b', 'c', 'd', 'e', 'f', 'g' 'h', 'i', 'j', 'k',
         {
             "type": "ServiceNow",

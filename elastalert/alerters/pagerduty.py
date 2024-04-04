@@ -18,6 +18,8 @@ class PagerDutyAlerter(Alerter):
         self.pagerduty_incident_key_args = self.rule.get('pagerduty_incident_key_args', None)
         self.pagerduty_event_type = self.rule.get('pagerduty_event_type', 'trigger')
         self.pagerduty_proxy = self.rule.get('pagerduty_proxy', None)
+        self.pagerduty_ca_certs = self.rule.get('pagerduty_ca_certs')
+        self.pagerduty_ignore_ssl_errors = self.rule.get('pagerduty_ignore_ssl_errors', False)
 
         self.pagerduty_api_version = self.rule.get('pagerduty_api_version', 'v1')
         self.pagerduty_v2_payload_class = self.rule.get('pagerduty_v2_payload_class', '')
@@ -90,12 +92,20 @@ class PagerDutyAlerter(Alerter):
 
         # set https proxy, if it was provided
         proxies = {'https': self.pagerduty_proxy} if self.pagerduty_proxy else None
+        if self.pagerduty_ca_certs:
+            verify = self.pagerduty_ca_certs
+        else:
+            verify = not self.pagerduty_ignore_ssl_errors
+
+        if self.pagerduty_ignore_ssl_errors:
+            requests.packages.urllib3.disable_warnings()
         try:
             response = requests.post(
                 self.url,
                 data=json.dumps(payload, cls=DateTimeEncoder, ensure_ascii=False).encode("utf-8"),
                 headers=headers,
-                proxies=proxies
+                proxies=proxies,
+                verify=verify
             )
             response.raise_for_status()
         except RequestException as e:
