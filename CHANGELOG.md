@@ -7,7 +7,7 @@
 - TBD
 
 ## Other changes
-- TBD
+- [Docs] Fixed typo in Alerta docs with incorrect number of seconds in a day. - @jertel
 
 # 2.18.0
 

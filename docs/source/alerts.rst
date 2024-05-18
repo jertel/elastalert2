@@ -247,7 +247,7 @@ The following options dictate the values of the API JSON payload:
 
 ``alerta_severity``: Defaults to "warning".
 
-``alerta_timeout``: Defaults 84600 (1 Day).
+``alerta_timeout``: Defaults 86400 (1 Day).
 
 ``alerta_type``: Defaults to "elastalert".
 
