@@ -598,7 +598,7 @@ def get_version_from_cluster_info(client):
             esversion = esinfo['number']
             if esinfo.get('distribution') == "opensearch":
                 # https://opensearch.org/
-                if esversion[0] == "1":
+                if (esversion[0] == "1") or (esversion[0] == "7"):
                     # OpenSearch 1.x is based on Elasticsearch 7.10.2
                     esversion = "7.10.2"
                 else:
