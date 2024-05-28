@@ -49,8 +49,9 @@ or
       - tencent_sms
       - twilio
       - victorops
-      - workwechat  
+      - workwechat
       - zabbix
+      - opensearch
 
 Options for each alerter can either defined at the top level of the YAML file, or nested within the alert name, allowing for different settings
 for multiple of the same alerter. For example, consider sending multiple emails, but with different 'To' and 'From' fields:
@@ -2353,3 +2354,86 @@ Example usage::
     zbx_key: "sender_load1"
 
 where ``hostname`` is the available elasticsearch field.
+
+Opensearch
+~~~~~~~~~~
+
+Description: Create and manage separately index for all alerts for statistics and report purpose.
+
+Opensearch alerter can be used to create a new alert in existen Opensearch. The alerter supports
+custom fields, and observables from the alert matches and rule data.
+
+Required:
+
+``opensearch_alert_config``: Configuration options for the alert, see example below for structure.
+
+``customFields`` Fields must be manually added, all of them will exist in the newly created index. You can set own field or use existed field fron match(see example below for structure).
+
+``index_alerts_name``: This field setup the output index for alerts.
+
+One of below is required:
+
+``opensearch_connection``: Options the connection details to your instance (see example below for the required syntax Example 1).
+
+``opensearch_config``: Options for the get connection details to your instance  from file (see example below for the required syntax Example 2).
+
+
+Example 1 usage::
+
+    alert: opensearch
+
+    opensearch_connection:
+      es_host: localhost
+      es_port: es_port
+      ssl_show_warn: False
+      use_ssl: True
+      verify_certs: False
+      es_username: user
+      es_password: password
+      index_alerts_name: opensearch_elastalert2               # You can create own config or use global config just added ``index_alerts_name`` in global config
+
+    opensearch_alert_config:
+      #Existing fields from match alert
+      message: message
+      host.name: host.name
+      event.action: event.action
+      event.type: event.type
+      winlog.computer_name: winlog.computer_name
+      winlog.event_id: winlog.event_id
+      winlog.task: winlog.task
+      #Enrich existen event with additional fields
+      customFields:
+        - name: original_time
+          value: "@timestamp"
+        - name: severity
+          value: high
+        - name: risk_score
+          value: 73
+        - name: description
+          value: General description.
+
+Example 2 usage::
+
+    alert: opensearch
+
+    opensearch_config: /opt/elastalert/config/config.yaml       # You can create own config or use global config just added ``index_alerts_name`` in global config
+
+    opensearch_alert_config:
+      #Existing fields from match alert
+      message: message
+      host.name: host.name
+      event.action: event.action
+      event.type: event.type
+      winlog.computer_name: winlog.computer_name
+      winlog.event_id: winlog.event_id
+      winlog.task: winlog.task
+      #Enrich existen event with additional fields
+      customFields:
+        - name: original_time
+          value: "@timestamp"
+        - name: severity
+          value: high
+        - name: risk_score
+          value: 73
+        - name: description
+          value: General description.
