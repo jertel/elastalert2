@@ -135,6 +135,24 @@ def test_looking_up_nested_composite_keys(ea):
     assert lookup_es_key(record, 'Fields.ts.value.keyword') == expected
 
 
+def test_looking_up_nested_composite_keys_with_fieldname_literary_containing_keyword(ea):
+    expected = 12467267
+    record = {
+        'Message': '12345',
+        'Fields': {
+            'ts': {
+                'value': {
+                    'keyword': expected,
+                }
+            },
+            'severity': 'large',
+            'user': 'jimmay'
+        }
+    }
+
+    assert lookup_es_key(record, 'Fields.ts.value.keyword') == expected
+
+
 def test_looking_up_arrays(ea):
     record = {
         'flags': [1, 2, 3],
