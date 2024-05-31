@@ -52,7 +52,7 @@ from elastalert.alerters.sns import SnsAlerter
 from elastalert.alerters.teams import MsTeamsAlerter
 from elastalert.alerters.zabbix import ZabbixAlerter
 from elastalert.alerters.tencentsms import TencentSMSAlerter
-from elastalert.alerters.opensearch import OpenSearchAlerter
+from elastalert.alerters.indexer import IndexerAlerter
 from elastalert.util import dt_to_ts
 from elastalert.util import dt_to_ts_with_format
 from elastalert.util import dt_to_unix
@@ -138,7 +138,7 @@ class RulesLoader(object):
         'rocketchat': elastalert.alerters.rocketchat.RocketChatAlerter,
         'gelf': elastalert.alerters.gelf.GelfAlerter,
         'iris': elastalert.alerters.iris.IrisAlerter,
-        'opensearch': OpenSearchAlerter,
+        'indexeralerter': IndexerAlerter,
     }
 
     # A partial ordering of alert types. Relative order will be preserved in the resulting alerts list

@@ -5,11 +5,11 @@ from elasticsearch.exceptions import TransportError
 from elastalert.alerts import Alerter
 from elastalert.util import lookup_es_key, EAException, elastalert_logger, elasticsearch_client
 
-class OpenSearchAlerter(Alerter):
+class IndexerAlerter(Alerter):
     """
-    Use matched data to create alerts on Opensearch
+    Use matched data to create alerts on Opensearch/Elasticsearch
     """
-    required_options = frozenset(['opensearch_alert_config'])
+    required_options = frozenset(['indexer_alert_config'])
 
     def lookup_field(self, match: dict, field_name: str, default):
         field_value = lookup_es_key(match, field_name)
@@ -40,7 +40,7 @@ class OpenSearchAlerter(Alerter):
                 original_fields[field['name']] = value
             else:
                 for k,v in field.items():
-                    original_fields[k] = self.lookup_list_fields(v)
+                    original_fields[k] = self.lookup_list_fields(v, match)
 
         return original_fields
 
@@ -79,7 +79,7 @@ class OpenSearchAlerter(Alerter):
         alert_config = {
             '@timestamp': datetime.now().strftime('%Y-%m-%dT%H:%M:%S.%fZ')
         }
-        alert_config.update(self.rule.get('opensearch_alert_config', {}))
+        alert_config.update(self.rule.get('indexer_alert_config', {}))
 
         if len(matches) > 0:
             alert_config = self.flatten_dict(alert_config)
@@ -89,12 +89,12 @@ class OpenSearchAlerter(Alerter):
         alert_config = self.make_nested_fields(alert_config)
 
 
-        # POST the alert to Opensearch
+        # POST the alert to SIEM
         try:
-            data = self.rule.get('opensearch_connection', '')
+            data = self.rule.get('indexer_connection', '')
             if not data:
-                if os.path.isfile(self.rule.get('opensearch_config', '')):
-                    filename = self.rule.get('opensearch_config', '')
+                if os.path.isfile(self.rule.get('indexer_config', '')):
+                    filename = self.rule.get('indexer_config', '')
                 else:
                     filename = ''
 
@@ -106,8 +106,8 @@ class OpenSearchAlerter(Alerter):
                                               refresh = True)
 
         except TransportError as e:
-            raise EAException(f"Error posting to Opensearch: {e}")
-        elastalert_logger.info("Alert sent to Opensearch")
+            raise EAException(f"Error posting to SIEM: {e}")
+        elastalert_logger.info("Alert sent to SIEM")
 
     def get_info(self):
-        return {'type': 'opensearch_alerter'}
+        return {'type': 'indexer_alerter'}
