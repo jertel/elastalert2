@@ -28,6 +28,7 @@ or
       - googlechat
       - gelf
       - hivealerter
+      - indexer
       - iris
       - jira
       - lark
@@ -51,7 +52,6 @@ or
       - victorops
       - workwechat
       - zabbix
-      - indexer
 
 Options for each alerter can either defined at the top level of the YAML file, or nested within the alert name, allowing for different settings
 for multiple of the same alerter. For example, consider sending multiple emails, but with different 'To' and 'From' fields:
@@ -1086,8 +1086,91 @@ Example usage with json string formatting::
         "X-custom-{{key}}": "{{type}}"
       }
 
+Indexer
+~~~~~~~
+
+Description: Creates a record in an arbitrary index within an Elasticsearch or OpenSearch index.
+
+Indexer alerter can be used to create a new alert in existing Opensearch/Elasticsearch. The alerter supports
+custom fields, and observables from the alert matches and rule data.
+
+Required:
+
+``indexer_alert_config``: Configuration options for the alert, see example below for structure.
+
+``customFields`` Fields must be manually added, all of them will exist in the newly created index. You can set own field or use existing field fron match (see example below for structure).
+
+``index_alerts_name``: The index to use for creating the new alert records.
+
+One of below is required:
+
+``indexer_connection``: Options the connection details to your server instance (see example below for the required syntax Example 1).
+
+``indexer_config``: Options for loading the connection details to your server instance from a file (see example below for the required syntax Example 2).
+
+
+Example 1 usage::
+
+    alert: indexer
+
+    indexer_connection:
+      es_host: localhost
+      es_port: es_port
+      ssl_show_warn: False
+      use_ssl: True
+      verify_certs: False
+      es_username: user
+      es_password: password
+      index_alerts_name: elastalert2               # You can create own config or use global config just added ``index_alerts_name`` in global config
+
+    indexer_alert_config:
+      #Existing fields from match alert
+      message: message
+      host.name: host.name
+      event.action: event.action
+      event.type: event.type
+      winlog.computer_name: winlog.computer_name
+      winlog.event_id: winlog.event_id
+      winlog.task: winlog.task
+      #Enrich existing event with additional fields
+      customFields:
+        - name: original_time
+          value: "@timestamp"
+        - name: severity
+          value: high
+        - name: risk_score
+          value: 73
+        - name: description
+          value: General description.
+
+Example 2 usage::
+
+    alert: indexer
+
+    indexer_config: /opt/elastalert/config/config.yaml       # Uses the ElastAlert 2 global config, with an added ``index_alerts_name`` parameter
+
+    indexer_alert_config:
+      #Existing fields from match alert
+      message: message
+      host.name: host.name
+      event.action: event.action
+      event.type: event.type
+      winlog.computer_name: winlog.computer_name
+      winlog.event_id: winlog.event_id
+      winlog.task: winlog.task
+      #Enrich existing event with additional fields
+      customFields:
+        - name: original_time
+          value: "@timestamp"
+        - name: severity
+          value: high
+        - name: risk_score
+          value: 73
+        - name: description
+          value: General description.
+
 IRIS
-~~~~~~~~~
+~~~~
 The Iris alerter can be used to create a new alert or case in `Iris IRP System <https://dfir-iris.org>`_. The alerter supports adding tags, IOCs, and context from the alert matches and rule data.
 
 The alerter requires the following option:
@@ -2354,86 +2437,3 @@ Example usage::
     zbx_key: "sender_load1"
 
 where ``hostname`` is the available elasticsearch field.
-
-Indexer
-~~~~~~~
-
-Description: Create and manage separately index for all alerts for statistics and report purpose.
-
-Indexer alerter can be used to create a new alert in existing Opensearch/Elasticsearch. The alerter supports
-custom fields, and observables from the alert matches and rule data.
-
-Required:
-
-``indexer_alert_config``: Configuration options for the alert, see example below for structure.
-
-``customFields`` Fields must be manually added, all of them will exist in the newly created index. You can set own field or use existing field fron match(see example below for structure).
-
-``index_alerts_name``: This field setup the output index for alerts.
-
-One of below is required:
-
-``indexer_connection``: Options the connection details to your instance (see example below for the required syntax Example 1).
-
-``indexer_config``: Options for the get connection details to your instance  from file (see example below for the required syntax Example 2).
-
-
-Example 1 usage::
-
-    alert: indexer
-
-    indexer_connection:
-      es_host: localhost
-      es_port: es_port
-      ssl_show_warn: False
-      use_ssl: True
-      verify_certs: False
-      es_username: user
-      es_password: password
-      index_alerts_name: elastalert2               # You can create own config or use global config just added ``index_alerts_name`` in global config
-
-    indexer_alert_config:
-      #Existing fields from match alert
-      message: message
-      host.name: host.name
-      event.action: event.action
-      event.type: event.type
-      winlog.computer_name: winlog.computer_name
-      winlog.event_id: winlog.event_id
-      winlog.task: winlog.task
-      #Enrich existing event with additional fields
-      customFields:
-        - name: original_time
-          value: "@timestamp"
-        - name: severity
-          value: high
-        - name: risk_score
-          value: 73
-        - name: description
-          value: General description.
-
-Example 2 usage::
-
-    alert: indexer
-
-    indexer_config: /opt/elastalert/config/config.yaml       # You can create own config or use global config just added ``index_alerts_name`` in global config
-
-    indexer_alert_config:
-      #Existing fields from match alert
-      message: message
-      host.name: host.name
-      event.action: event.action
-      event.type: event.type
-      winlog.computer_name: winlog.computer_name
-      winlog.event_id: winlog.event_id
-      winlog.task: winlog.task
-      #Enrich existing event with additional fields
-      customFields:
-        - name: original_time
-          value: "@timestamp"
-        - name: severity
-          value: high
-        - name: risk_score
-          value: 73
-        - name: description
-          value: General description.
