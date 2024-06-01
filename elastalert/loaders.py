@@ -138,7 +138,7 @@ class RulesLoader(object):
         'rocketchat': elastalert.alerters.rocketchat.RocketChatAlerter,
         'gelf': elastalert.alerters.gelf.GelfAlerter,
         'iris': elastalert.alerters.iris.IrisAlerter,
-        'indexeralerter': IndexerAlerter,
+        'indexer': IndexerAlerter,
     }
 
     # A partial ordering of alert types. Relative order will be preserved in the resulting alerts list

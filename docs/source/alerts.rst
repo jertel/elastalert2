@@ -51,7 +51,7 @@ or
       - victorops
       - workwechat
       - zabbix
-      - indexeralerter
+      - indexer
 
 Options for each alerter can either defined at the top level of the YAML file, or nested within the alert name, allowing for different settings
 for multiple of the same alerter. For example, consider sending multiple emails, but with different 'To' and 'From' fields:
@@ -2380,7 +2380,7 @@ One of below is required:
 
 Example 1 usage::
 
-    alert: indexeralerter
+    alert: indexer
 
     indexer_connection:
       es_host: localhost
@@ -2414,7 +2414,7 @@ Example 1 usage::
 
 Example 2 usage::
 
-    alert: indexeralerter
+    alert: indexer
 
     indexer_config: /opt/elastalert/config/config.yaml       # You can create own config or use global config just added ``index_alerts_name`` in global config
 

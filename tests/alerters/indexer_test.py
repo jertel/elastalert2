@@ -270,7 +270,7 @@ def test_indexer_getinfo():
 
     alert = IndexerAlerter(rule)
     expected_data = {
-        'type': 'indexer_alerter'
+        'type': 'indexer'
     }
     actual_data = alert.get_info()
     assert expected_data == actual_data

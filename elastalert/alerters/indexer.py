@@ -110,4 +110,4 @@ class IndexerAlerter(Alerter):
         elastalert_logger.info("Alert sent to SIEM")
 
     def get_info(self):
-        return {'type': 'indexer_alerter'}
+        return {'type': 'indexer'}
