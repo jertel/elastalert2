@@ -4,7 +4,7 @@
 - TBD
 
 ## New features
-- TBD
+- Add indexer alerter - [#1451](https://github.com/jertel/elastalert2/pull/1451) - @olehpalanskyi
 
 ## Other changes
 - [Docs] Fixed typo in Alerta docs with incorrect number of seconds in a day. - @jertel
