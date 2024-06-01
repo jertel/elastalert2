@@ -101,7 +101,7 @@ class IndexerAlerter(Alerter):
                 if filename:
                     with open(filename) as config_file:
                         data = yaml.load(config_file, Loader=yaml.FullLoader)
-            elasticsearch_client(data).index(index = data.get('index_alerts_name'),
+            elasticsearch_client(data).index(index = data.get('indexer_alerts_name'),
                                               body = alert_config,
                                               refresh = True)
 

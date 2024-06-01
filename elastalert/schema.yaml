@@ -539,7 +539,7 @@ properties:
   http_post2_timeout: {type: integer}
 
   ### INDEXER
-  index_alerts_name: {type: string}
+  indexer_alerts_name: {type: string}
   indexer_config: {type: string}
   indexer_connection:
     type: object
@@ -556,15 +556,16 @@ properties:
       index_alerts_name: {type: string}
   indexer_alert_config:
     type: object
-    properties:
-      somecustomFields: {type: string}
-      customFields:
-        type: array
-        items:
-          type: object
-          properties:
-            name: {type: string}
-            value: {type: any}  # Flexible type for dynamic field values
+    minProperties: 1
+    patternProperties:
+      "^.+$":
+        oneOf:
+          - type: [boolean, string, integer]
+          - type: object
+            additionalProperties: false
+            required: [ field ]
+            properties:
+              field: { type: [boolean, string, integer], minLength: 1 }
 
   ### IRIS
   iris_host: {type: string}

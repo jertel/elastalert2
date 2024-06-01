@@ -17,7 +17,7 @@ def rule_config():
         'indexer_connection': {
             'es_host': 'localhost',
             'es_port': 9200,
-            'index_alerts_name': 'test_index'
+            'indexer_alerts_name': 'test_index'
         },
         'indexer_alert_config': {
             'get_index': 'index',
@@ -87,8 +87,8 @@ def test_alert_with_file_config():
     with mock.patch('elasticsearch.Elasticsearch.index') as mock_create, \
             mock.patch('os.path.isfile', return_value=True), \
             mock.patch('builtins.open', new_callable=mock.mock_open,
-                       read_data='indexer_connection:\n  es_host: localhost\n  es_port: 9200\n  index_alerts_name: test_index'), \
-            mock.patch('yaml.load', return_value={'es_host': 'localhost', 'es_port': 9200, 'index_alerts_name': 'test_index'}):
+                       read_data='indexer_connection:\n  es_host: localhost\n  es_port: 9200\n  indexer_alerts_name: test_index'), \
+            mock.patch('yaml.load', return_value={'es_host': 'localhost', 'es_port': 9200, 'indexer_alerts_name': 'test_index'}):
         alert.alert([match])
 
     expected_data = {

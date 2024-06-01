@@ -1100,7 +1100,7 @@ Required:
 
 ``customFields`` Fields must be manually added, all of them will exist in the newly created index. You can set own field or use existing field fron match (see example below for structure).
 
-``index_alerts_name``: The index to use for creating the new alert records.
+``indexer_alerts_name``: The index to use for creating the new alert records.
 
 One of below is required:
 
@@ -1121,7 +1121,7 @@ Example 1 usage::
       verify_certs: False
       es_username: user
       es_password: password
-      index_alerts_name: elastalert2               # You can create own config or use global config just added ``index_alerts_name`` in global config
+      indexer_alerts_name: elastalert2               # You can create own config or use global config just added ``index_alerts_name`` in global config
 
     indexer_alert_config:
       #Existing fields from match alert
@@ -1147,7 +1147,7 @@ Example 2 usage::
 
     alert: indexer
 
-    indexer_config: /opt/elastalert/config/config.yaml       # Uses the ElastAlert 2 global config, with an added ``index_alerts_name`` parameter
+    indexer_config: /opt/elastalert/config/config.yaml       # Uses the ElastAlert 2 global config, with an added ``indexer_alerts_name`` parameter
 
     indexer_alert_config:
       #Existing fields from match alert
