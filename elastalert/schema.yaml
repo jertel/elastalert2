@@ -557,13 +557,7 @@ properties:
   indexer_alert_config:
     type: object
     properties:
-      message: {type: string}
-      host.name: {type: string}
-      event.action: {type: string}
-      event.type: {type: string}
-      winlog.computer_name: {type: string}
-      winlog.event_id: {type: integer}
-      winlog.task: {type: string}
+      somecustomFields: {type: string}
       customFields:
         type: array
         items:
