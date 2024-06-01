@@ -1121,7 +1121,7 @@ Example 1 usage::
       verify_certs: False
       es_username: user
       es_password: password
-      indexer_alerts_name: elastalert2               # You can create own config or use global config just added ``index_alerts_name`` in global config
+      indexer_alerts_name: elastalert2               # You can create own config or use global config just added ``indexer_alerts_name`` in global config
 
     indexer_alert_config:
       #Existing fields from match alert
