@@ -8,6 +8,7 @@
 
 ## Other changes
 - [Docs] Fixed typo in Alerta docs with incorrect number of seconds in a day. - @jertel
+- Update GitHub actions to avoid running publish workflows on forked branches. - @jertel
 
 # 2.18.0
 
