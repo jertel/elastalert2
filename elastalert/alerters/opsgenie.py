@@ -67,7 +67,13 @@ class OpsGenieAlerter(Alerter):
         if self.custom_message is None:
             self.message = self.create_title(matches)
         else:
-            self.message = self.custom_message.format(**matches[0])
+            # Safely get values from matches[0] with a default fallback
+            try:
+                self.message = self.custom_message.format(**matches[0])
+            except KeyError as e:
+                missing_key = str(e)
+                self.message = f"Key {missing_key} is missing in the alert data"
+
         self.recipients = self._parse_responders(self.recipients, self.recipients_args, matches, self.default_reciepients)
         self.teams = self._parse_responders(self.teams, self.teams_args, matches, self.default_teams)
         post = {}
