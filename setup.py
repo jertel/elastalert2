@@ -38,6 +38,7 @@ setup(
         'boto3>=1.34.54',
         'cffi>=1.16.0',
         'croniter>=2.0.2',
+        'numpy<2.0.0',
         'elasticsearch==7.10.1',
         'envparse>=0.2.0',
         'exotel==0.1.5',
