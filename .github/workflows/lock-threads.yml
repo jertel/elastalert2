@@ -22,5 +22,5 @@ jobs:
         with:
           include-discussion-currently-open: true
           discussion-inactive-days: 90
-          issue-inactive-days: 30
-          pr-inactive-days: 30
+          issue-inactive-days: 365
+          pr-inactive-days: 365
