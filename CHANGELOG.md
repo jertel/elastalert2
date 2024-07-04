@@ -23,6 +23,7 @@
 - [workwechat] add workwechat msgtype - [#1369](https://github.com/jertel/elastalert2/pull/1369) - @bitqiu
 - [Pager Duty] Add options: pagerduty_ca_certs, pagerduty_ignore_ssl_errors - [#1418](https://github.com/jertel/elastalert2/pull/1418) - @kexin-zhai
 - Add support for Kibana 8.13 for Kibana Discover - [#1423](https://github.com/jertel/elastalert2/pull/1423) - @nsano-rururu
+- Support DingTalk robot, add sign security settings
 
 # 2.17.0
 
