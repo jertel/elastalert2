@@ -702,6 +702,8 @@ Optional:
 
 ``dingtalk_proxy_pass``: The Dingtalk proxy auth username.
 
+``dingtalk_sign``: Dingtalk sign for security.
+
 Discord
 ~~~~~~~
 
