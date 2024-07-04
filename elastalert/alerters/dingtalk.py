@@ -32,6 +32,16 @@ class DingTalkAlerter(Alerter):
         self.dingtalk_proxy_login = self.rule.get('dingtalk_proxy_login', None)
         self.dingtalk_proxy_password = self.rule.get('dingtalk_proxy_pass', None)
 
+    def sign(self):
+        timestamp = str(round(time.time() * 1000))
+        secret = self.dingtalk_sign
+        secret_enc = secret.encode('utf-8')
+        string_to_sign = '{}\n{}'.format(timestamp, secret)
+        string_to_sign_enc = string_to_sign.encode('utf-8')
+        hmac_code = hmac.new(secret_enc, string_to_sign_enc, digestmod=hashlib.sha256).digest()
+        sign = urllib.parse.quote_plus(base64.b64encode(hmac_code))
+        return timestamp, sign
+
     def alert(self, matches):
         title = self.create_title(matches)
         body = self.create_alert_body(matches)
@@ -43,13 +53,7 @@ class DingTalkAlerter(Alerter):
             'Accept': 'application/json;charset=utf-8'
         }
         if self.dingtalk_sign:
-            timestamp = str(round(time.time() * 1000))
-            secret = self.dingtalk_sign
-            secret_enc = secret.encode('utf-8')
-            string_to_sign = '{}\n{}'.format(timestamp, secret)
-            string_to_sign_enc = string_to_sign.encode('utf-8')
-            hmac_code = hmac.new(secret_enc, string_to_sign_enc, digestmod=hashlib.sha256).digest()
-            sign = urllib.parse.quote_plus(base64.b64encode(hmac_code))
+            timestamp, sign = self.sign()
             self.dingtalk_webhook_url = '{}&timestamp={}&sign={}'.format(self.dingtalk_webhook_url, timestamp, sign)
         if self.dingtalk_msgtype == 'text':
             # text
