@@ -97,14 +97,6 @@ class HiveAlerter(Alerter):
         else:
             return raw
 
-    def assign_custom_severity(self, match: dict, severity_field: str) -> int:
-        severity_value = self.lookup_field(match, severity_field, 1)
-        for severity_scale in self.rule.get("severity_scale"):
-            if severity_scale["min"] <= severity_value <= severity_scale["max"]:
-                return severity_scale["severity"]
-        # Fallback to lowest severity
-        return 1
-
     def alert(self, matches):
         # Build TheHive alert object, starting with some defaults, updating with any
         # user-specified config
@@ -126,9 +118,9 @@ class HiveAlerter(Alerter):
             artifacts = artifacts + self.load_observable_artifacts(match)
             tags.update(self.load_tags(alert_config['tags'], match))
 
-            # Allow a custom severity scale
-            if (severity := alert_config.get("severity")) not in (1, 2, 3, 4):
-                alert_config['severity'] = self.assign_custom_severity(match, severity)
+            # Check for a dynamic severity
+            if (severity_field := alert_config.get("severity")) not in (1, 2, 3, 4):
+                alert_config['severity'] = self.lookup_field(match, severity_field, 1)
 
         alert_config['artifacts'] = artifacts
         alert_config['tags'] = list(tags)
