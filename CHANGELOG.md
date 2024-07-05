@@ -4,10 +4,12 @@
 - TBD
 
 ## New features
-- TBD
+- Add indexer alerter - [#1451](https://github.com/jertel/elastalert2/pull/1451) - @olehpalanskyi
 
 ## Other changes
-- TBD
+- [Docs] Fixed typo in Alerta docs with incorrect number of seconds in a day. - @jertel
+- Update GitHub actions to avoid running publish workflows on forked branches. - @jertel
+- Rewrite `_find_es_dict_by_key` per [discussion #1450](https://github.com/jertel/elastalert2/discussions/1450) for fieldnames literally ending in `.keyword` [#1459](https://github.com/jertel/elastalert2/pull/1459) - @jmacdone @jertel
 
 # 2.18.0
 

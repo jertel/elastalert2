@@ -538,6 +538,35 @@ properties:
   http_post2_ignore_ssl_errors: {type: boolean}
   http_post2_timeout: {type: integer}
 
+  ### INDEXER
+  indexer_alerts_name: {type: string}
+  indexer_config: {type: string}
+  indexer_connection:
+    type: object
+    properties:
+      es_host: {type: string}
+      es_hosts: {type: array, items: {type: string}}
+      es_port: {type: integer}
+      ssl_show_warn: {type: boolean}
+      use_ssl: {type: boolean}
+      verify_certs: {type: boolean}
+      ca_cert: {type: string}
+      es_username: {type: string}
+      es_password: {type: string}
+      index_alerts_name: {type: string}
+  indexer_alert_config:
+    type: object
+    minProperties: 1
+    patternProperties:
+      "^.+$":
+        oneOf:
+          - type: [boolean, string, integer]
+          - type: object
+            additionalProperties: false
+            required: [ field ]
+            properties:
+              field: { type: [boolean, string, integer], minLength: 1 }
+
   ### IRIS
   iris_host: {type: string}
   iris_api_token: {type: string}
