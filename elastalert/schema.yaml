@@ -438,6 +438,7 @@ properties:
   dingtalk_proxy: {type: string}
   dingtalk_proxy_login: {type: string}
   dingtalk_proxy_pass: {type: string}
+  dingtalk_sign: {type: string}
 
   ## Discord
   discord_webhook_url: {type: string}

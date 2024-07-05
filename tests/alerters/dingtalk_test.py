@@ -12,6 +12,23 @@ from elastalert.loaders import FileRulesLoader
 from elastalert.util import EAException
 
 
+def test_dingtalk_sign(caplog):
+    caplog.set_level(logging.INFO)
+    rule = {
+        'type': 'any',
+        'dingtalk_sign': "xxx",
+        'alert': [],
+        'alert_subject': 'Test DingTalk'
+    }
+    rules_loader = FileRulesLoader({})
+    rules_loader.load_modules(rule)
+    alert = DingTalkAlerter(rule)
+
+    with mock.patch('time.time', return_value=1720063700033):
+        timestamp, sign = alert.sign()
+        assert sign == 'p7C%2BjdCVtGt77XXVBqP6I9ZzC8T0X9tv%2BWOduuQ53ZM%3D'
+
+
 def test_dingtalk_sign_text(caplog):
     caplog.set_level(logging.INFO)
     rule = {
