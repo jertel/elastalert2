@@ -698,9 +698,11 @@ Optional:
 
 ``dingtalk_proxy``: By default ElastAlert 2 will not use a network proxy to send notifications to Dingtalk. Set this option using ``hostname:port`` if you need to use a proxy. only supports https.
 
-``dingtalk_proxy_login``: The Dingtalk proxy auth username.
+``dingtalk_proxy_login``: The DingTalk proxy auth username.
 
-``dingtalk_proxy_pass``: The Dingtalk proxy auth username.
+``dingtalk_proxy_pass``: The DingTalk proxy auth username.
+
+``dingtalk_sign``: DingTalk HMAC secret, used for message authentication. See https://open.dingtalk.com/document/robots/customize-robot-security-settings for more information. Note that the algorithm provides authentication that *some* message was recently sent (within an hour) but does not authenticate the integrity of the current message itself. 
 
 Discord
 ~~~~~~~

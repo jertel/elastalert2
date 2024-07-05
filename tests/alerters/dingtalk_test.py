@@ -12,6 +12,71 @@ from elastalert.loaders import FileRulesLoader
 from elastalert.util import EAException
 
 
+def test_dingtalk_sign(caplog):
+    caplog.set_level(logging.INFO)
+    rule = {
+        'type': 'any',
+        'dingtalk_sign': "xxx",
+        'alert': [],
+        'alert_subject': 'Test DingTalk'
+    }
+    rules_loader = FileRulesLoader({})
+    rules_loader.load_modules(rule)
+    alert = DingTalkAlerter(rule)
+
+    with mock.patch('time.time', return_value=1720063700033):
+        timestamp, sign = alert.sign()
+        assert sign == 'p7C%2BjdCVtGt77XXVBqP6I9ZzC8T0X9tv%2BWOduuQ53ZM%3D'
+
+
+def test_dingtalk_sign_text(caplog):
+    caplog.set_level(logging.INFO)
+    rule = {
+        'name': 'Test DingTalk Rule',
+        'type': 'any',
+        'dingtalk_access_token': 'xxxxxxx',
+        'dingtalk_msgtype': 'text',
+        'dingtalk_sign': "xxx",
+        'alert': [],
+        'alert_subject': 'Test DingTalk'
+    }
+    rules_loader = FileRulesLoader({})
+    rules_loader.load_modules(rule)
+    alert = DingTalkAlerter(rule)
+
+    match = {
+        '@timestamp': '2021-01-01T00:00:00',
+        'somefield': 'foobarbaz'
+    }
+    with mock.patch('requests.post') as mock_post_request:
+        with mock.patch('time.time', return_value=1720063700033):
+            timestamp, sign = alert.sign()
+            url = '{}&timestamp={}&sign={}'.format('https://oapi.dingtalk.com/robot/send?access_token=xxxxxxx', timestamp, sign)
+
+            alert.alert([match])
+
+            expected_data = {
+                'msgtype': 'text',
+                'text': {'content': 'Test DingTalk Rule\n\n@timestamp: 2021-01-01T00:00:00\nsomefield: foobarbaz\n'}
+            }
+
+            mock_post_request.assert_called_once_with(
+                url,
+                data=mock.ANY,
+                headers={
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json;charset=utf-8'
+                },
+                proxies=None,
+                auth=None
+            )
+
+            actual_data = json.loads(mock_post_request.call_args_list[0][1]['data'])
+            assert expected_data == actual_data
+
+    assert ('elastalert', logging.INFO, 'Trigger sent to dingtalk') == caplog.record_tuples[0]
+
+
 def test_dingtalk_text(caplog):
     caplog.set_level(logging.INFO)
     rule = {
