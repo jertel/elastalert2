@@ -1,4 +1,9 @@
+import base64
+import hashlib
+import hmac
 import json
+import time
+import urllib
 import warnings
 
 import requests
@@ -17,6 +22,7 @@ class DingTalkAlerter(Alerter):
         super(DingTalkAlerter, self).__init__(rule)
         self.dingtalk_access_token = self.rule.get('dingtalk_access_token', None)
         self.dingtalk_webhook_url = 'https://oapi.dingtalk.com/robot/send?access_token=%s' % (self.dingtalk_access_token)
+        self.dingtalk_sign = self.rule.get('dingtalk_sign', None)
         self.dingtalk_msgtype = self.rule.get('dingtalk_msgtype', 'text')
         self.dingtalk_single_title = self.rule.get('dingtalk_single_title', 'elastalert')
         self.dingtalk_single_url = self.rule.get('dingtalk_single_url', '')
@@ -25,6 +31,16 @@ class DingTalkAlerter(Alerter):
         self.dingtalk_proxy = self.rule.get('dingtalk_proxy', None)
         self.dingtalk_proxy_login = self.rule.get('dingtalk_proxy_login', None)
         self.dingtalk_proxy_password = self.rule.get('dingtalk_proxy_pass', None)
+
+    def sign(self):
+        timestamp = str(round(time.time() * 1000))
+        secret = self.dingtalk_sign
+        secret_enc = secret.encode('utf-8')
+        string_to_sign = '{}\n{}'.format(timestamp, secret)
+        string_to_sign_enc = string_to_sign.encode('utf-8')
+        hmac_code = hmac.new(secret_enc, string_to_sign_enc, digestmod=hashlib.sha256).digest()
+        sign = urllib.parse.quote_plus(base64.b64encode(hmac_code))
+        return timestamp, sign
 
     def alert(self, matches):
         title = self.create_title(matches)
@@ -36,7 +52,9 @@ class DingTalkAlerter(Alerter):
             'Content-Type': 'application/json',
             'Accept': 'application/json;charset=utf-8'
         }
-
+        if self.dingtalk_sign:
+            timestamp, sign = self.sign()
+            self.dingtalk_webhook_url = '{}&timestamp={}&sign={}'.format(self.dingtalk_webhook_url, timestamp, sign)
         if self.dingtalk_msgtype == 'text':
             # text
             payload = {
