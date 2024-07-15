@@ -4,6 +4,17 @@
 - TBD
 
 ## New features
+- TBD
+
+## Other changes
+- TBD
+
+# 2.19.0
+
+## Breaking changes
+- None
+
+## New features
 - Add indexer alerter - [#1451](https://github.com/jertel/elastalert2/pull/1451) - @olehpalanskyi
 
 ## Other changes
