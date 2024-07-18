@@ -7,6 +7,7 @@
 - TBD
 
 ## Other changes
+- [indexer] fixed fields types error on instance indexer_alert_config in schema.yml
 - TBD
 
 # 2.19.0
