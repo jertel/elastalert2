@@ -53,9 +53,20 @@ definitions:
       name: {type: string}
       value: {type: string}
 
+  msPowerAutomateFact: &msPowerAutomateFact
+    type: object
+    additionalProperties: false
+    properties:
+      name: {type: string}
+      value: {type: string}    
+
   arrayOfMsTeamsFacts: &arrayOfMsTeamsFacts
     type: array
     items: *msTeamsFact
+
+  arrayOfMsPowerAutomateFacts: &arrayOfMsPowerAutomateFacts
+    type: array
+    items: *msPowerAutomateFact
 
   mattermostField: &mattermostField
     type: object
@@ -667,6 +678,22 @@ properties:
   ms_teams_ignore_ssl_errors: {type: boolean}
   ms_teams_attach_opensearch_discover_url: {type: boolean}
   ms_teams_opensearch_discover_title: {type: string}
+
+
+  ### Microsoft Power Automate
+  ms_power_automate_webhook_url: *arrayOfString
+  ms_power_automate_alert_summary: {type: string}
+  ms_power_automate_proxy: {type: string}
+  ms_power_automate_alert_fixed_width: {type: boolean}
+  ms_power_automate_alert_facts: *arrayOfMsPowerAutomateFacts
+  ms_power_automate_kibana_discover_attach_url: {type: boolean}
+  ms_power_automate_kibana_discover_title: {type: string}
+  ms_power_automate_kibana_discover_color: {type: string}
+  ms_power_automate_ca_certs: {type: [boolean, string]}
+  ms_power_automate_ignore_ssl_errors: {type: boolean}
+  ms_power_automate_opensearch_discover_attach_url: {type: boolean}
+  ms_power_automate_opensearch_discover_title: {type: string}
+  ms_power_automate_teams_card_width_full: {type: boolean}
 
   ### Opsgenie
   opsgenie_key: {type: string}
