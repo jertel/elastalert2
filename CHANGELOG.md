@@ -9,6 +9,11 @@
 ## Other changes
 - TBD
 
+# 2.20.0
+
+## New features
+- New Alert Channel with Microsoft Power Automate
+
 # 2.19.0
 
 ## Breaking changes
