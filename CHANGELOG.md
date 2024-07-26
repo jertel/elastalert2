@@ -7,7 +7,7 @@
 - TBD
 
 ## Other changes
-- TBD
+- [Indexer] Fixed fields types error on instance indexer_alert_config in schema.yml - [#1499](https://github.com/jertel/elastalert2/pull/1499) - @olehpalanskyi
 
 # 2.19.0
 
