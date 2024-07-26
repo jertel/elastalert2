@@ -4,15 +4,10 @@
 - TBD
 
 ## New features
-- TBD
+- [MS Power Automate] New Alert Channel with Microsoft Power Automate - [#1505](https://github.com/jertel/elastalert2/pull/1505) - @marssilva
 
 ## Other changes
 - TBD
-
-# 2.20.0
-
-## New features
-- New Alert Channel with Microsoft Power Automate
 
 # 2.19.0
 
