@@ -1632,7 +1632,7 @@ Example usage::
     ms_teams_webhook_url: "MS Teams Webhook URL"
 
 Microsoft Power Automate
-~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~
 
 Microsoft Power Automate alerter will send a notification to a predefined Microsoft Teams channel.
 
