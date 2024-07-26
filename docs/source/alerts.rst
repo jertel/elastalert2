@@ -1638,7 +1638,7 @@ Microsoft Power Automate alerter will send a notification to a predefined Micros
 
 The alerter requires the following options:
 
-``ms_power_automate_webhook_url``: The webhook URL provided in Power Automate, `doc Microsoft <https://support.microsoft.com/en-us/office/post-a-workflow-when-a-webhook-request-is-received-in-microsoft-teams-8ae491c7-0394-4861-ba59-055e33f75498>`. After creating the flow select your Teams channel under "Send each adaptive card". You can use a list of URLs to send to multiple channels.
+``ms_power_automate_webhook_url``: The webhook URL provided in Power Automate, `doc Microsoft <https://support.microsoft.com/en-us/office/post-a-workflow-when-a-webhook-request-is-received-in-microsoft-teams-8ae491c7-0394-4861-ba59-055e33f75498>`_. After creating the flow select your Teams channel under "Send each adaptive card". You can use a list of URLs to send to multiple channels.
 
 Optional:
 
@@ -1648,7 +1648,7 @@ Optional:
 
 ``ms_power_automate_proxy``: By default ElastAlert 2 will not use a network proxy to send notifications to MS Teams. Set this option using ``hostname:port`` if you need to use a proxy. only supports https.
 
-``ms_power_automate_teams_card_width_full``: By default, this is ``False`` and the notification will be sent to MS Teams without rendering full width in Microsoft Teams. Setting this attribute to ``True`` will render the alert in full width. `doc feature <https://github.com/microsoft/AdaptiveCards/issues/8102>`
+``ms_power_automate_teams_card_width_full``: By default, this is ``False`` and the notification will be sent to MS Teams without rendering full width in Microsoft Teams. Setting this attribute to ``True`` will render the alert in full width. `doc feature <https://github.com/microsoft/AdaptiveCards/issues/8102>`_.
 
 ``ms_power_automate_alert_facts``: You can add additional facts to your MS Teams alerts using this field. Specify the title using `name` and a value for the field or arbitrary text using `value`. 
 
@@ -1729,7 +1729,7 @@ Example usage::
     - ms_power_automate
 
   ms_power_automate_webhook_url: >-
-    <webhook> 
+    webhook 
 
 OpsGenie
 ~~~~~~~~
