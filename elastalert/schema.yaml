@@ -573,11 +573,16 @@ properties:
       "^.+$":
         oneOf:
           - type: [boolean, string, integer]
+          - type: array
+            items:
+                type: object
+                properties:
+                  name: { type: string , minLength: 1 }
+                  value: { type: [boolean, string, integer] , minLength: 1 }
+                  "^.+$": { type: [boolean, string, integer], minLength: 1 }
           - type: object
-            additionalProperties: false
-            required: [ field ]
             properties:
-              field: { type: [boolean, string, integer], minLength: 1 }
+              "^.+$": { type: [boolean, string, integer], minLength: 1 }
 
   ### IRIS
   iris_host: {type: string}
