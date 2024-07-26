@@ -18,7 +18,6 @@ class MsPowerAutomateAlerter(Alerter):
             self.ms_power_automate_webhook_url = [self.ms_power_automate_webhook_url]
         self.ms_power_automate_proxy = self.rule.get('ms_power_automate_proxy', None)
         self.ms_power_automate_alert_summary = self.rule.get('ms_power_automate_alert_summary', None)
-        self.ms_power_automate_alert_fixed_width = self.rule.get('ms_power_automate_alert_fixed_width', False)
         self.ms_power_automate_kibana_discover_color = self.rule.get('ms_power_automate_kibana_discover_color', 'default')
         self.ms_power_automate_ca_certs = self.rule.get('ms_power_automate_ca_certs')
         self.ms_power_automate_ignore_ssl_errors = self.rule.get('ms_power_automate_ignore_ssl_errors', False)
@@ -28,12 +27,6 @@ class MsPowerAutomateAlerter(Alerter):
         self.ms_power_automate_opensearch_discover_attach_url = self.rule.get('ms_power_automate_opensearch_discover_attach_url', False)
         self.ms_power_automate_opensearch_discover_title = self.rule.get('ms_power_automate_opensearch_discover_title', 'Discover in opensearch')
         self.ms_power_automate_teams_card_width_full = self.rule.get('ms_power_automate_teams_card_width_full', False)
-
-    def format_body(self, body):
-        if self.ms_power_automate_alert_fixed_width:
-            body = body.replace('`', "'")
-            body = "```{0}```".format('```\n\n```'.join(x for x in body.split('\n'))).replace('\n``````', '')
-        return body
 
     def populate_facts(self, matches):
         alert_facts = []
@@ -46,7 +39,6 @@ class MsPowerAutomateAlerter(Alerter):
 
     def alert(self, matches):
         body = self.create_alert_body(matches)
-        body = self.format_body(body)
 
         title = self.create_title(matches)
         summary = title if self.ms_power_automate_alert_summary is None else self.ms_power_automate_alert_summary

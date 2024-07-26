@@ -684,7 +684,6 @@ properties:
   ms_power_automate_webhook_url: *arrayOfString
   ms_power_automate_alert_summary: {type: string}
   ms_power_automate_proxy: {type: string}
-  ms_power_automate_alert_fixed_width: {type: boolean}
   ms_power_automate_alert_facts: *arrayOfMsPowerAutomateFacts
   ms_power_automate_kibana_discover_attach_url: {type: boolean}
   ms_power_automate_kibana_discover_title: {type: string}

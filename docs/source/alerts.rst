@@ -35,6 +35,7 @@ or
       - linenotify
       - mattermost
       - ms_teams
+      - ms_power_automate
       - opsgenie
       - pagerduty
       - pagertree
@@ -1629,6 +1630,106 @@ Example usage::
       - "ms_teams"
     ms_teams_theme_color: "#6600ff"
     ms_teams_webhook_url: "MS Teams Webhook URL"
+
+Microsoft Power Automate
+~~~~~~~~~~~~~~~
+
+Microsoft Power Automate alerter will send a notification to a predefined Microsoft Teams channel.
+
+The alerter requires the following options:
+
+``ms_power_automate_webhook_url``: The webhook URL provided in Power Automate, `doc Microsoft <https://support.microsoft.com/en-us/office/post-a-workflow-when-a-webhook-request-is-received-in-microsoft-teams-8ae491c7-0394-4861-ba59-055e33f75498>`. After creating the flow select your Teams channel under "Send each adaptive card". You can use a list of URLs to send to multiple channels.
+
+Optional:
+
+``ms_power_automate_alert_summary``: Microsoft Power Automate use this value for notification title, defaults to `Alert Subject <https://elastalert2.readthedocs.io/en/latest/alerts.html#alert-subject>`_. You can set this value with arbitrary text if you don't want to use the default.
+
+``ms_power_automate_kibana_discover_color``: By default, the alert will be published with the ``default`` type blue if not specified. If set to ``positive``, action is displayed with a positive style (typically the button becomes accent color), If set to ``destructive``, Action is displayed with a destructive style (typically the button becomes red)
+
+``ms_power_automate_proxy``: By default ElastAlert 2 will not use a network proxy to send notifications to MS Teams. Set this option using ``hostname:port`` if you need to use a proxy. only supports https.
+
+``ms_power_automate_teams_card_width_full``: By default, this is ``False`` and the notification will be sent to MS Teams without rendering full width in Microsoft Teams. Setting this attribute to ``True`` will render the alert in full width. `doc feature <https://github.com/microsoft/AdaptiveCards/issues/8102>`
+
+``ms_power_automate_alert_facts``: You can add additional facts to your MS Teams alerts using this field. Specify the title using `name` and a value for the field or arbitrary text using `value`. 
+
+Example ms_power_automate_alert_facts::
+
+    ms_power_automate_alert_facts:
+      - name: Team
+        value: Teste
+      - name: Level
+        value: Critical 
+
+``ms_power_automate_kibana_discover_attach_url``: Enables the attachment of the ``kibana_discover_url`` to the MS Power Automate notification. The config ``generate_kibana_discover_url`` must also be ``True`` in order to generate the url. Defaults to ``False``.
+
+``ms_power_automate_kibana_discover_title``: The title of the Kibana Discover url attachment. Defaults to ``Discover in Kibana``.
+
+``ms_power_automate_opensearch_discover_attach_url``: Enables the attachment of the ``opensearch_discover_url`` to the MS Teams notification. The config ``generate_opensearch_discover_url`` must also be ``True`` in order to generate the url. Defaults to ``False``.
+
+``ms_power_automate_opensearch_discover_title``: The title of the Opensearch Discover url attachment. Defaults to ``Discover in opensearch``.
+
+Example ms_power_automate_kibana_discover_attach_url, ms_power_automate_kibana_discover_title::
+
+    # (Required)
+    generate_kibana_discover_url: True
+    kibana_discover_app_url: "http://localhost:5601/app/discover#/"
+    kibana_discover_index_pattern_id: "4babf380-c3b1-11eb-b616-1b59c2feec54"
+    kibana_discover_version: "8.13"
+
+    # (Optional)
+    kibana_discover_from_timedelta:
+      minutes: 10
+    kibana_discover_to_timedelta:
+      minutes: 10
+
+    # (Required)
+    ms_power_automate_kibana_discover_attach_url: True
+
+    # (Optional)
+    ms_power_automate_kibana_discover_title: "Discover in Kibana"
+
+Example ms_power_automate_opensearch_discover_attach_url, ms_power_automate_opensearch_discover_title::
+
+    # (Required)
+    generate_opensearch_discover_url: True
+    opensearch_discover_app_url: "http://localhost:5601/app/discover#/"
+    opensearch_discover_index_pattern_id: "4babf380-c3b1-11eb-b616-1b59c2feec54"
+    opensearch_discover_version: "7.15"
+
+    # (Optional)
+    opensearch_discover_from_timedelta:
+      minutes: 10
+    opensearch_discover_to_timedelta:
+      minutes: 10
+
+    # (Required)
+    ms_power_automate_opensearch_discover_attach_url: True
+
+    # (Optional)
+    ms_power_automate_opensearch_discover_title: "Discover in opensearch"
+
+``ms_power_automate_ca_certs``: Set this option to ``True`` or a path to a CA cert bundle or directory (eg: ``/etc/ssl/certs/ca-certificates.crt``) to validate the SSL certificate.
+
+``ms_power_automate_ignore_ssl_errors``: By default ElastAlert 2 will verify SSL certificate. Set this option to ``True`` if you want to ignore SSL errors.
+
+Example usage::
+
+  ms_power_automate_kibana_discover_attach_url: true
+  ms_power_automate_kibana_discover_title: "See More"
+  ms_power_automate_kibana_discover_color: 'destructive'
+  ms_power_automate_teams_card_width_full: true
+
+  ms_power_automate_alert_facts: 
+    - name: Team
+      value: Teste
+    - name: Level
+      value: Critical  
+
+  alert:
+    - ms_power_automate
+
+  ms_power_automate_webhook_url: >-
+    <webhook> 
 
 OpsGenie
 ~~~~~~~~
