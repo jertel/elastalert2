@@ -1,11 +1,11 @@
 import json
 import logging
 from unittest import mock
-import pytest
 
 from elastalert.alerters.powerautomate import MsPowerAutomateAlerter
 from elastalert.alerts import BasicMatchString
 from elastalert.loaders import FileRulesLoader
+
 
 def test_ms_power_automate(caplog):
     caplog.set_level(logging.INFO)
@@ -50,7 +50,7 @@ def test_ms_power_automate(caplog):
                             "wrap": True
                         }
                     ],
-                        "actions": []
+                    "actions": []
                 }
             }
         ]
@@ -62,13 +62,11 @@ def test_ms_power_automate(caplog):
         proxies=None,
         verify=True
     )
-    
     assert expected_data == json.loads(mock_post_request.call_args_list[0][1]['data'])
     assert ('elastalert', logging.INFO, 'Alert sent to Power Automate') == caplog.record_tuples[0]
 
 
 def test_ms_power_automate_alert_facts():
-    
     rule = {
         'name': 'Test Rule',
         'type': 'any',
@@ -152,7 +150,7 @@ def test_ms_power_automate_alert_facts():
                             ],
                         }
                     ],
-                        "actions": []
+                    "actions": []
                 }
             }
         ]
@@ -166,6 +164,7 @@ def test_ms_power_automate_alert_facts():
         verify=True
     )
     assert expected_data == json.loads(mock_post_request.call_args_list[0][1]['data'])
+
 
 def test_ms_power_automate_proxy():
     rule = {
@@ -210,7 +209,7 @@ def test_ms_power_automate_proxy():
                             "wrap": True
                         }
                     ],
-                        "actions": []
+                    "actions": []
                 }
             }
         ]
@@ -224,6 +223,7 @@ def test_ms_power_automate_proxy():
         verify=True
     )
     assert expected_data == json.loads(mock_post_request.call_args_list[0][1]['data'])
+
 
 def test_ms_power_automate_kibana_discover_attach_url_when_generated():
     rule = {
@@ -268,14 +268,14 @@ def test_ms_power_automate_kibana_discover_attach_url_when_generated():
                             "wrap": True
                         }
                     ],
-                        "actions": [
-                            {
+                    "actions": [
+                        {
                             "type": "Action.OpenUrl",
                             "title": "Discover in Kibana",
                             "url": match['kibana_discover_url'],
                             "style": "default"
-                            }
-                        ],
+                        }
+                    ],
                 }
             }
         ]
@@ -290,13 +290,14 @@ def test_ms_power_automate_kibana_discover_attach_url_when_generated():
     )
     actual_data = json.loads(mock_post_request.call_args_list[0][1]['data'])
     assert expected_data == actual_data
+
 
 def test_ms_power_automate_kibana_discover_color_when_positive():
     rule = {
         'name': 'Test Rule',
         'type': 'any',
-        'ms_power_automate_kibana_discover_attach_url': True,
-        'ms_power_automate_kibana_discover_color' : 'positive',
+        'ms_power_automate_kibana_discover_attach_url': 'true',
+        'ms_power_automate_kibana_discover_color': 'positive',
         'ms_power_automate_webhook_url': 'http://test.webhook.url',
         'ms_power_automate_alert_summary': 'Alert from ElastAlert',
         'alert': [],
@@ -335,14 +336,14 @@ def test_ms_power_automate_kibana_discover_color_when_positive():
                             "wrap": True
                         }
                     ],
-                        "actions": [
-                            {
+                    "actions": [
+                        {
                             "type": "Action.OpenUrl",
                             "title": "Discover in Kibana",
                             "url": match['kibana_discover_url'],
                             "style": rule['ms_power_automate_kibana_discover_color']
-                            }
-                        ],
+                        }
+                    ],
                 }
             }
         ]
@@ -357,13 +358,14 @@ def test_ms_power_automate_kibana_discover_color_when_positive():
     )
     actual_data = json.loads(mock_post_request.call_args_list[0][1]['data'])
     assert expected_data == actual_data
+
 
 def test_ms_power_automate_kibana_discover_color_when_destructive():
     rule = {
         'name': 'Test Rule',
         'type': 'any',
-        'ms_power_automate_kibana_discover_attach_url': True,
-        'ms_power_automate_kibana_discover_color' : 'destructive',
+        'ms_power_automate_kibana_discover_attach_url': 'true',
+        'ms_power_automate_kibana_discover_color': 'destructive',
         'ms_power_automate_webhook_url': 'http://test.webhook.url',
         'ms_power_automate_alert_summary': 'Alert from ElastAlert',
         'alert': [],
@@ -402,14 +404,14 @@ def test_ms_power_automate_kibana_discover_color_when_destructive():
                             "wrap": True
                         }
                     ],
-                        "actions": [
-                            {
+                    "actions": [
+                        {
                             "type": "Action.OpenUrl",
                             "title": "Discover in Kibana",
                             "url": match['kibana_discover_url'],
                             "style": rule['ms_power_automate_kibana_discover_color']
-                            }
-                        ],
+                        }
+                    ],
                 }
             }
         ]
@@ -424,16 +426,17 @@ def test_ms_power_automate_kibana_discover_color_when_destructive():
     )
     actual_data = json.loads(mock_post_request.call_args_list[0][1]['data'])
     assert expected_data == actual_data
+
 
 def test_ms_power_automate_teams_card_width_full():
     rule = {
         'name': 'Test Rule',
         'type': 'any',
         'ms_power_automate_kibana_discover_attach_url': True,
-        'ms_power_automate_kibana_discover_color' : 'destructive',
+        'ms_power_automate_kibana_discover_color': 'destructive',
         'ms_power_automate_webhook_url': 'http://test.webhook.url',
         'ms_power_automate_alert_summary': 'Alert from ElastAlert',
-        'ms_power_automate_teams_card_width_full' : True,
+        'ms_power_automate_teams_card_width_full': True,
         'alert': [],
         'alert_subject': 'Cool subject',
     }
@@ -470,17 +473,17 @@ def test_ms_power_automate_teams_card_width_full():
                             "wrap": True
                         }
                     ],
-                        "actions": [
-                            {
+                    "actions": [
+                        {
                             "type": "Action.OpenUrl",
                             "title": "Discover in Kibana",
                             "url": match['kibana_discover_url'],
                             "style": rule['ms_power_automate_kibana_discover_color']
-                            }
-                        ],
-                        "msteams": {
-                            "width": "Full"
                         }
+                    ],
+                    "msteams": {
+                        "width": "Full"
+                    }
                 }
             }
         ]
@@ -495,6 +498,7 @@ def test_ms_power_automate_teams_card_width_full():
     )
     actual_data = json.loads(mock_post_request.call_args_list[0][1]['data'])
     assert expected_data == actual_data
+
 
 def test_ms_power_automate_kibana_discover_title():
     rule = {
@@ -541,14 +545,14 @@ def test_ms_power_automate_kibana_discover_title():
                             "wrap": True
                         }
                     ],
-                        "actions": [
-                            {
+                    "actions": [
+                        {
                             "type": "Action.OpenUrl",
                             "title": rule['ms_power_automate_kibana_discover_title'],
                             "url": match['kibana_discover_url'],
                             "style": rule['ms_power_automate_kibana_discover_color']
-                            }
-                        ],
+                        }
+                    ],
                 }
             }
         ]
