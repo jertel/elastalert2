@@ -51,6 +51,7 @@ Currently, we have support built in for these alert types:
 - Line Notify
 - Mattermost
 - Microsoft Teams
+- Microsoft Power Automate
 - OpsGenie
 - PagerDuty
 - PagerTree
