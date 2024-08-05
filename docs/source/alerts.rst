@@ -1642,7 +1642,7 @@ The alerter requires the following options:
 
 Optional:
 
-``ms_power_automate_summary_text_size``: By default, it is set to the value ``large``. This field supports the values, default, small, medium and extraLarge.
+``ms_power_automate_summary_text_size``: By default, is set to the value ``large``. This field supports the values, default, small, medium and extraLarge.
 
 ``ms_power_automate_body_text_size``: By default, this field is not set, and has the default behavior in MS Power Automate. This field supports the values, default, small, medium, large and extraLarge.
 
