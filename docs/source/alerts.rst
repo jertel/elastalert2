@@ -1642,6 +1642,10 @@ The alerter requires the following options:
 
 Optional:
 
+``ms_power_automate_summary_text_size``: By default, it is set to the value ``large``. This field supports the values, default, small, medium and extraLarge.
+
+``ms_power_automate_body_text_size``: By default, this field is not set, and has the default behavior in MS Power Automate. This field supports the values, default, small, medium, large and extraLarge.
+
 ``ms_power_automate_alert_summary``: Microsoft Power Automate use this value for notification title, defaults to `alert_subject <https://elastalert2.readthedocs.io/en/latest/alerts.html#alert-subject>`_. You can set this value with arbitrary text if you don't want to use the default.
 
 ``ms_power_automate_kibana_discover_color``: By default, the alert will be published with the ``default`` type blue if not specified. If set to ``positive``, action is displayed with a positive style (typically the button becomes accent color), If set to ``destructive``, Action is displayed with a destructive style (typically the button becomes red)
