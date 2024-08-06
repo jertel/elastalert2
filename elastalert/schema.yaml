@@ -688,8 +688,8 @@ properties:
   ### Microsoft Power Automate
   ms_power_automate_webhook_url: *arrayOfString
   ms_power_automate_alert_summary: {type: string}
-  ms_power_automate_summary_text_size: {type: string}
-  ms_power_automate_body_text_size: {type: string}
+  ms_power_automate_summary_text_size: {type: string, enum: ['default', 'small', 'medium', 'large', 'extraLarge']}
+  ms_power_automate_body_text_size: {type: string, enum: ['default', 'small', 'medium', 'large', 'extraLarge']}
   ms_power_automate_proxy: {type: string}
   ms_power_automate_alert_facts: *arrayOfMsPowerAutomateFacts
   ms_power_automate_kibana_discover_attach_url: {type: boolean}
