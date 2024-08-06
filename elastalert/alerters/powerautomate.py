@@ -18,6 +18,8 @@ class MsPowerAutomateAlerter(Alerter):
             self.ms_power_automate_webhook_url = [self.ms_power_automate_webhook_url]
         self.ms_power_automate_proxy = self.rule.get('ms_power_automate_proxy', None)
         self.ms_power_automate_alert_summary = self.rule.get('ms_power_automate_alert_summary', None)
+        self.ms_power_automate_summary_text_size = self.rule.get('ms_power_automate_summary_text_size', 'large')
+        self.ms_power_automate_body_text_size = self.rule.get('ms_power_automate_body_text_size', '')
         self.ms_power_automate_kibana_discover_color = self.rule.get('ms_power_automate_kibana_discover_color', 'default')
         self.ms_power_automate_ca_certs = self.rule.get('ms_power_automate_ca_certs')
         self.ms_power_automate_ignore_ssl_errors = self.rule.get('ms_power_automate_ignore_ssl_errors', False)
@@ -68,7 +70,8 @@ class MsPowerAutomateAlerter(Alerter):
                                 "type": "TextBlock",
                                 "text": summary,
                                 "weight": "Bolder",
-                                "size": "ExtraLarge",
+                                "wrap": True,
+                                "size": self.ms_power_automate_summary_text_size
                             },
                             {
                                 "type": "TextBlock",
@@ -82,6 +85,9 @@ class MsPowerAutomateAlerter(Alerter):
                 }
             ]
         }
+
+        if self.ms_power_automate_body_text_size != '':
+            payload['attachments'][0]['content']['body'][1]['size'] = self.ms_power_automate_body_text_size
 
         if self.ms_power_automate_teams_card_width_full:
             payload['attachments'][0]['content']['msteams'] = {

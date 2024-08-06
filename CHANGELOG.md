@@ -4,7 +4,7 @@
 - TBD
 
 ## New features
-- [MS Power Automate] New Alert Channel with Microsoft Power Automate - [#1505](https://github.com/jertel/elastalert2/pull/1505) - @marssilva
+- [MS Power Automate] New Alert Channel with Microsoft Power Automate - [#1505](https://github.com/jertel/elastalert2/pull/1505)  [#1513](https://github.com/jertel/elastalert2/pull/1513) - @marssilva
 
 ## Other changes
 - [Indexer] Fixed fields types error on instance indexer_alert_config in schema.yml - [#1499](https://github.com/jertel/elastalert2/pull/1499) - @olehpalanskyi
