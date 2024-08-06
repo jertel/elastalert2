@@ -694,7 +694,7 @@ properties:
   ms_power_automate_alert_facts: *arrayOfMsPowerAutomateFacts
   ms_power_automate_kibana_discover_attach_url: {type: boolean}
   ms_power_automate_kibana_discover_title: {type: string}
-  ms_power_automate_kibana_discover_color: {type: string}
+  ms_power_automate_kibana_discover_color: {type: string, enum: ['default', 'positive', 'destructive']}
   ms_power_automate_ca_certs: {type: [boolean, string]}
   ms_power_automate_ignore_ssl_errors: {type: boolean}
   ms_power_automate_opensearch_discover_attach_url: {type: boolean}
