@@ -118,6 +118,10 @@ class HiveAlerter(Alerter):
             artifacts = artifacts + self.load_observable_artifacts(match)
             tags.update(self.load_tags(alert_config['tags'], match))
 
+            # Check for a dynamic severity
+            if (severity_field := alert_config.get("severity")) not in (1, 2, 3, 4):
+                alert_config['severity'] = self.lookup_field(match, severity_field, 1)
+
         alert_config['artifacts'] = artifacts
         alert_config['tags'] = list(tags)
 
