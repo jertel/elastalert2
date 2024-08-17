@@ -434,6 +434,212 @@ def test_ms_power_automate_kibana_discover_color_when_destructive():
     assert expected_data == actual_data
 
 
+def test_ms_power_automate_opensearch_discover_attach_url_when_generated():
+    rule = {
+        'name': 'Test Rule',
+        'type': 'any',
+        'ms_power_automate_opensearch_discover_attach_url': True,
+        'ms_power_automate_webhook_url': 'http://test.webhook.url',
+        'ms_power_automate_alert_summary': 'Alert from ElastAlert',
+        'alert': [],
+        'alert_subject': 'Cool subject',
+    }
+    rules_loader = FileRulesLoader({})
+    rules_loader.load_modules(rule)
+    alert = MsPowerAutomateAlerter(rule)
+    match = {
+        '@timestamp': '2024-07-19T00:00:00',
+        'opensearch_discover_url': 'http://opensearch#discover'
+    }
+    with mock.patch('requests.post') as mock_post_request:
+        alert.alert([match])
+
+    expected_data = {
+        "type": "message",
+        "attachments": [
+            {
+                "contentType": "application/vnd.microsoft.card.adaptive",
+                "content": {
+                    "type": "AdaptiveCard",
+                    "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+                    "version": "1.4",
+                    "body": [
+                        {
+                            "type": "TextBlock",
+                            "text": rule['ms_power_automate_alert_summary'],
+                            "weight": "Bolder",
+                            "wrap": True,
+                            "size": "large"
+                        },
+                        {
+                            "type": "TextBlock",
+                            "text": BasicMatchString(rule, match).__str__(),
+                            "spacing": "Large",
+                            "wrap": True
+                        }
+                    ],
+                    "actions": [
+                        {
+                            "type": "Action.OpenUrl",
+                            "title": "Discover in opensearch",
+                            "url": match['opensearch_discover_url'],
+                            "style": "default"
+                        }
+                    ],
+                }
+            }
+        ]
+    }
+
+    mock_post_request.assert_called_once_with(
+        rule['ms_power_automate_webhook_url'],
+        data=mock.ANY,
+        headers={'content-type': 'application/json'},
+        proxies=None,
+        verify=True
+    )
+    actual_data = json.loads(mock_post_request.call_args_list[0][1]['data'])
+    assert expected_data == actual_data
+
+
+def test_ms_power_automate_opensearch_discover_color_when_positive():
+    rule = {
+        'name': 'Test Rule',
+        'type': 'any',
+        'ms_power_automate_opensearch_discover_attach_url': 'true',
+        'ms_power_automate_opensearch_discover_color': 'positive',
+        'ms_power_automate_webhook_url': 'http://test.webhook.url',
+        'ms_power_automate_alert_summary': 'Alert from ElastAlert',
+        'alert': [],
+        'alert_subject': 'Cool subject',
+    }
+    rules_loader = FileRulesLoader({})
+    rules_loader.load_modules(rule)
+    alert = MsPowerAutomateAlerter(rule)
+    match = {
+        '@timestamp': '2024-07-19T00:00:00',
+        'opensearch_discover_url': 'http://opensearch#discover'
+    }
+    with mock.patch('requests.post') as mock_post_request:
+        alert.alert([match])
+
+    expected_data = {
+        "type": "message",
+        "attachments": [
+            {
+                "contentType": "application/vnd.microsoft.card.adaptive",
+                "content": {
+                    "type": "AdaptiveCard",
+                    "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+                    "version": "1.4",
+                    "body": [
+                        {
+                            "type": "TextBlock",
+                            "text": rule['ms_power_automate_alert_summary'],
+                            "weight": "Bolder",
+                            "wrap": True,
+                            "size": "large"
+                        },
+                        {
+                            "type": "TextBlock",
+                            "text": BasicMatchString(rule, match).__str__(),
+                            "spacing": "Large",
+                            "wrap": True
+                        }
+                    ],
+                    "actions": [
+                        {
+                            "type": "Action.OpenUrl",
+                            "title": "Discover in opensearch",
+                            "url": match['opensearch_discover_url'],
+                            "style": rule['ms_power_automate_opensearch_discover_color']
+                        }
+                    ],
+                }
+            }
+        ]
+    }
+
+    mock_post_request.assert_called_once_with(
+        rule['ms_power_automate_webhook_url'],
+        data=mock.ANY,
+        headers={'content-type': 'application/json'},
+        proxies=None,
+        verify=True
+    )
+    actual_data = json.loads(mock_post_request.call_args_list[0][1]['data'])
+    assert expected_data == actual_data
+
+
+def test_ms_power_automate_opensearch_discover_color_when_destructive():
+    rule = {
+        'name': 'Test Rule',
+        'type': 'any',
+        'ms_power_automate_opensearch_discover_attach_url': 'true',
+        'ms_power_automate_opensearch_discover_color': 'destructive',
+        'ms_power_automate_webhook_url': 'http://test.webhook.url',
+        'ms_power_automate_alert_summary': 'Alert from ElastAlert',
+        'alert': [],
+        'alert_subject': 'Cool subject',
+    }
+    rules_loader = FileRulesLoader({})
+    rules_loader.load_modules(rule)
+    alert = MsPowerAutomateAlerter(rule)
+    match = {
+        '@timestamp': '2024-07-19T00:00:00',
+        'opensearch_discover_url': 'http://opensearch#discover'
+    }
+    with mock.patch('requests.post') as mock_post_request:
+        alert.alert([match])
+
+    expected_data = {
+        "type": "message",
+        "attachments": [
+            {
+                "contentType": "application/vnd.microsoft.card.adaptive",
+                "content": {
+                    "type": "AdaptiveCard",
+                    "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+                    "version": "1.4",
+                    "body": [
+                        {
+                            "type": "TextBlock",
+                            "text": rule['ms_power_automate_alert_summary'],
+                            "weight": "Bolder",
+                            "wrap": True,
+                            "size": "large"
+                        },
+                        {
+                            "type": "TextBlock",
+                            "text": BasicMatchString(rule, match).__str__(),
+                            "spacing": "Large",
+                            "wrap": True
+                        }
+                    ],
+                    "actions": [
+                        {
+                            "type": "Action.OpenUrl",
+                            "title": "Discover in opensearch",
+                            "url": match['opensearch_discover_url'],
+                            "style": rule['ms_power_automate_opensearch_discover_color']
+                        }
+                    ],
+                }
+            }
+        ]
+    }
+
+    mock_post_request.assert_called_once_with(
+        rule['ms_power_automate_webhook_url'],
+        data=mock.ANY,
+        headers={'content-type': 'application/json'},
+        proxies=None,
+        verify=True
+    )
+    actual_data = json.loads(mock_post_request.call_args_list[0][1]['data'])
+    assert expected_data == actual_data
+
+
 def test_ms_power_automate_teams_card_width_full():
     rule = {
         'name': 'Test Rule',
