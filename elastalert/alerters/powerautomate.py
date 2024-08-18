@@ -20,12 +20,13 @@ class MsPowerAutomateAlerter(Alerter):
         self.ms_power_automate_alert_summary = self.rule.get('ms_power_automate_alert_summary', None)
         self.ms_power_automate_summary_text_size = self.rule.get('ms_power_automate_summary_text_size', 'large')
         self.ms_power_automate_body_text_size = self.rule.get('ms_power_automate_body_text_size', '')
-        self.ms_power_automate_kibana_discover_color = self.rule.get('ms_power_automate_kibana_discover_color', 'default')
         self.ms_power_automate_ca_certs = self.rule.get('ms_power_automate_ca_certs')
         self.ms_power_automate_ignore_ssl_errors = self.rule.get('ms_power_automate_ignore_ssl_errors', False)
         self.ms_power_automate_alert_facts = self.rule.get('ms_power_automate_alert_facts', '')
+        self.ms_power_automate_kibana_discover_color = self.rule.get('ms_power_automate_kibana_discover_color', 'default')
         self.ms_power_automate_kibana_discover_attach_url = self.rule.get('ms_power_automate_kibana_discover_attach_url', False)
         self.ms_power_automate_kibana_discover_title = self.rule.get('ms_power_automate_kibana_discover_title', 'Discover in Kibana')
+        self.ms_power_automate_opensearch_discover_color = self.rule.get('ms_power_automate_opensearch_discover_color', 'default')
         self.ms_power_automate_opensearch_discover_attach_url = self.rule.get('ms_power_automate_opensearch_discover_attach_url', False)
         self.ms_power_automate_opensearch_discover_title = self.rule.get('ms_power_automate_opensearch_discover_title', 'Discover in opensearch')
         self.ms_power_automate_teams_card_width_full = self.rule.get('ms_power_automate_teams_card_width_full', False)
@@ -118,7 +119,7 @@ class MsPowerAutomateAlerter(Alerter):
                     "type": "Action.OpenUrl",
                     "title": self.ms_power_automate_opensearch_discover_title,
                     "url": opensearch_discover_url,
-                    "style": self.ms_power_automate_kibana_discover_color
+                    "style": self.ms_power_automate_opensearch_discover_color
                 })                     
 
         for url in self.ms_power_automate_webhook_url:
