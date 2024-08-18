@@ -1648,8 +1648,6 @@ Optional:
 
 ``ms_power_automate_alert_summary``: Microsoft Power Automate use this value for notification title, defaults to `alert_subject <https://elastalert2.readthedocs.io/en/latest/alerts.html#alert-subject>`_. You can set this value with arbitrary text if you don't want to use the default.
 
-``ms_power_automate_kibana_discover_color``: By default, the alert will be published with the ``default`` type blue if not specified. If set to ``positive``, action is displayed with a positive style (typically the button becomes accent color), If set to ``destructive``, Action is displayed with a destructive style (typically the button becomes red)
-
 ``ms_power_automate_proxy``: By default ElastAlert 2 will not use a network proxy to send notifications to MS Teams. Set this option using ``hostname:port`` if you need to use a proxy. only supports https.
 
 ``ms_power_automate_teams_card_width_full``: By default, this is ``False`` and the notification will be sent to MS Teams without rendering full width in Microsoft Teams. Setting this attribute to ``True`` will render the alert in full width. `doc feature <https://github.com/microsoft/AdaptiveCards/issues/8102>`_.
@@ -1668,9 +1666,13 @@ Example ms_power_automate_alert_facts::
 
 ``ms_power_automate_kibana_discover_title``: The title of the Kibana Discover url attachment. Defaults to ``Discover in Kibana``.
 
+``ms_power_automate_kibana_discover_color``: By default, the alert will be published with the ``default`` type blue if not specified. If set to ``positive``, action is displayed with a positive style (typically the button becomes accent color), If set to ``destructive``, Action is displayed with a destructive style (typically the button becomes red)
+
 ``ms_power_automate_opensearch_discover_attach_url``: Enables the attachment of the ``opensearch_discover_url`` to the MS Teams notification. The config ``generate_opensearch_discover_url`` must also be ``True`` in order to generate the url. Defaults to ``False``.
 
 ``ms_power_automate_opensearch_discover_title``: The title of the Opensearch Discover url attachment. Defaults to ``Discover in opensearch``.
+
+``ms_power_automate_opensearch_discover_color``: By default, the alert will be published with the ``default`` type blue if not specified. If set to ``positive``, action is displayed with a positive style (typically the button becomes accent color), If set to ``destructive``, Action is displayed with a destructive style (typically the button becomes red)
 
 Example ms_power_automate_kibana_discover_attach_url, ms_power_automate_kibana_discover_title::
 
