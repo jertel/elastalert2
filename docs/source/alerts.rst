@@ -33,6 +33,7 @@ or
       - jira
       - lark
       - linenotify
+      - matrixhookshot
       - mattermost
       - ms_teams
       - ms_power_automate
@@ -1423,6 +1424,33 @@ Example usage::
     alert:
       - "linenotify"
     linenotify_access_token: "Your linenotify access token"
+
+Matrix Hookshot
+~~~~~~~~~~~~~~~
+
+The Matrix Hookshot alerter will send a notification to a Hookshot server that's already setup within the Matrix server. The body of the notification is formatted the same as with other alerters.
+
+See the Hookshot Webhook documentation for more information: https://matrix-org.github.io/matrix-hookshot/latest/setup/webhooks.html#webhook-handling
+
+The alerter requires the following option:
+
+``matrixhookshot_webhook_url``: The webhook URL that was provided to you by the hookshot bot. Ex: https://XXXXX.com/webhook/6de1f483-5c4b-4bb8-784a-f09129f45225. You can also use a list of URLs to send to multiple webhooks.
+
+Optional:
+
+``matrixhookshot_username``: Optional username to prepend to the text body.
+
+``matrixhookshot_text``: Override the default alert text with custom text formatting.
+
+``matrixhookshot_html``: Specify HTML alert content to use instead of the default alert text.
+
+``matrixhookshot_proxy``: By default ElastAlert 2 will not use a network proxy to send notifications to Hookshot. Set this option using ``hostname:port`` if you need to use a proxy. only supports https.
+
+``matrixhookshot_ignore_ssl_errors``: By default ElastAlert 2 will verify SSL certificate. Set this option to ``True`` if you want to ignore SSL errors.
+
+``matrixhookshot_timeout``: You can specify a timeout value, in seconds, for making communicating with Hookshot. The default is 10. If a timeout occurs, the alert will be retried next time ElastAlert 2 cycles.
+
+``matrixhookshot_ca_certs``: Set this option to ``True`` or a path to a CA cert bundle or directory (eg: ``/etc/ssl/certs/ca-certificates.crt``) to validate the SSL certificate.
 
 Mattermost
 ~~~~~~~~~~

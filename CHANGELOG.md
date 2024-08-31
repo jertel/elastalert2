@@ -5,6 +5,7 @@
 
 ## New features
 - [MS Power Automate] New Alert Channel with Microsoft Power Automate - [#1505](https://github.com/jertel/elastalert2/pull/1505)  [#1513](https://github.com/jertel/elastalert2/pull/1513) [#1519](https://github.com/jertel/elastalert2/pull/1519) - @marssilva, @jertel
+- [Matrix Hookshot] New Alerter for sending alerts to Matrix via Hookshot - [#1525](https://github.com/jertel/elastalert2/pull/1525) - @jertel
 
 ## Other changes
 - [Indexer] Fixed fields types error on instance indexer_alert_config in schema.yml - [#1499](https://github.com/jertel/elastalert2/pull/1499) - @olehpalanskyi

@@ -642,6 +642,16 @@ properties:
   ### Line Notify
   linenotify_access_token: {type: string}
 
+  ### Matrix Hookshot
+  matrixhookshot_ca_certs: {type: [boolean, string]}
+  matrixhookshot_webhook_url: *arrayOfString
+  matrixhookshot_username: {type: string}
+  matrixhookshot_html: {type: string}
+  matrixhookshot_text: {type: string}
+  matrixhookshot_proxy: {type: string}
+  matrixhookshot_ignore_ssl_errors: {type: boolean}
+  matrixhookshot_timeout: {type: integer}
+
   ### Mattermost
   mattermost_webhook_url: *arrayOfString
   mattermost_proxy: {type: string}

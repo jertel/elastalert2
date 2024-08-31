@@ -44,6 +44,7 @@ from elastalert import ruletypes
 from elastalert.alerters.alertmanager import AlertmanagerAlerter
 from elastalert.alerters.email import EmailAlerter
 from elastalert.alerters.jira import JiraAlerter
+from elastalert.alerters.matrixhookshot import MatrixHookshotAlerter
 from elastalert.alerters.mattermost import MattermostAlerter
 from elastalert.alerters.opsgenie import OpsGenieAlerter
 from elastalert.alerters.pagerduty import PagerDutyAlerter
@@ -141,6 +142,7 @@ class RulesLoader(object):
         'gelf': elastalert.alerters.gelf.GelfAlerter,
         'iris': elastalert.alerters.iris.IrisAlerter,
         'indexer': IndexerAlerter,
+        'matrixhookshot': MatrixHookshotAlerter,
     }
 
     # A partial ordering of alert types. Relative order will be preserved in the resulting alerts list

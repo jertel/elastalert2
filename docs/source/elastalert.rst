@@ -49,6 +49,7 @@ Currently, we have support built in for these alert types:
 - Jira
 - Lark
 - Line Notify
+- Matrix Hookshot
 - Mattermost
 - Microsoft Teams
 - Microsoft Power Automate
