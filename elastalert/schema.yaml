@@ -643,13 +643,14 @@ properties:
   linenotify_access_token: {type: string}
 
   ### Matrix Hookshot
-  matrix_hookshot_webhook_url: *arrayOfString
-  matrix_hookshot_username: {type: string}
-  matrix_hookshot_html: {type: string}
-  matrix_hookshot_text: {type: string}
-  matrix_hookshot_proxy: {type: string}
-  matrix_hookshot_ignore_ssl_errors: {type: boolean}
-  matrix_hookshot_timeout: {type: integer}
+  matrixhookshot_ca_certs: {type: [boolean, string]}
+  matrixhookshot_webhook_url: *arrayOfString
+  matrixhookshot_username: {type: string}
+  matrixhookshot_html: {type: string}
+  matrixhookshot_text: {type: string}
+  matrixhookshot_proxy: {type: string}
+  matrixhookshot_ignore_ssl_errors: {type: boolean}
+  matrixhookshot_timeout: {type: integer}
 
   ### Mattermost
   mattermost_webhook_url: *arrayOfString
