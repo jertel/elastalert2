@@ -1,7 +1,7 @@
 # 2.TBD.TBD
 
 ## Breaking changes
-- TBD
+- Drop python3.9, python3.10, python3.11 from `python_requires` - [#1528](https://github.com/jertel/elastalert2/pull/1528) - @kmurphy4
 
 ## New features
 - [MS Power Automate] New Alert Channel with Microsoft Power Automate - [#1505](https://github.com/jertel/elastalert2/pull/1505)  [#1513](https://github.com/jertel/elastalert2/pull/1513) [#1519](https://github.com/jertel/elastalert2/pull/1519) - @marssilva, @jertel
