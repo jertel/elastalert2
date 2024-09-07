@@ -27,6 +27,7 @@ class IrisAlerter(Alerter):
             'Authorization': f'Bearer {self.rule.get("iris_api_token")}'
         }
         self.alert_note = self.rule.get('iris_alert_note', None)
+        self.alert_source = self.rule.get('iris_alert_source', 'ElastAlert2')
         self.alert_tags = self.rule.get('iris_alert_tags', None)
         self.alert_status_id = self.rule.get('iris_alert_status_id', 2)
         self.alert_source_link = self.rule.get('iris_alert_source_link', None)
@@ -78,7 +79,7 @@ class IrisAlerter(Alerter):
         alert_data = {
             "alert_title": self.rule.get('name'),
             "alert_description": self.description,
-            "alert_source": "ElastAlert2",
+            "alert_source": self.alert_source,
             "alert_severity_id": self.alert_severity_id,
             "alert_status_id": self.alert_status_id,
             "alert_source_event_time": event_timestamp,
