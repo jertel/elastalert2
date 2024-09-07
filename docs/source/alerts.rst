@@ -1201,7 +1201,7 @@ Optional:
 
 ``iris_alert_note``: Note for the alert.
 
-``iris-alert-source``: Source of the alert. Default value is ``ElastAlert2``.
+``iris_alert_source``: Source of the alert. Default value is ``ElastAlert2``.
 
 ``iris_alert_tags``: List of tags.
 
