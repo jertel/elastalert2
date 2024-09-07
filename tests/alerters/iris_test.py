@@ -155,6 +155,7 @@ def test_iris_make_alert_maximal(caplog):
         'iris_alert_tags': 'test, alert',
         'iris_overwrite_timestamp': True,
         'iris_alert_source_link': 'https://example.com',
+        'iris_alert_source': "TestSource",
         'iris_iocs': [
             {
                 'ioc_description': 'source address',
@@ -195,6 +196,7 @@ def test_iris_make_alert_maximal(caplog):
         "alert_tags": 'test, alert',
         "alert_customer_id": 1,
         "alert_source_link": 'https://example.com',
+        "alert_source": "TestSource",
         "alert_iocs": [
             {
                 'ioc_description': 'source address',
@@ -235,6 +237,7 @@ def test_iris_make_alert_maximal_with_nested_json(caplog):
         'iris_alert_tags': 'test, alert',
         'iris_overwrite_timestamp': True,
         'iris_alert_source_link': 'https://example.com',
+        'iris_alert_source': "TestSource",
         'iris_iocs': [
             {
                 'ioc_description': 'source address',
@@ -275,6 +278,7 @@ def test_iris_make_alert_maximal_with_nested_json(caplog):
         "alert_tags": 'test, alert',
         "alert_customer_id": 1,
         "alert_source_link": 'https://example.com',
+        "alert_source": "TestSource",
         "alert_iocs": [
             {
                 'ioc_description': 'source address',
