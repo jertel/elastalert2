@@ -155,6 +155,7 @@ def test_iris_make_alert_maximal(caplog):
         'iris_alert_tags': 'test, alert',
         'iris_overwrite_timestamp': True,
         'iris_alert_source_link': 'https://example.com',
+        'iris_alert_source': "TestSource",
         'iris_iocs': [
             {
                 'ioc_description': 'source address',
@@ -187,7 +188,7 @@ def test_iris_make_alert_maximal(caplog):
     expected_data = {
         "alert_title": 'Test Maximal Alert Body',
         "alert_description": 'test description in alert',
-        "alert_source": "ElastAlert2",
+        "alert_source": "TestSource",
         "alert_severity_id": 1,
         "alert_status_id": 2,
         "alert_source_event_time": '2023-10-21 20:00:00.000',
@@ -235,6 +236,7 @@ def test_iris_make_alert_maximal_with_nested_json(caplog):
         'iris_alert_tags': 'test, alert',
         'iris_overwrite_timestamp': True,
         'iris_alert_source_link': 'https://example.com',
+        'iris_alert_source': "TestSource",
         'iris_iocs': [
             {
                 'ioc_description': 'source address',
@@ -267,7 +269,7 @@ def test_iris_make_alert_maximal_with_nested_json(caplog):
     expected_data = {
         "alert_title": 'Test Maximal Alert Body',
         "alert_description": 'test description in alert',
-        "alert_source": "ElastAlert2",
+        "alert_source": "TestSource",
         "alert_severity_id": 1,
         "alert_status_id": 2,
         "alert_source_event_time": '2023-10-21 20:00:00.000',
