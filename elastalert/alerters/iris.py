@@ -75,8 +75,12 @@ class IrisAlerter(Alerter):
         else:
             event_timestamp = datetime.now().strftime("%Y-%m-%dT%H:%M:%S")
 
+        # If no description is supplied use the built-in alert body generator which accounts for alert_text and alert_text_args
+        if not self.description:
+            self.description = self.create_alert_body(matches)
+        
         alert_data = {
-            "alert_title": self.rule.get('name'),
+            "alert_title": self.create_title(matches),
             "alert_description": self.description,
             "alert_source": "ElastAlert2",
             "alert_severity_id": self.alert_severity_id,
