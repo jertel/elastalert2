@@ -597,6 +597,7 @@ properties:
   iris_alert_note: {type: string}
   iris_alert_tags: {type: string}
   iris_alert_status_id: {type: integer, enum: [1, 2, 3, 4, 5, 6, 7]}
+  iris_alert_source: {type: string}
   iris_alert_source_link: {type: string}
   iris_alert_severity_id: {type: integer, enum: [1, 2, 3, 4, 5, 6]}
   iris_iocs: *arrayOfIrisIocFields
