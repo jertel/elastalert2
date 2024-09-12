@@ -318,7 +318,7 @@ def test_iris_make_alert_auto_description_args(caplog):
     These functions use the alert_subject and alert_text fields to automatically
     build the title and description based on alert match data if available.
 
-    This test specifically uses _args for the alert_text to ensure match args 
+    This test specifically uses _args for the alert_text to ensure match args
     are passed through properly.
     """
     caplog.set_level(logging.INFO)
