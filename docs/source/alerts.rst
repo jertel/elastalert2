@@ -1201,6 +1201,8 @@ Optional:
 
 ``iris_alert_note``: Note for the alert.
 
+``iris_alert_source``: Source of the alert. Default value is ``ElastAlert2``.
+
 ``iris_alert_tags``: List of tags.
 
 ``iris_alert_status_id``: The alert status of the alert, default value is ``2``. This parameter requires an integer input.
