@@ -1191,7 +1191,7 @@ Optional:
 
 ``iris_ignore_ssl_errors``: Ignore ssl error. The default value is: ``False``.
 
-``iris_description``: Description of the alert or case.
+``iris_description``: Description of the alert or case. If left blank and ``iris_type`` is ``alert`` (default value) description will automatically be generated utilizing the ``alert_text``, and optionally ``alert_text_args``/``alert_text_type``, field(s) to automatically generate a description.
 
 ``iris_overwrite_timestamp``: Should the timestamp be overridden when creating an alert. By default, the alert's creation time will be the trigger time. If you want to use the event's timestamp as the ticket creation time, set this value to ``True``. Default value is ``False``.
 
