@@ -10,7 +10,7 @@
 ## Other changes
 - [Indexer] Fixed fields types error on instance indexer_alert_config in schema.yml - [#1499](https://github.com/jertel/elastalert2/pull/1499) - @olehpalanskyi
 - [IRIS] Changed alert_source field from static 'ElastAlert2' value to field iris_alert_source value with default of 'ElastAlert2' - @bvirgilioamnh
-- [IRIS] Updated alert_title to leverage ElastAlert built-in ``create_title`` function. Updated alert_description to use ElastAlert2 built-in function ``create_alert_body`` if alert_description is not set within the rule - [#1352](https://github.com/jertel/elastalert2/pull/1532) - @bvirgilioamnh
+- [IRIS] Updated alert_title to leverage ElastAlert built-in ``create_title`` function. Updated alert_description to use ElastAlert2 built-in function ``create_alert_body`` if alert_description is not set within the rule - [#1532](https://github.com/jertel/elastalert2/pull/1532) - @bvirgilioamnh
 
 # 2.19.0
 
