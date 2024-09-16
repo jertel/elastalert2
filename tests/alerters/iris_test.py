@@ -105,6 +105,7 @@ def test_iris_make_iocs_records(caplog):
     actual_data = alert.make_iocs_records([match])
     assert expected_data == actual_data
 
+
 def test_iris_handle_multiple_alerts_with_iocs(caplog):
     caplog.set_level(logging.INFO)
     rule = {
@@ -166,10 +167,10 @@ def test_iris_handle_multiple_alerts_with_iocs(caplog):
         }
     ]
 
-    first_alert_data = alert.make_iocs_records([match])
+    # Submitting a bogus alert to test follow up alerts
+    alert.make_iocs_records([match])
     actual_data = alert.make_iocs_records([match])
     assert expected_data == actual_data
-
 
 
 def test_iris_make_alert_minimal(caplog):
