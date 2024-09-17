@@ -2,6 +2,7 @@
 
 ## Breaking changes
 - Drop python3.9, python3.10, python3.11 from `python_requires` - [#1528](https://github.com/jertel/elastalert2/pull/1528) - @kmurphy4
+- [IRIS] Updated alert_title to leverage ElastAlert built-in ``create_title`` function. Updated alert_description to use ElastAlert2 built-in function ``create_alert_body`` if alert_description is not set within the rule - [#1532](https://github.com/jertel/elastalert2/pull/1532) - @bvirgilioamnh
 
 ## New features
 - [MS Power Automate] New Alert Channel with Microsoft Power Automate - [#1505](https://github.com/jertel/elastalert2/pull/1505)  [#1513](https://github.com/jertel/elastalert2/pull/1513) [#1519](https://github.com/jertel/elastalert2/pull/1519) - @marssilva, @jertel
