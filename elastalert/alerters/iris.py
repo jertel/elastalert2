@@ -27,6 +27,7 @@ class IrisAlerter(Alerter):
             'Authorization': f'Bearer {self.rule.get("iris_api_token")}'
         }
         self.alert_note = self.rule.get('iris_alert_note', None)
+        self.alert_source = self.rule.get('iris_alert_source', 'ElastAlert2')
         self.alert_tags = self.rule.get('iris_alert_tags', None)
         self.alert_status_id = self.rule.get('iris_alert_status_id', 2)
         self.alert_source_link = self.rule.get('iris_alert_source_link', None)
@@ -77,10 +78,14 @@ class IrisAlerter(Alerter):
         else:
             event_timestamp = datetime.now().strftime("%Y-%m-%dT%H:%M:%S")
 
+        # If no description is supplied use the built-in alert body generator which accounts for alert_text and alert_text_args
+        if not self.description:
+            self.description = self.create_alert_body(matches)
+        
         alert_data = {
-            "alert_title": self.rule.get('name'),
+            "alert_title": self.create_title(matches),
             "alert_description": self.description,
-            "alert_source": "ElastAlert2",
+            "alert_source": self.alert_source,
             "alert_severity_id": self.alert_severity_id,
             "alert_status_id": self.alert_status_id,
             "alert_source_event_time": event_timestamp,
