@@ -106,6 +106,73 @@ def test_iris_make_iocs_records(caplog):
     assert expected_data == actual_data
 
 
+def test_iris_handle_multiple_alerts_with_iocs(caplog):
+    caplog.set_level(logging.INFO)
+    rule = {
+        'name': 'Test Context',
+        'type': 'any',
+        'iris_type': 'alert',
+        'iris_host': '127.0.0.1',
+        'iris_api_token': 'token 12345',
+        'iris_customer_id': 1,
+        'iris_iocs': [
+            {
+                'ioc_description': 'source address',
+                'ioc_tags': 'ip, ipv4',
+                'ioc_tlp_id': 1,
+                'ioc_type_id': 76,
+                'ioc_value': 'src_ip'
+            },
+            {
+                'ioc_description': 'target username',
+                'ioc_tags': 'login, username',
+                'ioc_tlp_id': 3,
+                'ioc_type_id': 3,
+                'ioc_value': 'username'
+            },
+            {
+                'ioc_description': 'empty ioc',
+                'ioc_tags': 'ioc',
+                'ioc_tlp_id': 3,
+                'ioc_type_id': 3,
+                'ioc_value': 'non_existent_data'
+            }
+        ],
+        'alert': []
+    }
+
+    rules_loader = FileRulesLoader({})
+    rules_loader.load_modules(rule)
+    alert = IrisAlerter(rule)
+
+    match = {
+        '@timestamp': '2023-10-21 20:00:00.000', 'username': 'evil_user', 'src_ip': '172.20.1.1', 'dst_ip': '10.0.0.1',
+        'event_type': 'login', 'event_status': 'success'
+    }
+
+    expected_data = [
+        {
+            'ioc_description': 'source address',
+            'ioc_tags': 'ip, ipv4',
+            'ioc_tlp_id': 1,
+            'ioc_type_id': 76,
+            'ioc_value': '172.20.1.1'
+        },
+        {
+            'ioc_description': 'target username',
+            'ioc_tags': 'login, username',
+            'ioc_tlp_id': 3,
+            'ioc_type_id': 3,
+            'ioc_value': 'evil_user'
+        }
+    ]
+
+    # Submitting a bogus alert to test follow up alerts
+    alert.make_iocs_records([match])
+    actual_data = alert.make_iocs_records([match])
+    assert expected_data == actual_data
+
+
 def test_iris_make_alert_minimal(caplog):
     caplog.set_level(logging.INFO)
     rule = {

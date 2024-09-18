@@ -10,7 +10,9 @@
 
 ## Other changes
 - [Indexer] Fixed fields types error on instance indexer_alert_config in schema.yml - [#1499](https://github.com/jertel/elastalert2/pull/1499) - @olehpalanskyi
-- [IRIS] Changed alert_source field from static 'ElastAlert2' value to field iris_alert_source value with default of 'ElastAlert2' - @bvirgilioamnh
+- [IRIS] Changed alert_source field from static 'ElastAlert2' value to field iris_alert_source value with default of 'ElastAlert2' - [#1531](https://github.com/jertel/elastalert2/pull/1531) - @bvirgilioamnh
+- [IRIS] Fixed NoneType error raised in issue [#1457](https://github.com/jertel/elastalert2/issues/1457) - [#1533](https://github.com/jertel/elastalert2/pull/1533) - @bvirgilioamnh
+
 
 # 2.19.0
 
