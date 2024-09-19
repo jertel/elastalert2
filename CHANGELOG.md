@@ -1,6 +1,17 @@
 # 2.TBD.TBD
 
 ## Breaking changes
+- None
+
+## New features
+- None
+
+## Other changes
+- None
+
+# 2.20.0
+
+## Breaking changes
 - Drop python3.9, python3.10, python3.11 from `python_requires` - [#1528](https://github.com/jertel/elastalert2/pull/1528) - @kmurphy4
 - [IRIS] Updated alert_title to leverage ElastAlert built-in ``create_title`` function. Updated alert_description to use ElastAlert2 built-in function ``create_alert_body`` if alert_description is not set within the rule - [#1532](https://github.com/jertel/elastalert2/pull/1532) - @bvirgilioamnh
 
