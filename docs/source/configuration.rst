@@ -93,7 +93,7 @@ rule will no longer be run until either ElastAlert 2 restarts or the rule file h
 
 ``notify_email``: An email address, or list of email addresses, to which notification emails will be sent. Currently,
 only an uncaught exception will send a notification email. The from address, SMTP host, and reply-to header can be set
-using ``from_addr``, ``smtp_host``, and ``email_reply_to`` options, respectively. By default, no emails will be sent.
+using ``from_addr``, ``smtp_host``, ``smtp_port`` and ``email_reply_to`` options, respectively. By default, no emails will be sent.
 
 single address example::
 
@@ -113,6 +113,17 @@ is "ElastAlert".
 
 ``smtp_host``: The SMTP host used to send email notifications. This value will be used for email alerts as well,
 unless overwritten in the rule config. The default is "localhost".
+
+``smtp_port``: The SMTP port used to send email notifications. This value will be used for email alerts as well,
+unless overwritten in the rule config.
+
+``smtp_ssl``: This enable TLS on SMTP. The default is False.
+
+``smtp_user``: Optional; username for connecting to ``smtp_host``.
+
+``smtp_password``: Optional; password for connecting to ``smtp_host``.
+
+``es_bearer``: Optional; Bearer token for connecting to ``es_host``. The environment variable ``ES_BEARER`` will override this field. This authentication option will override the password authentication option.
 
 ``email_reply_to``: This sets the Reply-To header in emails. The default is the recipient address.
 
