@@ -123,8 +123,6 @@ unless overwritten in the rule config.
 
 ``smtp_password``: Optional; password for connecting to ``smtp_host``.
 
-``es_bearer``: Optional; Bearer token for connecting to ``es_host``. The environment variable ``ES_BEARER`` will override this field. This authentication option will override the password authentication option.
-
 ``email_reply_to``: This sets the Reply-To header in emails. The default is the recipient address.
 
 ``aws_region``: This makes ElastAlert 2 to sign HTTP requests when using Amazon OpenSearch Service. It'll use instance role keys to sign the requests.
