@@ -1859,7 +1859,7 @@ class ElastAlerter(object):
                     smtp = SMTP(self.smtp_host, self.smtp_port)
                 else:
                     # default port : 25
-                    self.smtp = SMTP(self.smtp_host)
+                    smtp = SMTP(self.smtp_host)
                 smtp.ehlo()
                 if smtp.has_extn('STARTTLS'):
                     smtp.starttls()
