@@ -69,15 +69,15 @@ class OpsGenieAlerter(Alerter):
         else:
             self.message = self.custom_message.format(**matches[0])
         self.recipients = self._parse_responders(self.recipients, self.recipients_args, matches, self.default_reciepients)
-        self.teams = self._parse_responders(self.teams, self.teams_args, matches, self.default_teams)
+        teams = self._parse_responders(self.teams, self.teams_args, matches, self.default_teams)
         post = {}
         post['message'] = self.message
         if self.account:
             post['user'] = self.account
         if self.recipients:
             post['responders'] = [{'username': r, 'type': 'user'} for r in self.recipients]
-        if self.teams:
-            post['teams'] = [{'name': r, 'type': 'team'} for r in self.teams]
+        if teams:
+            post['teams'] = [{'name': r, 'type': 'team'} for r in teams]
         if self.description:
             post['description'] = self.description.format(**matches[0])
         else:
