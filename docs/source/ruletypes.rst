@@ -1412,6 +1412,11 @@ default 50, unique terms.
 
 ``query_key``: Counts of documents will be stored independently for each value of ``query_key``.
 
+.. note::
+
+  Matches of the rule type ``spike`` contain two additional fields: ``spike_count`` contains the number of events that occurred during the
+  current timeframe. ``reference_count`` contains the number of events that occurred during the reference timeframe.
+
 Flatline
 ~~~~~~~~
 
