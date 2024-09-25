@@ -13,9 +13,14 @@ class OpsGenieAlerter(Alerter):
 
     def __init__(self, *args):
         super(OpsGenieAlerter, self).__init__(*args)
+
+        default_recipients_deprecated = self.rule.get('opsgenie_default_receipients', None)
+        if default_recipients_deprecated:
+            elastalert_logger.warning("OpsGenieAlerter: `opsgenie_default_receipients` rule configuration option is deprecated and will be removed in the future. Please use `opsgenie_default_recipients` option instead.")
+
         self.account = self.rule.get('opsgenie_account')
         self.api_key = self.rule.get('opsgenie_key', 'key')
-        self.default_recipients = self.rule.get('opsgenie_default_recipients', None)
+        self.default_recipients = self.rule.get('opsgenie_default_recipients', default_recipients_deprecated)
         self.recipients = self.rule.get('opsgenie_recipients')
         self.recipients_args = self.rule.get('opsgenie_recipients_args')
         self.default_teams = self.rule.get('opsgenie_default_teams', None)
