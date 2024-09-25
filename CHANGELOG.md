@@ -7,7 +7,7 @@
 - None
 
 ## Other changes
-- None
+- [Docs] Mention the two available Spike-rule metrics that are add into the match record - [#1525](https://github.com/jertel/elastalert2/pull/1542) - @jertel
 
 # 2.20.0
 
