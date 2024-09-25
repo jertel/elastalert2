@@ -15,7 +15,7 @@ class OpsGenieAlerter(Alerter):
         super(OpsGenieAlerter, self).__init__(*args)
         self.account = self.rule.get('opsgenie_account')
         self.api_key = self.rule.get('opsgenie_key', 'key')
-        self.default_reciepients = self.rule.get('opsgenie_default_recipients', None)
+        self.default_recipients = self.rule.get('opsgenie_default_recipients', None)
         self.recipients = self.rule.get('opsgenie_recipients')
         self.recipients_args = self.rule.get('opsgenie_recipients_args')
         self.default_teams = self.rule.get('opsgenie_default_teams', None)
@@ -72,7 +72,7 @@ class OpsGenieAlerter(Alerter):
             self.message = self.create_title(matches)
         else:
             self.message = self.custom_message.format(**matches[0])
-        recipients = self._parse_responders(self.recipients, self.recipients_args, matches, self.default_reciepients)
+        recipients = self._parse_responders(self.recipients, self.recipients_args, matches, self.default_recipients)
         teams = self._parse_responders(self.teams, self.teams_args, matches, self.default_teams)
         post = {}
         post['message'] = self.message
