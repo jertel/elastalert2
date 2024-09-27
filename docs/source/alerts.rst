@@ -1790,7 +1790,7 @@ Optional:
 
 ``opsgenie_recipients_args``: Map of arguments used to format opsgenie_recipients.
 
-``opsgenie_default_receipients``: List of default recipients to notify when the formatting of opsgenie_recipients is unsuccesful.
+``opsgenie_default_recipients``: List of default recipients to notify when the formatting of opsgenie_recipients is unsuccesful.
 
 ``opsgenie_teams``: A list of OpsGenie teams to notify (useful for schedules with escalation).
 
