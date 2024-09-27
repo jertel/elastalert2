@@ -105,21 +105,23 @@ def test_opsgenie_alert_routing():
         'opsgenie_key': 'ogkey',
         'opsgenie_account': 'genies',
         'opsgenie_addr': 'https://api.opsgenie.com/v2/alerts',
-        'opsgenie_recipients': ['{RECEIPIENT_PREFIX}'],
-        'opsgenie_recipients_args': {'RECEIPIENT_PREFIX': 'recipient'},
+        'opsgenie_recipients': ['{RECIPIENT_PREFIX}'],
+        'opsgenie_recipients_args': {'RECIPIENT_PREFIX': 'recipient'},
         'type': mock_rule(),
         'filter': [{'query': {'query_string': {'query': '*hihi*'}}}],
         'alert': 'opsgenie',
         'opsgenie_teams': ['{TEAM_PREFIX}-Team'],
         'opsgenie_teams_args': {'TEAM_PREFIX': 'team'}
     }
-    with mock.patch('requests.post'):
-
+    with mock.patch('requests.post') as mock_post:
         alert = OpsGenieAlerter(rule)
         alert.alert([{'@timestamp': '2014-10-31T00:00:00', 'team': "Test", 'recipient': "lytics"}])
 
-        assert alert.get_info()['teams'] == ['Test-Team']
-        assert alert.get_info()['recipients'] == ['lytics']
+        _, kwargs = mock_post.call_args
+        payload = kwargs['json']
+
+        assert payload['teams'][0]['name'] == 'Test-Team'
+        assert payload['responders'][0]['username'] == 'lytics'
 
 
 def test_opsgenie_default_alert_routing():
@@ -128,22 +130,24 @@ def test_opsgenie_default_alert_routing():
         'opsgenie_key': 'ogkey',
         'opsgenie_account': 'genies',
         'opsgenie_addr': 'https://api.opsgenie.com/v2/alerts',
-        'opsgenie_recipients': ['{RECEIPIENT_PREFIX}'],
-        'opsgenie_recipients_args': {'RECEIPIENT_PREFIX': 'recipient'},
+        'opsgenie_recipients': ['{RECIPIENT_PREFIX}'],
+        'opsgenie_recipients_args': {'RECIPIENT_PREFIX': 'recipient'},
         'type': mock_rule(),
         'filter': [{'query': {'query_string': {'query': '*hihi*'}}}],
         'alert': 'opsgenie',
         'opsgenie_teams': ['{TEAM_PREFIX}-Team'],
-        'opsgenie_default_receipients': ["devops@test.com"],
-        'opsgenie_default_teams': ["Test"]
+        'opsgenie_default_recipients': ["devops@test.com"],
+        'opsgenie_default_teams': ["Default-Team"]
     }
-    with mock.patch('requests.post'):
+    with mock.patch('requests.post') as mock_post:
 
         alert = OpsGenieAlerter(rule)
         alert.alert([{'@timestamp': '2014-10-31T00:00:00', 'team': "Test"}])
 
-        assert alert.get_info()['teams'] == ['{TEAM_PREFIX}-Team']
-        assert alert.get_info()['recipients'] == ['devops@test.com']
+        _, kwargs = mock_post.call_args
+        payload = kwargs['json']
+        assert payload['teams'][0]['name'] == 'Default-Team'
+        assert payload['responders'][0]['username'] == 'devops@test.com'
 
 
 def test_opsgenie_details_with_constant_value():
@@ -1006,8 +1010,8 @@ def test_opsgenie_parse_responders(caplog):
         'opsgenie_key': 'ogkey',
         'opsgenie_account': 'genies',
         'opsgenie_addr': 'https://api.opsgenie.com/v2/alerts',
-        'opsgenie_recipients': ['{RECEIPIENT_PREFIX}'],
-        'opsgenie_recipients_args': {'RECEIPIENT_PREFIX': 'recipient'},
+        'opsgenie_recipients': ['{RECIPIENT_PREFIX}'],
+        'opsgenie_recipients_args': {'RECIPIENT_PREFIX': 'recipient'},
         'type': mock_rule(),
         'filter': [{'query': {'query_string': {'query': '*hihi*'}}}],
         'alert': 'opsgenie',
@@ -1040,7 +1044,7 @@ def test_opsgenie_parse_responders(caplog):
     assert expected == actual
     user, level, message = caplog.record_tuples[0]
     assert logging.WARNING == level
-    assert "Cannot create responder for OpsGenie Alert. Key not foud: 'RECEIPIENT_PREFIX'." in message
+    assert "Cannot create responder for OpsGenie Alert. Key not found: 'RECIPIENT_PREFIX'." in message
     user, level, message = caplog.record_tuples[1]
     assert logging.WARNING == level
     assert 'no responders can be formed. Trying the default responder' in message
@@ -1049,10 +1053,77 @@ def test_opsgenie_parse_responders(caplog):
     assert 'default responder not set. Falling back' in message
     user, level, message = caplog.record_tuples[3]
     assert logging.WARNING == level
-    assert "Cannot create responder for OpsGenie Alert. Key not foud: 'TEAM_PREFIX'." in message
+    assert "Cannot create responder for OpsGenie Alert. Key not found: 'TEAM_PREFIX'." in message
     user, level, message = caplog.record_tuples[4]
     assert logging.WARNING == level
     assert 'no responders can be formed. Trying the default responder' in message
+
+
+def test_opsgenie_parse_opsgenie_teams():
+    rule = {
+        'name': 'testOGalert',
+        'opsgenie_key': 'ogkey',
+        'opsgenie_account': 'genies',
+        'opsgenie_addr': 'https://api.opsgenie.com/v2/alerts',
+        'type': mock_rule(),
+        'filter': [{'query': {'query_string': {'query': '*hihi*'}}}],
+        'alert': 'opsgenie',
+        'opsgenie_teams': ['{TEAM_PREFIX}-Team'],
+        'opsgenie_teams_args': {'TEAM_PREFIX': 'team'},
+        'opsgenie_default_teams': ["Test"]
+    }
+    match = [
+        {
+            '@timestamp': '2014-10-10T00:00:00',
+            'sender_ip': '1.1.1.1',
+            'hostname': 'aProbe',
+            'team': 'Test'
+        },
+        {
+            '@timestamp': '2014-10-10T00:00:00',
+            'sender_ip': '1.1.1.1',
+            'hostname2': 'aProbe',
+            'team': 'Test'
+        }
+    ]
+
+    with mock.patch('requests.post'):
+        alert = OpsGenieAlerter(rule)
+        alert.alert(match)
+        assert alert.teams == rule['opsgenie_teams']
+
+
+def test_opsgenie_parse_opsgenie_recipients():
+    rule = {
+        'name': 'testOGalert',
+        'opsgenie_key': 'ogkey',
+        'opsgenie_account': 'genies',
+        'opsgenie_addr': 'https://api.opsgenie.com/v2/alerts',
+        'opsgenie_recipients': ['{RECIPIENT_PREFIX}'],
+        'opsgenie_recipients_args': {'RECIPIENT_PREFIX': 'recipient'},
+        'type': mock_rule(),
+        'filter': [{'query': {'query_string': {'query': '*hihi*'}}}],
+        'alert': 'opsgenie'
+    }
+    match = [
+        {
+            '@timestamp': '2014-10-10T00:00:00',
+            'sender_ip': '1.1.1.1',
+            'hostname': 'aProbe',
+            'recipient': 'Test'
+        },
+        {
+            '@timestamp': '2014-10-10T00:00:00',
+            'sender_ip': '1.1.1.1',
+            'hostname2': 'aProbe',
+            'recipient': 'Test'
+        }
+    ]
+
+    with mock.patch('requests.post'):
+        alert = OpsGenieAlerter(rule)
+        alert.alert(match)
+        assert alert.recipients == rule['opsgenie_recipients']
 
 
 def test_opsgenie_create_custom_title():
