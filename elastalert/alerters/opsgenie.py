@@ -13,9 +13,14 @@ class OpsGenieAlerter(Alerter):
 
     def __init__(self, *args):
         super(OpsGenieAlerter, self).__init__(*args)
+
+        default_recipients_deprecated = self.rule.get('opsgenie_default_receipients', None)
+        if default_recipients_deprecated:
+            elastalert_logger.warning("OpsGenieAlerter: `opsgenie_default_receipients` rule configuration option is deprecated and will be removed in the future. Please use `opsgenie_default_recipients` option instead.")
+
         self.account = self.rule.get('opsgenie_account')
         self.api_key = self.rule.get('opsgenie_key', 'key')
-        self.default_reciepients = self.rule.get('opsgenie_default_receipients', None)
+        self.default_recipients = self.rule.get('opsgenie_default_recipients', default_recipients_deprecated)
         self.recipients = self.rule.get('opsgenie_recipients')
         self.recipients_args = self.rule.get('opsgenie_recipients_args')
         self.default_teams = self.rule.get('opsgenie_default_teams', None)
@@ -35,25 +40,29 @@ class OpsGenieAlerter(Alerter):
         self.source = self.rule.get('opsgenie_source', 'ElastAlert')
 
     def _parse_responders(self, responders, responder_args, matches, default_responders):
-        if responder_args:
-            formated_responders = list()
-            responders_values = dict((k, lookup_es_key(matches[0], v)) for k, v in responder_args.items())
-            responders_values = dict((k, v) for k, v in responders_values.items() if v)
+        if responders is None:
+            return None
+        if responder_args is None:
+            responder_args = dict()
 
-            for responder in responders:
-                responder = str(responder)
-                try:
-                    formated_responders.append(responder.format(**responders_values))
-                except KeyError as error:
-                    elastalert_logger.warning("OpsGenieAlerter: Cannot create responder for OpsGenie Alert. Key not foud: %s. " % (error))
-            if not formated_responders:
-                elastalert_logger.warning("OpsGenieAlerter: no responders can be formed. Trying the default responder ")
-                if not default_responders:
-                    elastalert_logger.warning("OpsGenieAlerter: default responder not set. Falling back")
-                    formated_responders = responders
-                else:
-                    formated_responders = default_responders
-            responders = formated_responders
+        formated_responders = list()
+        responders_values = dict((k, lookup_es_key(matches[0], v)) for k, v in responder_args.items())
+        responders_values = dict((k, v) for k, v in responders_values.items() if v)
+        for responder in responders:
+            responder = str(responder)
+            try:
+                formated_responders.append(responder.format(**responders_values))
+            except KeyError as error:
+                elastalert_logger.warning("OpsGenieAlerter: Cannot create responder for OpsGenie Alert. Key not found: %s. " % (error))
+        if not formated_responders:
+            elastalert_logger.warning("OpsGenieAlerter: no responders can be formed. Trying the default responder ")
+            if not default_responders:
+                elastalert_logger.warning("OpsGenieAlerter: default responder not set. Falling back")
+                formated_responders = responders
+            else:
+                formated_responders = default_responders
+        responders = formated_responders
+
         return responders
 
     def alert(self, matches):
@@ -68,16 +77,16 @@ class OpsGenieAlerter(Alerter):
             self.message = self.create_title(matches)
         else:
             self.message = self.custom_message.format(**matches[0])
-        self.recipients = self._parse_responders(self.recipients, self.recipients_args, matches, self.default_reciepients)
-        self.teams = self._parse_responders(self.teams, self.teams_args, matches, self.default_teams)
+        recipients = self._parse_responders(self.recipients, self.recipients_args, matches, self.default_recipients)
+        teams = self._parse_responders(self.teams, self.teams_args, matches, self.default_teams)
         post = {}
         post['message'] = self.message
         if self.account:
             post['user'] = self.account
-        if self.recipients:
-            post['responders'] = [{'username': r, 'type': 'user'} for r in self.recipients]
-        if self.teams:
-            post['teams'] = [{'name': r, 'type': 'team'} for r in self.teams]
+        if recipients:
+            post['responders'] = [{'username': r, 'type': 'user'} for r in recipients]
+        if teams:
+            post['teams'] = [{'name': r, 'type': 'team'} for r in teams]
         if self.description:
             post['description'] = self.description.format(**matches[0])
         else:
