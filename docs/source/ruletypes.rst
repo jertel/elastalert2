@@ -974,7 +974,7 @@ summary_suffix
 ``summary_suffix``: Specify a suffix string, which will be added after the aggregation summary table. This string is currently not subject to any formatting.
 
 timestamp_field
-^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^
 
 ``timestamp_field``: Specify the name of the document field containing the timestamp. 
 By default, the field ``@timestamp`` is used to query Elasticsearch. 
