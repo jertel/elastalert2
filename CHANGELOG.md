@@ -8,6 +8,7 @@
 
 ## Other changes
 - [Docs] Mention the two available Spike-rule metrics that are add into the match record - [#1542](https://github.com/jertel/elastalert2/pull/1542) - @ulmako
+- [Docs] Add missing documentation of the timestamp_field option - [#1544](https://github.com/jertel/elastalert2/pull/1544) - @apollolv
 
 # 2.20.0
 
