@@ -745,22 +745,13 @@ properties:
   opsgenie_message: {type: string}
   opsgenie_priority: {type: string}
   opsgenie_proxy: {type: string}
-  opsgenie_recipients_args:
-    oneOf: 
-      - *arrayOfString
-      - *opsGenieArgs
+  opsgenie_recipients_args: *opsGenieArgs
   opsgenie_recipients: *arrayOfString
   opsgenie_source: {type: string}
   opsgenie_subject: {type: string}
-  opsgenie_subject_args:
-    oneOf: 
-      - *arrayOfString
-      - *opsGenieArgs
+  opsgenie_subject_args: *arrayOfString
   opsgenie_tags: *arrayOfString
-  opsgenie_teams_args:
-    oneOf: 
-      - *arrayOfString
-      - *opsGenieArgs
+  opsgenie_teams_args: *opsGenieArgs
   opsgenie_teams: *arrayOfString
 
 
