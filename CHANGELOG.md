@@ -10,6 +10,7 @@
 - [Docs] Mention the two available Spike-rule metrics that are add into the match record - [#1542](https://github.com/jertel/elastalert2/pull/1542) - @ulmako
 - [OpsGenie] Corrected spelling of the `opsgenie_default_receipients` configuration option to `opsgenie_default_recipients`. Both variations will continue to work and a warning message will notify affected users. [#1539](https://github.com/jertel/elastalert2/pull/1539) - @lstyles
 - [OpsGenie] Prevent templated `opsgenie_teams` and `opsgenie_recipients` from being overwritten with evaluated values first time an alert is sent. [#1540](https://github.com/jertel/elastalert2/issues/1540) [#1539](https://github.com/jertel/elastalert2/pull/1539) - @lstyles
+- [OpsGenie] Updated configuration schema with missing OpsGenie alerter properties. [#1543](https://github.com/jertel/elastalert2/pull/1543) - @lstyles
 - [Docs] Add missing documentation of the timestamp_field option - [#1544](https://github.com/jertel/elastalert2/pull/1544) - @apollolv
 
 # 2.20.0
