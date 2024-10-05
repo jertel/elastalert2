@@ -91,9 +91,37 @@ rule will no longer be run until either ElastAlert 2 restarts or the rule file h
 
 ``show_disabled_rules``: If true, ElastAlert 2 show the disable rules' list when finishes the execution. This defaults to True.
 
-``notify_email``: An email address, or list of email addresses, to which notification emails will be sent. Currently,
-only an uncaught exception will send a notification email. The from address, SMTP host, and reply-to header can be set
-using ``from_addr``, ``smtp_host``, and ``email_reply_to`` options, respectively. By default, no emails will be sent.
+``notify_alert``: List of alerters to execute upon encountering a system error. System errors occur when an unexpected exception is thrown during rule processing. For additional notifications, such as when ElastAlert 2 background tests encounter problems, or when connectivity to the data storage system is lost, enable ``notify_all_errors``. 
+
+See the :ref:`Alerts` section for the list of available alerters and their parameters.
+
+Included fields in a system notification are:
+
+- message: The details about the error
+- timestamp: The time that the error occurred
+- rule: Rule object if the error occurred during the processing of a rule, otherwise will be empty/None.
+
+The following example shows how all ElastAlert 2 system errors can be delivered to both a Matrix chat server and an email address.
+
+.. code-block:: yaml
+
+    notify_alert:
+    - email
+    - matrixhookshot
+
+    notify_all_errors: true
+
+    email:
+    - jason@some-domain.com
+    smtp_host: some-mail-host.com
+    from_addr: "ElastAlert 2 <sysadmin@some-server.com>"
+    smtp_auth_file: /opt/elastalert2/smtp.auth
+    matrixhookshot_webhook_url: https://some-matrix-server/webhook/xyz
+
+``notify_all_errors``: If true, notification emails will be sent on additional system errors. This can cause a large number of emails to be sent when connectivity to Elasticsearch is lost. When set to false, only unexpected, rule-specific errors will be sent.
+
+``notify_email``: (DEPRECATED) An email address, or list of email addresses, to which notification emails will be sent upon encountering an unexpected rule error. The from address, SMTP host, and reply-to header can be set
+using ``from_addr``, ``smtp_host``, and ``email_reply_to`` options, respectively. By default, no emails will be sent. NOTE: This is a legacy method with limited email delivery support. Use the newer ``notify_alert`` setting to gain the full flexibility of ElastAlert 2's alerter library for system notifications.
 
 single address example::
 

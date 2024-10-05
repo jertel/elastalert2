@@ -6,10 +6,15 @@ definitions:
     type: [string, array]
     items: {type: string}
 
-  # Either a single string OR an array of strings OR an array of ararys
+  # Either a single string OR an array of strings OR an array of arrays
   arrayOfStringsOrOtherArrays: &arrayOfStringsOrOtherArray
     type: [string, array]
     items: {type: [string, array]}
+
+  # Either a single string OR an array of strings OR an array of objects
+  stringOrArrayOfStringsOrObjects: &stringOrArrayOfStringsOrObjects
+    type: [string, array]
+    items: {type: [string, object]}
 
   timedelta: &timedelta
     type: object
@@ -304,6 +309,10 @@ properties:
   replace_dots_in_field_names: {type: boolean}
   scan_entire_timeframe: {type: boolean}
   
+  ## System Error Notifications
+  notify_alert: *stringOrArrayOfStringsOrObjects
+  notify_all_errors: {type: boolean}
+
   ### summary table
   summary_table_fields: {type: array, items: {type: string}}
   summary_table_type: {type: string, enum: ['ascii', 'html', 'markdown']}

@@ -9,6 +9,7 @@ import pytest
 from elasticsearch.exceptions import ConnectionError
 from elasticsearch.exceptions import ElasticsearchException
 
+from elastalert.alerts import Alerter
 from elastalert.enhancements import BaseEnhancement
 from elastalert.enhancements import DropMatchException
 from elastalert.enhancements import TimeEnhancement
@@ -1286,6 +1287,34 @@ def test_uncaught_exceptions(ea):
     with mock.patch.object(ea, 'send_notification_email') as mock_email:
         ea.handle_uncaught_exception(e, ea.rules[0])
     assert mock_email.call_args_list[0][1] == {'exception': e, 'rule': ea.disabled_rules[0]}
+
+
+def test_handle_notify_error_unconfigured(ea):
+    testmsg = "testing"
+    testrule = {}
+    testex = Exception()
+
+    with mock.patch.object(ea, 'send_notification_email') as mock_email:
+        ea.handle_notify_error(testmsg, testrule, testex)
+    assert not mock_email.called
+
+
+def test_handle_notify_error_alerts(ea):
+    testmsg = "testing"
+    testrule = {}
+    testex = Exception()
+
+    fake_alert = Alerter(testrule)
+
+    ea.notify_alerters = [fake_alert]
+    with mock.patch.object(fake_alert, 'alert') as mock_alert:
+        ea.handle_notify_error(testmsg, testrule, testex)
+        assert mock_alert.called
+        actual = mock_alert.call_args_list[0][0][0]
+        details = actual[0]
+        assert details['timestamp'] is not None
+        assert details['message'] == testmsg
+        assert details['rule'] == testrule
 
 
 def test_get_top_counts_handles_no_hits_returned(ea):
