@@ -142,6 +142,8 @@ Rule Configuration Cheat Sheet
 +--------------------------------------------------------------+           +
 | ``buffer_time`` (time, default from config.yaml)             |           |
 +--------------------------------------------------------------+           |
+| ``timestamp_field`` (string, default "@timestamp")           |           |
++--------------------------------------------------------------+           |
 | ``timestamp_type`` (string, default iso)                     |           |
 +--------------------------------------------------------------+           |
 | ``timestamp_format`` (string, default "%Y-%m-%dT%H:%M:%SZ")  |           |
@@ -970,6 +972,14 @@ summary_suffix
 ^^^^^^^^^^^^^^^^^^^^
 
 ``summary_suffix``: Specify a suffix string, which will be added after the aggregation summary table. This string is currently not subject to any formatting.
+
+timestamp_field
+^^^^^^^^^^^^^^^
+
+``timestamp_field``: Specify the name of the document field containing the timestamp. 
+By default, the field ``@timestamp`` is used to query Elasticsearch. 
+If ``timestamp_field`` is set, this date field will be considered whenever querying, filtering and aggregating based on timestamps.
+(Optional, string, default @timestamp).
 
 timestamp_type
 ^^^^^^^^^^^^^^
