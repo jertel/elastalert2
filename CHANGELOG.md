@@ -13,6 +13,7 @@
 - [OpsGenie] Prevent templated `opsgenie_teams` and `opsgenie_recipients` from being overwritten with evaluated values first time an alert is sent. [#1540](https://github.com/jertel/elastalert2/issues/1540) [#1539](https://github.com/jertel/elastalert2/pull/1539) - @lstyles
 - [OpsGenie] Updated configuration schema with missing OpsGenie alerter properties. [#1543](https://github.com/jertel/elastalert2/pull/1543) - @lstyles
 - [Docs] Add missing documentation of the timestamp_field option - [#1544](https://github.com/jertel/elastalert2/pull/1544) - @apollolv
+- Add support for Kibana 8.14/8.15 for Kibana Discover - [#1547](https://github.com/jertel/elastalert2/pull/1547) - @nsano-rururu
 
 # 2.20.0
 
