@@ -14,6 +14,7 @@
 - [OpsGenie] Updated configuration schema with missing OpsGenie alerter properties. [#1543](https://github.com/jertel/elastalert2/pull/1543) - @lstyles
 - [Docs] Add missing documentation of the timestamp_field option - [#1544](https://github.com/jertel/elastalert2/pull/1544) - @apollolv
 - Add support for Kibana 8.14/8.15 for Kibana Discover - [#1547](https://github.com/jertel/elastalert2/pull/1547) - @nsano-rururu
+- Upgrade pylint 3.1.0 to 3.3.1, pytest 8.0.2 to 8.3.3, pytest-cov 4.1.0 to 5.0.0, pytest-xdist 3.5.0 to 3.6.1, sphinx 7.2.6 to 8.0.2, sphinx_rtd_theme 2.0.0 to 3.0.1, tox 4.13.0 to 4.21.2  - [#1550](https://github.com/jertel/elastalert2/pull/1550) - @nsano-rururu
 
 # 2.20.0
 
