@@ -21,7 +21,7 @@ setup(
         "Discussion Forum": "https://github.com/jertel/elastalert2/discussions",
     },
     classifiers=[
-        'Programming Language :: Python :: 3.12',
+        'Programming Language :: Python :: 3.13',
         'License :: OSI Approved :: Apache Software License',
         'Operating System :: OS Independent',
     ],
@@ -31,7 +31,7 @@ setup(
                             'elastalert=elastalert.elastalert:main']},
     packages=find_packages(exclude=["tests"]),
     package_data={'elastalert': ['schema.yaml', 'es_mappings/**/*.json']},
-    python_requires='>=3.12',
+    python_requires='>=3.13',
     install_requires=[
         'apscheduler>=3.10.4,<4.0',
         'aws-requests-auth>=0.4.3',

@@ -38,6 +38,7 @@ from elastalert.opensearch_discover import generate_opensearch_discover_url
 from elastalert.opensearch_external_url_formatter import create_opensearch_external_url_formatter
 from elastalert.prometheus_wrapper import PrometheusWrapper
 from elastalert.ruletypes import FlatlineRule
+from elastalert.ruletypes import RuleType
 from elastalert.util import (add_keyword_postfix, cronite_datetime_to_timestamp, dt_to_ts, dt_to_unix, EAException,
                              elastalert_logger, elasticsearch_client, format_index, lookup_es_key, parse_deadline,
                              parse_duration, pretty_ts, replace_dots_in_field_names, seconds, set_es_key,
@@ -138,6 +139,13 @@ class ElastAlerter(object):
         self.old_query_limit = self.conf['old_query_limit']
         self.disable_rules_on_error = self.conf['disable_rules_on_error']
         self.notify_email = self.conf.get('notify_email', [])
+        self.notify_all_errors = self.conf.get('notify_all_errors', False)
+        self.notify_alert = self.conf.get('notify_alert', [])
+        alert_conf_obj = self.conf.copy()
+        alert_conf_obj['name'] = 'ElastAlert 2 System Error Notification'
+        alert_conf_obj['alert'] = self.notify_alert
+        alert_conf_obj['type'] = RuleType({})
+        self.notify_alerters = self.rules_loader.load_alerts(alert_conf_obj, self.notify_alert)
         self.from_addr = self.conf.get('from_addr', 'ElastAlert')
         self.smtp_host = self.conf.get('smtp_host', 'localhost')
         self.smtp_port = self.conf.get('smtp_port')
@@ -1505,6 +1513,8 @@ class ElastAlerter(object):
             return res
         except ElasticsearchException as e:
             elastalert_logger.exception("Error writing alert info to Elasticsearch: %s" % (e))
+            if self.notify_all_errors:
+                self.handle_notify_error(e, None)
 
     def find_recent_pending_alerts(self, time_limit):
         """ Queries writeback_es to find alerts that did not send
@@ -1526,6 +1536,8 @@ class ElastAlerter(object):
                 return res['hits']['hits']
         except ElasticsearchException as e:
             elastalert_logger.exception("Error finding recent pending alerts: %s %s" % (e, query))
+            if self.notify_all_errors:
+                self.handle_notify_error(e, None)
         return []
 
     def send_pending_alerts(self):
@@ -1793,6 +1805,23 @@ class ElastAlerter(object):
                 return True
         return False
 
+    def handle_notify_error(self, message, rule, exception=None):
+        if self.notify_email:
+            self.send_notification_email(exception=exception, rule=rule)
+        if self.notify_alerters:
+            alert_pipeline = {"alert_time": ts_now()}
+            details = [{
+                'timestamp': ts_now(),
+                'message': message,
+                'rule': rule,
+            }]
+            for alerter in self.notify_alerters:
+                alerter.pipeline = alert_pipeline
+                try:
+                    alerter.alert(details)
+                except Exception as e:
+                    elastalert_logger.error('Error while running notify alert %s: %s' % (alerter.get_info()['type'], e))
+
     def handle_error(self, message, data=None):
         ''' Logs message at error level and writes message, data and traceback to Elasticsearch. '''
         elastalert_logger.error(message)
@@ -1802,18 +1831,20 @@ class ElastAlerter(object):
         if data:
             body['data'] = data
         self.writeback('elastalert_error', body)
+        if self.notify_all_errors:
+            self.handle_notify_error(message, None)
 
     def handle_uncaught_exception(self, exception, rule):
         """ Disables a rule and sends a notification. """
         elastalert_logger.error(traceback.format_exc())
-        self.handle_error('Uncaught exception running rule %s: %s' % (rule['name'], exception), {'rule': rule['name']})
+        msg = 'Uncaught exception running rule %s: %s' % (rule['name'], exception)
+        self.handle_error(msg, {'rule': rule['name']})
         if self.disable_rules_on_error:
             self.rules = [running_rule for running_rule in self.rules if running_rule['name'] != rule['name']]
             self.disabled_rules.append(rule)
             self.scheduler.pause_job(job_id=rule['name'])
             elastalert_logger.info('Rule %s disabled', rule['name'])
-        if self.notify_email:
-            self.send_notification_email(exception=exception, rule=rule)
+        self.handle_notify_error(msg, rule, exception=exception)
 
     def send_notification_email(self, text='', exception=None, rule=None, subject=None, rule_file=None):
         email_body = text
@@ -1869,7 +1900,7 @@ class ElastAlerter(object):
 
             smtp.sendmail(self.from_addr, recipients, email.as_string())
         except (SMTPException, error) as e:
-            self.handle_error('Error connecting to SMTP host: %s' % (e), {'email_body': email_body})
+            elastalert_logger.error('Error connecting to SMTP host: %s' % (e), {'email_body': email_body})
 
     def get_top_counts(self, rule, starttime, endtime, keys, number=None, qk=None):
         """ Counts the number of events for each unique value for each key field.

@@ -142,6 +142,8 @@ Rule Configuration Cheat Sheet
 +--------------------------------------------------------------+           +
 | ``buffer_time`` (time, default from config.yaml)             |           |
 +--------------------------------------------------------------+           |
+| ``timestamp_field`` (string, default "@timestamp")           |           |
++--------------------------------------------------------------+           |
 | ``timestamp_type`` (string, default iso)                     |           |
 +--------------------------------------------------------------+           |
 | ``timestamp_format`` (string, default "%Y-%m-%dT%H:%M:%SZ")  |           |
@@ -744,7 +746,7 @@ kibana_discover_version
 The currently supported versions of Kibana Discover are:
 
 - `7.0`, `7.1`, `7.2`, `7.3`, `7.4`, `7.5`, `7.6`, `7.7`, `7.8`, `7.9`, `7.10`, `7.11`, `7.12`, `7.13`, `7.14`, `7.15`, `7.16`, `7.17`
-- `8.0`, `8.1`, `8.2`, `8.3`, `8.4`, `8.5`, `8.6`, `8.7`, `8.8`, `8.9` , `8.10` , `8.11` , `8.12` , `8.13` 
+- `8.0`, `8.1`, `8.2`, `8.3`, `8.4`, `8.5`, `8.6`, `8.7`, `8.8`, `8.9` , `8.10` , `8.11` , `8.12` , `8.13`, `8.14`, `8.15` 
 
 ``kibana_discover_version: '7.15'``
 
@@ -970,6 +972,14 @@ summary_suffix
 ^^^^^^^^^^^^^^^^^^^^
 
 ``summary_suffix``: Specify a suffix string, which will be added after the aggregation summary table. This string is currently not subject to any formatting.
+
+timestamp_field
+^^^^^^^^^^^^^^^
+
+``timestamp_field``: Specify the name of the document field containing the timestamp. 
+By default, the field ``@timestamp`` is used to query Elasticsearch. 
+If ``timestamp_field`` is set, this date field will be considered whenever querying, filtering and aggregating based on timestamps.
+(Optional, string, default @timestamp).
 
 timestamp_type
 ^^^^^^^^^^^^^^
@@ -1411,6 +1421,11 @@ default 50, unique terms.
 ``terms_size``: When used with ``use_terms_query``, this is the maximum number of terms returned per query. Default is 50.
 
 ``query_key``: Counts of documents will be stored independently for each value of ``query_key``.
+
+.. note::
+
+  Matches of the rule type ``spike`` contain two additional fields: ``spike_count`` contains the number of events that occurred during the
+  current timeframe. ``reference_count`` contains the number of events that occurred during the reference timeframe.
 
 Flatline
 ~~~~~~~~

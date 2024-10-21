@@ -80,6 +80,7 @@ class mock_rule_loader(object):
         self.load = mock.Mock()
         self.get_hashes = mock.Mock()
         self.load_configuration = mock.Mock()
+        self.load_alerts = mock.Mock(return_value=[])
 
 
 class mock_ruletype(object):
