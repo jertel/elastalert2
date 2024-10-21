@@ -7,7 +7,7 @@
 - None
 
 ## Other changes
-- None
+- Add SNMPTS to notify email - [#1536] - @popexie
 
 # 2.20.0
 
