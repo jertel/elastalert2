@@ -1287,4 +1287,3 @@ def test_formatted_opsgenie_addr(caplog):
         user, level, message = caplog.record_tuples[0]
         assert "Error response from https://api.opsgenie.com/v2/alerts \n API Response: <MagicMock name='post()' id=" not in message
         assert ('elastalert', logging.INFO, 'Alert sent to OpsGenie') == caplog.record_tuples[0]
-
