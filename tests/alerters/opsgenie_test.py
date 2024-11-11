@@ -1268,18 +1268,23 @@ def test_formatted_opsgenie_addr(caplog):
         'opsgenie_addr': 'https://api.opsgenie.com/v2/alerts/{alert_id}',
         'type': mock_rule()
     }
-    with mock.patch('requests.post') as mock_post:
+    with (mock.patch('requests.post') as mock_post):
         rep = requests
         rep.status_code = 202
         url = rule.get('opsgenie_addr')
-        matches = [{'alert_id': '1234','@timestamp': '2014-10-31T00:00:00'}]
+        matches = [
+            {
+                'alert_id': '1234',
+                '@timestamp': '2014-10-31T00:00:00'
+            }
+        ]
         mock_post.return_value = rep
         url.format(**matches[0])
 
         alert = OpsGenieAlerter(rule)
         alert.alert(matches)
         mcal = mock_post._mock_call_args_list
-        assert mcal[0][0][0] == (f'https://api.opsgenie.com/v2/alerts/{matches[0].get("alert_id")}')
+        assert mcal[0][0][0] == f'https://api.opsgenie.com/v2/alerts/{matches[0].get("alert_id")}'
         assert mock_post.called
 
         assert mcal[0][1]['headers']['Authorization'] == 'GenieKey ogkey'
