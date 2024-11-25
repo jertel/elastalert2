@@ -130,8 +130,7 @@ As a Kubernetes deployment
 
 The Docker container for ElastAlert 2 can be used directly as a Kubernetes
 deployment, but for convenience, a Helm chart is also available. See the
-instructions provided `on Github
-<https://github.com/jertel/elastalert2/blob/master/chart/elastalert2/README.md>`_
+`Chart Readme <https://github.com/jertel/elastalert2/blob/master/chart/elastalert2/README.md>`_ 
 for more information on how to install, configure, and run the chart.
 
 .. _python-instructions:
