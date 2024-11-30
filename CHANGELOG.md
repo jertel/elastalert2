@@ -1,6 +1,17 @@
 # 2.TBD.TBD
 
 ## Breaking changes
+- None
+
+## New features
+- None
+
+## Other changes
+- None
+
+# 2.22.0
+
+## Breaking changes
 - Note that version 2.21 upgraded Python to 3.13 and unintentionally dropped support for Python 3.12. This release, restores support for Python 3.12, while continuing to use Python 3.13 in the official ElastAlert 2 Docker image. Python 3.12 support will be dropped in a future release. - [#1585](https://github.com/jertel/elastalert2/pull/1585) - @jertel
 
 ## New features
