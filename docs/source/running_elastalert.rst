@@ -146,7 +146,7 @@ Requirements
 
 - Elasticsearch 7.x or 8.x, or OpenSearch 1.x or 2.x
 - ISO8601 or Unix timestamped data
-- Python 3.13. Require OpenSSL 3.0.8 or newer.
+- Python 3.13. Require OpenSSL 3.0.8 or newer. Note that Python 3.12 is still supported but will be removed in a future release.
 - pip
 - Packages on Ubuntu 24.04: build-essential python3-pip python3.13 python3.13-dev libffi-dev libssl-dev
 
