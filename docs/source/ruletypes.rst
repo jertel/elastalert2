@@ -526,6 +526,17 @@ aggregate_by_match_time
 Setting this to true will cause aggregations to be created relative to the timestamp of the first event, rather than the current time. This
 is useful for querying over historic data or if using a very large buffer_time and you want multiple aggregations to occur from a single query.
 
+aggregation_alert_time_compared_with_timestamp_field
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+``aggregation_alert_time_compared_with_timestamp_field``: This option controls how aggregation works when a rule processes events
+older than ``current time - aggregation window`` and ``aggregate_by_match_time`` is set to true. Defaults to false.
+When false, the expected send timestamp of the pending alert (waiting for additional events to aggregate) is compared with the current time.
+As a result, following events will not be aggregated with the pending alert, because it is considered already notified,
+leading to past events being notified one by one instead of being grouped together.
+When true, it allows the aggregation of events with old timestamps, as long as they are within the aggregation window.
+(Optional, boolean, default false)
+
 realert
 ^^^^^^^
 

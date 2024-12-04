@@ -7,7 +7,7 @@
 - None
 
 ## Other changes
-- None
+- [Docs] Add missing documentation of the `aggregation_alert_time_compared_with_timestamp_field` option. - [#1588](https://github.com/jertel/elastalert2/pull/1588) - @nicolasnovelli
 
 # 2.22.0
 
