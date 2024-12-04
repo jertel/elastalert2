@@ -30,6 +30,7 @@
 - [Notifications] New config option `notify_all_errors` supports all system errors, including loss of data connectivity - [#1546](https://github.com/jertel/elastalert2/pull/1546) - @jertel
 
 ## Other changes
+- Add SNMPTS to notify email - [#1536] - @popexie
 - [Docs] Mention the two available Spike-rule metrics that are add into the match record - [#1542](https://github.com/jertel/elastalert2/pull/1542) - @ulmako
 - [OpsGenie] Corrected spelling of the `opsgenie_default_receipients` configuration option to `opsgenie_default_recipients`. Both variations will continue to work and a warning message will notify affected users. [#1539](https://github.com/jertel/elastalert2/pull/1539) - @lstyles
 - [OpsGenie] Prevent templated `opsgenie_teams` and `opsgenie_recipients` from being overwritten with evaluated values first time an alert is sent. [#1540](https://github.com/jertel/elastalert2/issues/1540) [#1539](https://github.com/jertel/elastalert2/pull/1539) - @lstyles
