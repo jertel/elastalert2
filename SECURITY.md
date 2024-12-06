@@ -8,8 +8,8 @@ reason to not upgrade to the latest release.
 
 | Version | Supported          |
 | ------- | ------------------ |
-| >= 2.18 | :white_check_mark: |
-| < 2.17  | :x:                |
+| >= 2.22 | :white_check_mark: |
+| <= 2.21  | :x:                |
 | 1.x     | :x:                |
 
 
