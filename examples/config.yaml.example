@@ -125,3 +125,13 @@ alert_time_limit:
 #        - console
 #        - file
 #      propagate: false
+#
+
+# SMTP configuration
+#smtp_host: "smtp.example.com"
+#smtp_port: 25
+
+# Option username and password for smtp
+#smtp_user: someusername
+#smtp_password: somepassword
+
