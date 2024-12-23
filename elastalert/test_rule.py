@@ -137,7 +137,7 @@ class MockElastAlerter(object):
 
         return parsed_args
 
-    def str_to_ts(self, input: str) -> datetime:
+    def str_to_ts(self, input: str) -> datetime.datetime:
         if input == "NOW":
             return self.ts_now
 
@@ -148,7 +148,7 @@ class MockElastAlerter(object):
                 f"Input is not a valid ISO8601 timestamp (YYYY-MM-DDTHH:MM:SS+XX:00): {input}"
             )
 
-    def parse_starttime(self, timeframe=None) -> datetime:
+    def parse_starttime(self, timeframe=None) -> datetime.datetime:
         if self.args.start:
             try:
                 return self.str_to_ts(self.args.start)
