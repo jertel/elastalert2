@@ -10,6 +10,29 @@
 - [Docs] Add missing documentation of the `aggregation_alert_time_compared_with_timestamp_field` option. - [#1588](https://github.com/jertel/elastalert2/pull/1588) - @nicolasnovelli
 - Fix linter error reporting about return type assignation in `elastalert/test_rule.py`. - [#1594](https://github.com/jertel/elastalert2/pull/1594) - @thican
 - Add support for Kibana 8.17 for Kibana Discover - [#1597](https://github.com/jertel/elastalert2/pull/1597) - @nsano-rururu
+- Resolve runtime deprecation warnings related to Elastic's 8.16 range filter changes - [#1599](https://github.com/jertel/elastalert2/pull/1599) - @jertel
+- Resolve test deprecation warnings related to prettytable enum changes - [#1599](https://github.com/jertel/elastalert2/pull/1599) - @jertel
+- Upgrade dependency pylint to 3.3.3 (build) - [#1599](https://github.com/jertel/elastalert2/pull/1599) - @jertel
+- Upgrade dependency pytest to 8.3.4 (build) - [#1599](https://github.com/jertel/elastalert2/pull/1599) - @jertel
+- Upgrade dependency pytest-cov to 6.0.0 (build) - [#1599](https://github.com/jertel/elastalert2/pull/1599) - @jertel
+- Upgrade dependency sphinx to 8.1.3 (build)  - [#1599](https://github.com/jertel/elastalert2/pull/1599) - @jertel
+- Upgrade dependency sphinx_rtd_theme to 3.0.2 (build) - [#1599](https://github.com/jertel/elastalert2/pull/1599) - @jertel
+- Upgrade dependency tox to 4.23.2 (build) - [#1599](https://github.com/jertel/elastalert2/pull/1599) - @jertel
+- Upgrade dependency apscheduler to 3.11.0 - [#1599](https://github.com/jertel/elastalert2/pull/1599) - @jertel
+- Upgrade dependency boto3 to 1.35.92 - [#1599](https://github.com/jertel/elastalert2/pull/1599) - @jertel
+- Upgrade dependency cffi to 1.17.1 - [#1599](https://github.com/jertel/elastalert2/pull/1599) - @jertel
+- Upgrade dependency croniter to 6.0.0 - [#1599](https://github.com/jertel/elastalert2/pull/1599) - @jertel
+- Upgrade dependency jinja2 to 3.1.5 - [#1599](https://github.com/jertel/elastalert2/pull/1599) - @jertel
+- Upgrade dependency jira to 3.8.0 - [#1599](https://github.com/jertel/elastalert2/pull/1599) - @jertel
+- Upgrade dependency jsonpointer to 3.0.0 - [#1599](https://github.com/jertel/elastalert2/pull/1599) - @jertel
+- Upgrade dependency jsonschema to 4.23.0 - [#1599](https://github.com/jertel/elastalert2/pull/1599) - @jertel
+- Upgrade dependency prettytable to 3.12.0 - [#1599](https://github.com/jertel/elastalert2/pull/1599) - @jertel
+- Upgrade dependency prometheus-client to 0.21.1 - [#1599](https://github.com/jertel/elastalert2/pull/1599) - @jertel
+- Upgrade dependency pyyaml to 6.0.2 - [#1599](https://github.com/jertel/elastalert2/pull/1599) - @jertel
+- Upgrade dependency requests to 2.32.3 - [#1599](https://github.com/jertel/elastalert2/pull/1599) - @jertel
+- Upgrade dependency stomp.py to 8.2.0 - [#1599](https://github.com/jertel/elastalert2/pull/1599) - @jertel
+- Upgrade dependency tencentcloud-sdk-python to 3.0.1295 - [#1599](https://github.com/jertel/elastalert2/pull/1599) - @jertel
+- Upgrade dependency twilio to 9.4.1 - [#1599](https://github.com/jertel/elastalert2/pull/1599) - @jertel
 
 # 2.22.0
 
