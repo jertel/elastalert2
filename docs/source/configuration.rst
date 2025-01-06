@@ -91,6 +91,10 @@ rule will no longer be run until either ElastAlert 2 restarts or the rule file h
 
 ``show_disabled_rules``: If true, ElastAlert 2 show the disable rules' list when finishes the execution. This defaults to True.
 
+``notify_email``: An email address, or list of email addresses, to which notification emails will be sent. Currently,
+only an uncaught exception will send a notification email. The from address, SMTP host, and reply-to header can be set
+using ``from_addr``, ``smtp_host``, ``smtp_port`` and ``email_reply_to`` options, respectively. By default, no emails will be sent.
+
 ``notify_alert``: List of alerters to execute upon encountering a system error. System errors occur when an unexpected exception is thrown during rule processing. For additional notifications, such as when ElastAlert 2 background tests encounter problems, or when connectivity to the data storage system is lost, enable ``notify_all_errors``. 
 
 See the :ref:`Alerts` section for the list of available alerters and their parameters.
@@ -141,6 +145,15 @@ is "ElastAlert".
 
 ``smtp_host``: The SMTP host used to send email notifications. This value will be used for email alerts as well,
 unless overwritten in the rule config. The default is "localhost".
+
+``smtp_port``: The SMTP port used to send email notifications. This value will be used for email alerts as well,
+unless overwritten in the rule config.
+
+``smtp_ssl``: This enable TLS on SMTP. The default is False.
+
+``smtp_user``: Optional; username for connecting to ``smtp_host``.
+
+``smtp_password``: Optional; password for connecting to ``smtp_host``.
 
 ``email_reply_to``: This sets the Reply-To header in emails. The default is the recipient address.
 
