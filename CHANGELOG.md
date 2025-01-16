@@ -4,10 +4,9 @@
 - None
 
 ## New features
-- None
+- [Helm] Add optional liveness and readiness probe - [#1604](https://github.com/jertel/elastalert2/pull/1604) - @aizerin
 
 ## Other changes
-- [Helm] Add optional liveness and readiness probe - [#1604](https://github.com/jertel/elastalert2/pull/1604) - @aizerin
 - [Docs] Add missing documentation of the `aggregation_alert_time_compared_with_timestamp_field` option. - [#1588](https://github.com/jertel/elastalert2/pull/1588) - @nicolasnovelli
 - Fix linter error reporting about return type assignation in `elastalert/test_rule.py`. - [#1594](https://github.com/jertel/elastalert2/pull/1594) - @thican
 - Add support for Kibana 8.17 for Kibana Discover - [#1597](https://github.com/jertel/elastalert2/pull/1597) - @nsano-rururu
