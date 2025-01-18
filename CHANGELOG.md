@@ -4,7 +4,7 @@
 - None
 
 ## New features
-- None
+- Add `include_rule_params_in_matches` rule parameter to enable copying of specific rule params into match data - [#1605](https://github.com/jertel/elastalert2/pull/1605) - @jertel
 
 ## Other changes
 - [Docs] Add missing documentation of the `aggregation_alert_time_compared_with_timestamp_field` option. - [#1588](https://github.com/jertel/elastalert2/pull/1588) - @nicolasnovelli
