@@ -4,7 +4,7 @@
 - None
 
 ## New features
-- None
+- [Helm] Add optional liveness and readiness probe - [#1604](https://github.com/jertel/elastalert2/pull/1604) - @aizerin
 
 ## Other changes
 - [Docs] Add missing documentation of the `aggregation_alert_time_compared_with_timestamp_field` option. - [#1588](https://github.com/jertel/elastalert2/pull/1588) - @nicolasnovelli

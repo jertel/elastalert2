@@ -219,6 +219,12 @@ rules: {}
   #   pagerduty_service_key: dummy
   #   pagerduty_client_name: ElastAlert Deadman Switch
 
+# Probes configuration
+livenessProbe:
+  enabled: false
+readinessProbe:
+  enabled: false
+
 serviceAccount:
   # Specifies whether a service account should be created
   create: true
