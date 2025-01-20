@@ -120,6 +120,10 @@ Rule Configuration Cheat Sheet
 +--------------------------------------------------------------+           |
 | ``include_fields`` (list of strs, no default)                |           |
 +--------------------------------------------------------------+           |
+| ``include_rule_params_in_matches`` (list of strs, no default)|           |
++--------------------------------------------------------------+           |
+| ``include_rule_params_in_first_match_only`` (boolean, False) |           |
++--------------------------------------------------------------+           |
 | ``filter`` (ES filter DSL, no default)                       |           |
 +--------------------------------------------------------------+           |
 | ``max_query_size`` (int, default global max_query_size)      |           |
@@ -624,6 +628,26 @@ include_fields
 ``include_fields``: A list of fields that should be included in query results and passed to rule types and alerts. If ``_source_enabled`` is False,
 only these fields and those from ``include`` are included.  When ``_source_enabled`` is True, these are in addition to source.  This is used
 for runtime fields, script fields, etc.  This only works with Elasticsearch version 7.11 and newer.  (Optional, list of strings, no default)
+
+include_rule_params_in_matches
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+``include_rule_params_in_matches``: This is an optional list of rule parameter names that will have their values copied from the rule into the match records prior to sending out alerts. This allows alerters to have access to specific data in the originating rule. The parameters will be keyed into the match with a ``rule_param_`` prefix. For example, if the ``name`` rule parameter is specified in this list, the match record will have access to the rule name via the ``rule_param_name`` field. Including parameters with complex types, such as maps (Dictionaries) or lists (Arrays) can cause problems if the alerter is unable to convert these into formats that it needs. For example, including the ``query_key`` list parameter in matches that use the http_post2 alerter can cause JSON serialization errors.
+
+.. note::
+
+    That this option can cause performance to degrade when a rule is triggered with many matching records since each match record will need to have the rule parameter data copied into it. See the ``include_rule_params_in_first_match_only`` boolean setting, which can mitigate this performance degradation. This performance degradation is more likely to occur with aggregated alerts.
+
+Example::
+
+    include_rule_params_in_matches:
+    - name
+    - some_custom_param
+
+include_rule_params_in_first_match_only
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+``include_rule_params_in_first_match_only``: When using the ``include_rule_params_in_matches`` setting mentioned above, optionally set to this setting to ``True`` to only copy the rule parameters into the first match record. This is primarily useful for aggregation rules that match hundreds or thousands of records during each run, and where only the first match is used in the alerter. The effectiveness of this setting is dependent upon which alerter(s) are being used. For example, using this setting with ``True`` in a rule that uses the http_post2 alerter will not be useful, since that alerter simply iterates across all matches and POSTs them to the HTTP URL. This would cause only the first POST to have the additional rule parameter values.
 
 top_count_keys
 ^^^^^^^^^^^^^^
