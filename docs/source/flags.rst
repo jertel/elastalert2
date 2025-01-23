@@ -31,6 +31,8 @@ based on changes to their config files.
 ``--prometheus_port`` exposes ElastAlert 2 `Prometheus metrics <https://elastalert2.readthedocs.io/en/latest/recipes/exposing_rule_metrics.html>`_ on the specified
 port. Prometheus metrics disabled by default.
 
+``--prometheus_addr`` allows you to specify the host address that the Prometheus metrics server will bind to.
+
 ``--rule <rule.yaml>`` will only run the given rule. The rule file may be a
 complete file path or a filename in ``rules_folder`` or its subdirectories.
 
