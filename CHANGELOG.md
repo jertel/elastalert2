@@ -36,6 +36,7 @@
 - Upgrade dependency tencentcloud-sdk-python to 3.0.1295 - [#1599](https://github.com/jertel/elastalert2/pull/1599) - @jertel
 - Upgrade dependency twilio to 9.4.1 - [#1599](https://github.com/jertel/elastalert2/pull/1599) - @jertel
 - [Spike] Fixes spike rule error when no data exists in the current time window - [#1605](https://github.com/jertel/elastalert2/pull/1605) - @jertel
+- [Spike] Fixes spike rule error when no data exists in the reference time window - [#1610](https://github.com/jertel/elastalert2/pull/1610) - @jertel
 
 # 2.22.0
 
