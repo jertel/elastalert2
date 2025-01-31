@@ -58,10 +58,25 @@ class SMSEagleAlerter(Alerter):
             'content-type': 'application/json',
             'access-token': self.smseagle_token
         }
+        
+        url = smseagle_url
+        
+        match smseagle_message_type:
+            case 'sms':
+                url += '/messages/sms'
+            case 'ring':
+                url += '/calls/ring'
+            case 'tts':
+                url += '/calls/tts'
+            case 'tts_adv':
+                url += '/calls/tts_advanced'
 
         payload = {
             "message": body
         }
+        
+        if not self.smseagle_to and not smseagle_contacts and not smseagle_groups:
+            raise EAException("Error forwarding to SMSEagle: Missing recipients")
         
         if self.smseagle_to:
             payload['to'] = self.smseagle_to
@@ -89,7 +104,7 @@ class SMSEagleAlerter(Alerter):
 
         try:
             response = requests.post(
-                smseagle_url,
+                url,
                 data=json.dumps(payload, cls=DateTimeEncoder),
                 headers=headers
             warnings.resetwarnings()
