@@ -9,7 +9,7 @@ from requests.exceptions import RequestException
 
 
 class SMSEagleAlerter(Alerter):
-    required_options = set(['smseagle_url'])
+    required_options = frozenset(['smseagle_url', 'smseagle_token', 'smseagle_message_type'])
 
     def __init__(self, rule):
         super(SMSEagleAlerter, self).__init__(rule)
@@ -27,8 +27,28 @@ class SMSEagleAlerter(Alerter):
         
         self.smseagle_duration = self.rule.get('smseagle_duration', '')
         self.smseagle_voice_id = self.rule.get('smseagle_voice_id', '')
+    
+    def get_message_type_endpoint(message_type):
+        match message_type:
+            case 'sms':
+                return '/messages/sms'
+            case 'ring':
+                return '/calls/ring'
+            case 'tts':
+                return '/calls/tts'
+            case 'tts_adv':
+                return '/calls/tts_advanced'
 
     def format_body(self, body):
+        return body
+        
+    def create_alert_body(self, matches):
+        body = self.get_aggregation_summary_text(matches)
+        if self.rule.get('alert_text_type') != 'aggregation_summary_only':
+            for match in matches:
+                body += str(BasicMatchString(self.rule, match))
+                if len(matches) > 1:
+                    body += '\n----------------------------------------\n'
         return body
 
     def get_aggregation_summary_text__maximum_width(self):
@@ -49,7 +69,6 @@ class SMSEagleAlerter(Alerter):
             alert_fields.append(arg)
         return alert_fields
 
-#todo
     def alert(self, matches):
         body = self.create_alert_body(matches)
 
@@ -59,17 +78,7 @@ class SMSEagleAlerter(Alerter):
             'access-token': self.smseagle_token
         }
         
-        url = smseagle_url
-        
-        match smseagle_message_type:
-            case 'sms':
-                url += '/messages/sms'
-            case 'ring':
-                url += '/calls/ring'
-            case 'tts':
-                url += '/calls/tts'
-            case 'tts_adv':
-                url += '/calls/tts_advanced'
+        endpoint = self.get_message_type_endpoint(smseagle_message_type)
 
         payload = {
             "message": body
@@ -102,17 +111,35 @@ class SMSEagleAlerter(Alerter):
         if self.smseagle_text:
             payload['message'] = self.smseagle_text
 
-        try:
-            response = requests.post(
-                url,
-                data=json.dumps(payload, cls=DateTimeEncoder),
-                headers=headers
-            warnings.resetwarnings()
-            response.raise_for_status()
-        except RequestException as e:
-            raise EAException("Error forwarding to SMSEagle: %s" % e)
+        for url in self.smseagle_url:
+            try:
+                response = requests.post(
+                    url+endpoint,
+                    data=json.dumps(payload, cls=DateTimeEncoder),
+                    headers=headers
+                )
+                warnings.resetwarnings()
+                response.raise_for_status()
+                
+                elastalert_logger.debug('Response: {0}'.format(r))
+                if response.status_code != 200:
+                    elastalert_logger.info("Error response from {0} \nAPI Response: {1}".format(url+endpoint, response))
+            except RequestException as e:
+                raise EAException("Error forwarding to SMSEagle: %s" % e)                               
         elastalert_logger.info("Alert '%s' sent to SMSEagle" % self.rule['name'])
 
     def get_info(self):
-        return {'type': 'smseagle',
-                'smseagle_url': self.smseagle_url}
+        ret = {'type': 'smseagle'}
+        
+        if self.smseagle_to:
+            ret['to'] = self.smseagle_to
+            
+        if self.smseagle_contacts:
+            ret['contacts'] = self.smseagle_contacts
+                    
+        if self.smseagle_groups:
+            ret['groups'] = self.smseagle_groups
+            
+        ret['url'] = self.smseagle_url+self.get_message_type_endpoint(self.smseagle_message_type)
+            
+        return ret
