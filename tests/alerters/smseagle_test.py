@@ -11,116 +11,61 @@ from elastalert.loaders import FileRulesLoader
 from elastalert.util import EAException
 
 
-def test_smseagle_sms_with_payload(caplog):
+def test_smseagle_send_sms(caplog):
     caplog.set_level(logging.INFO)
     rule = {
-        'name': 'Test SMSEagle integration',
+        'name': 'Test SMSEagle',
         'type': 'any',
-        'alert': ["smseagle"],
-        'smseagle_url': 'http://192.168.1.101',
+        'alert': ["smseagle"],        
+        'smseagle_url': 'http://smseagle_url',
         'smseagle_token': '123abc456def789',
-        'smseagle_message_type': 'sms'
+        'smseagle_message_type': 'sms',
         'smseagle_to': ['111222333']
     }
+    
+    rule['url'] = rule['smseagle_url'] + '/messages/sms'
+    
     rules_loader = FileRulesLoader({})
     rules_loader.load_modules(rule)
     alert = SMSEagleAlerter(rule)
     
     match = {
-        '@timestamp': '2017-01-01T00:00:00',
+        '@timestamp': '2025-01-01T00:00:00',
         'somefield': 'foobarbaz'
     }
     with mock.patch('requests.post') as mock_post_request:
         alert.alert([match])
 
     expected_data = {
-        'text': 'Test Rule\n\n@timestamp: 2017-01-01T00:00:00\nsomefield: foobarbaz\n',
+        'text': 'Test Rule\n\n@timestamp: 2025-01-01T00:00:00\nsomefield: foobarbaz\n'
     }
     
     mock_post_request.assert_called_once_with(
-        rule['smseagle_url'],
+        rule['url'],
         data=mock.ANY,
-        headers={'content-type': 'application/json'}
+        headers={'content-type': 'application/json', 'access-token': rule['smseagle_token']}
     )
     
     assert expected_data == json.loads(mock_post_request.call_args_list[0][1]['data'])
     assert ('elastalert', logging.INFO, "Alert 'Test Rule' sent to SMSEagle") == caplog.record_tuples[0]
     
 
-def test_http_alerter_with_payload_all_values():
-    rule = {
-        'name': 'Test SMSEagle Alerter With Payload',
-        'type': 'any',
-        'alert': []
-    }
-    rules_loader = FileRulesLoader({})
-    rules_loader.load_modules(rule)
-    alert = HTTPPostAlerter(rule)
-    match = {
-        '@timestamp': '2017-01-01T00:00:00',
-        'somefield': 'foobarbaz'
-    }
-    with mock.patch('requests.post') as mock_post_request:
-        alert.alert([match])
-    expected_data = {
-        'posted_name': 'foobarbaz',
-        'name': 'somestaticname',
-        '@timestamp': '2017-01-01T00:00:00',
-        'somefield': 'foobarbaz'
-    }
-    mock_post_request.assert_called_once_with(
-        rule['smseagle_url'],
-        data=mock.ANY,
-        headers={'Content-Type': 'application/json', 'Accept': 'application/json;charset=utf-8'},
-        proxies=None,
-        timeout=10,
-        verify=True
-    )
-    assert expected_data == json.loads(mock_post_request.call_args_list[0][1]['data'])
-    
-
-def test_smseagle_alerter_without_payload():
-    rule = {
-        'name': 'Test SMSEagle Alerter Without Payload',
-        'type': 'any',
-        'smseagle_url': 'http://192.168.1.101',
-        'alert': []
-    }
-    rules_loader = FileRulesLoader({})
-    rules_loader.load_modules(rule)
-    alert = HTTPPostAlerter(rule)
-    match = {
-        '@timestamp': '2017-01-01T00:00:00',
-        'somefield': 'foobarbaz'
-    }
-    with mock.patch('requests.post') as mock_post_request:
-        alert.alert([match])
-    expected_data = {
-        '@timestamp': '2017-01-01T00:00:00',
-        'somefield': 'foobarbaz',
-        'name': 'somestaticname'
-    }
-    mock_post_request.assert_called_once_with(
-        rule['smseagle_url'],
-        data=mock.ANY,
-        headers={'Content-Type': 'application/json', 'Accept': 'application/json;charset=utf-8'},
-    )
-    assert expected_data == json.loads(mock_post_request.call_args_list[0][1]['data'])
-    
-
 def test_smseagle_alerter_post_ea_exception():
     with pytest.raises(EAException) as ea:
         rule = {
-            'name': 'Test SMSEagle Alerter Without Payload',
+            'name': 'Test SMSEagle',
             'type': 'any',
-            'smseagle_url': 'http://192.168.1.101',
+            'smseagle_url': 'http://smseagle_url',
+            'smseagle_token': '123abc456def789',
+            'smseagle_message_type': 'sms',
+            'smseagle_to': ['111222333'],
             'alert': []
         }
         rules_loader = FileRulesLoader({})
         rules_loader.load_modules(rule)
         alert = SMSEagleAlerter(rule)
         match = {
-            '@timestamp': '2017-01-01T00:00:00',
+            '@timestamp': '2025-01-01T00:00:00',
             'somefield': 'foobarbaz'
         }
         mock_run = mock.MagicMock(side_effect=RequestException)
@@ -129,33 +74,20 @@ def test_smseagle_alerter_post_ea_exception():
     assert 'Error posting SMSEagle alert: ' in str(ea)
     
 
-def test_smseagle_get_aggregation_summary_text__maximum_width():
+def test_smseagle_getinfo():
     rule = {
-        'name': 'Test Rule',
+        'name': 'Test SMSEagle',
         'type': 'any',
-        'smseagle_url': 'http://192.168.1.101',
+        'smseagle_url': 'http://smseagle_url',
         'alert': []
     }
     rules_loader = FileRulesLoader({})
     rules_loader.load_modules(rule)
     alert = SMSEagleAlerter(rule)
-    assert 75 == alert.get_aggregation_summary_text__maximum_width()
-    
-
-def test_smseagle_getinfo():
-    rule = {
-        'name': 'Test SMSEagle Alerter Without Payload',
-        'type': 'any',
-        'smseagle_url': 'http://192.168.1.101',
-        'alert': []
-    }
-    rules_loader = FileRulesLoader({})
-    rules_loader.load_modules(rule)
-    alert = HTTPPostAlerter(rule)
 
     expected_data = {
         'type': 'smseagle',
-        'smseagle_url': ['http://192.168.1.101']
+        'smseagle_url': ['http://smseagle_url']
     }
     actual_data = alert.get_info()
     assert expected_data == actual_data
@@ -163,16 +95,16 @@ def test_smseagle_getinfo():
 
 @pytest.mark.parametrize('smseagle_url, expected_data', [
     ('',  'Missing required option(s): smseagle_url'),
-    ('http://192.168.1.101',
+    ('http://smseagle_url',
         {
             'type': 'smseagle',
-            'smseagle_url': ['http://192.168.1.101']
+            'smseagle_url': ['http://smseagle_url']
         }),
 ])
 def test_smseagle_required_error(smseagle_url, expected_data):
     try:
         rule = {
-            'name': 'Test SMSEagle Alerter Without Payload',
+            'name': 'Test SMSEagle',
             'type': 'any',
             'alert': []
         }

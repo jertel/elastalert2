@@ -28,64 +28,33 @@ class SMSEagleAlerter(Alerter):
         self.smseagle_duration = self.rule.get('smseagle_duration', '')
         self.smseagle_voice_id = self.rule.get('smseagle_voice_id', '')
     
-    def get_message_type_endpoint(message_type):
+    def get_message_type_endpoint(self, message_type):
         match message_type:
-            case 'sms':
-                return '/messages/sms'
             case 'ring':
                 return '/calls/ring'
             case 'tts':
                 return '/calls/tts'
             case 'tts_adv':
                 return '/calls/tts_advanced'
-
-    def format_body(self, body):
-        return body
-        
-    def create_alert_body(self, matches):
-        body = self.get_aggregation_summary_text(matches)
-        if self.rule.get('alert_text_type') != 'aggregation_summary_only':
-            for match in matches:
-                body += str(BasicMatchString(self.rule, match))
-                if len(matches) > 1:
-                    body += '\n----------------------------------------\n'
-        return body
-
-    def get_aggregation_summary_text__maximum_width(self):
-        width = super(SMSEagleAlerter, self).get_aggregation_summary_text__maximum_width()
-        return min(width, 75)
-
-    def get_aggregation_summary_text(self, matches):
-        text = super(SMSEagleAlerter, self).get_aggregation_summary_text(matches)
-        if text:
-            text = '```\n{0}```\n'.format(text)
-        return text
-
-    def populate_fields(self, matches):
-        alert_fields = []
-        for arg in self.smseagle_alert_fields:
-            arg = copy.copy(arg)
-            arg['value'] = lookup_es_key(matches[0], arg['value'])
-            alert_fields.append(arg)
-        return alert_fields
+            case _:
+                return '/messages/sms'
 
     def alert(self, matches):
         body = self.create_alert_body(matches)
 
-        body = self.format_body(body)
         headers = {
             'content-type': 'application/json',
             'access-token': self.smseagle_token
         }
         
-        endpoint = self.get_message_type_endpoint(smseagle_message_type)
+        endpoint = self.get_message_type_endpoint(self.smseagle_message_type)
 
         payload = {
             "message": body
         }
         
-        if not self.smseagle_to and not smseagle_contacts and not smseagle_groups:
-            raise EAException("Error forwarding to SMSEagle: Missing recipients")
+        if not self.smseagle_to and not self.smseagle_contacts and not self.smseagle_groups:
+            raise EAException("Error posting SMSEagle alert: Missing recipients")
         
         if self.smseagle_to:
             payload['to'] = self.smseagle_to
@@ -121,11 +90,11 @@ class SMSEagleAlerter(Alerter):
                 warnings.resetwarnings()
                 response.raise_for_status()
                 
-                elastalert_logger.debug('Response: {0}'.format(r))
+                elastalert_logger.debug('Response: {0}'.format(response))
                 if response.status_code != 200:
                     elastalert_logger.info("Error response from {0} \nAPI Response: {1}".format(url+endpoint, response))
             except RequestException as e:
-                raise EAException("Error forwarding to SMSEagle: %s" % e)                               
+                raise EAException("Error posting SMSEagle alert: %s" % e)                               
         elastalert_logger.info("Alert '%s' sent to SMSEagle" % self.rule['name'])
 
     def get_info(self):
@@ -140,6 +109,6 @@ class SMSEagleAlerter(Alerter):
         if self.smseagle_groups:
             ret['groups'] = self.smseagle_groups
             
-        ret['url'] = self.smseagle_url+self.get_message_type_endpoint(self.smseagle_message_type)
+        ret['msg_type'] = self.smseagle_message_type
             
         return ret
