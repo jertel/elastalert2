@@ -40,6 +40,7 @@ from elastalert.util import format_string
 from elastalert.util import pretty_ts
 from elastalert.util import parse_hosts
 from elastalert.util import get_version_from_cluster_info
+from elastalert.util import expand_string_into_array
 
 from elasticsearch.client import Elasticsearch
 
@@ -697,3 +698,12 @@ def test_get_version(version, distro, expectedversion):
         client = Elasticsearch()
         actualversion = get_version_from_cluster_info(client)
     assert expectedversion == actualversion
+
+
+@pytest.mark.parametrize('value, expect', [
+    ('foo', ['foo']),
+    ('foo,foo', ['foo', 'foo']),
+])
+def test_expand_string_into_array(value, expect):
+    actual = expand_string_into_array(value)
+    assert expect == actual

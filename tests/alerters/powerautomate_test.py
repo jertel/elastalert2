@@ -1,6 +1,7 @@
 import json
 import logging
 from unittest import mock
+import pytest
 
 from elastalert.alerters.powerautomate import MsPowerAutomateAlerter
 from elastalert.alerts import BasicMatchString
@@ -925,3 +926,33 @@ def test_ms_power_automate_body_text_size_medium():
     )
     actual_data = json.loads(mock_post_request.call_args_list[0][1]['data'])
     assert expected_data == actual_data
+
+
+@pytest.mark.parametrize('match_data, expected_data', [
+    ({'webhook_url': 'webhook.com'}, ['webhook.com']),
+    ({'webhook_url': 'webhook.com,webhook2.com'}, ['webhook.com', 'webhook2.com']),
+    ({}, ['default.com'])
+])
+def test_ms_power_automate_webhook_url_from_field(match_data, expected_data):
+    rule = {
+        'name': 'Test Rule',
+        'type': 'any',
+        'ms_power_automate_webhook_url': 'default.com',
+        'ms_power_automate_webhook_url_from_field': 'webhook_url',
+        'alert': [],
+        'alert_subject': 'Cool subject',
+    }
+    rules_loader = FileRulesLoader({})
+    rules_loader.load_modules(rule)
+    alert = MsPowerAutomateAlerter(rule)
+    with mock.patch('requests.post') as mock_post_request:
+        alert.alert([match_data])
+
+    for url in expected_data:
+        mock_post_request.assert_any_call(
+            url,
+            data=mock.ANY,
+            headers={'content-type': 'application/json'},
+            proxies=None,
+            verify=True
+        )

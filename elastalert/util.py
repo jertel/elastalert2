@@ -521,6 +521,14 @@ def expand_string_into_dict(dictionary, string, value, sep='.'):
         dictionary[field1] = _expand_string_into_dict(new_string, value)
     return dictionary
 
+def expand_string_into_array(value, sep=','):
+    """
+    Expands a separated string into an array of strings.
+    """
+    if sep not in value:
+        return [value]
+    else:
+        return value.split(sep)
 
 def format_string(format_config, target_value):
     """
