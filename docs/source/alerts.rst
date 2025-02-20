@@ -1672,6 +1672,8 @@ The alerter requires the following options:
 
 ``ms_power_automate_webhook_url``: The webhook URL provided in Power Automate, `doc Microsoft <https://support.microsoft.com/en-us/office/post-a-workflow-when-a-webhook-request-is-received-in-microsoft-teams-8ae491c7-0394-4861-ba59-055e33f75498>`_. After creating the flow select your Teams channel under "Send each adaptive card". You can use a list of URLs to send to multiple channels.
 
+``ms_power_automate_webhook_url_from_field``: Use a field from the document that triggered the alert as the webhook. If the field cannot be found, the ``ms_power_automate_webhook_url`` value will be used as a default. 
+
 Optional:
 
 ``ms_power_automate_summary_text_size``: By default, is set to the value ``large``. This field supports the values, default, small, medium and extraLarge.
