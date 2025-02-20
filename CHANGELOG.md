@@ -7,6 +7,19 @@
 - [MicrosoftPowerAutomate] Add support for 'ms_power_automate_webhook_url_from_field' option to dynamically select the webhook URL from the match. - [#1623](https://github.com/jertel/elastalert2/pull/1623) - @aizerin
 
 ## Other changes
+- None
+
+# 2.23.0
+
+## Breaking changes
+- None
+
+## New features
+- [Helm] Add optional liveness and readiness probe - [#1604](https://github.com/jertel/elastalert2/pull/1604) - @aizerin
+- Add `include_rule_params_in_matches` rule parameter to enable copying of specific rule params into match data - [#1605](https://github.com/jertel/elastalert2/pull/1605) - @jertel
+- [Helm] Add `--prometheus_addr` command line parameter to allow binding the Prometheus metrics server on a different host address - [#1608](https://github.com/jertel/elastalert2/pull/1608) - @tgxworld
+
+## Other changes
 - [Docs] Add missing documentation of the `aggregation_alert_time_compared_with_timestamp_field` option. - [#1588](https://github.com/jertel/elastalert2/pull/1588) - @nicolasnovelli
 - Fix linter error reporting about return type assignation in `elastalert/test_rule.py`. - [#1594](https://github.com/jertel/elastalert2/pull/1594) - @thican
 - Add support for Kibana 8.17 for Kibana Discover - [#1597](https://github.com/jertel/elastalert2/pull/1597) - @nsano-rururu
@@ -33,6 +46,8 @@
 - Upgrade dependency stomp.py to 8.2.0 - [#1599](https://github.com/jertel/elastalert2/pull/1599) - @jertel
 - Upgrade dependency tencentcloud-sdk-python to 3.0.1295 - [#1599](https://github.com/jertel/elastalert2/pull/1599) - @jertel
 - Upgrade dependency twilio to 9.4.1 - [#1599](https://github.com/jertel/elastalert2/pull/1599) - @jertel
+- [Spike] Fixes spike rule error when no data exists in the current time window - [#1605](https://github.com/jertel/elastalert2/pull/1605) - @jertel
+- [Spike] Fixes spike rule error when no data exists in the reference time window - [#1610](https://github.com/jertel/elastalert2/pull/1610) - @jertel
 
 # 2.22.0
 

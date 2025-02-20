@@ -94,6 +94,14 @@ class ElastAlerter(object):
             help='Enable logging from Elasticsearch queries as curl command. Queries will be logged to file. Note that '
                  'this will incorrectly display localhost:9200 as the host/port')
         parser.add_argument('--prometheus_port', type=int, dest='prometheus_port', help='Enables Prometheus metrics on specified port.')
+
+        parser.add_argument(
+            '--prometheus_addr',
+            type=str,
+            dest='prometheus_addr',
+            default=None,
+            help='Address to bind the Prometheus metrics server on.')
+
         self.args = parser.parse_args(args)
 
     def __init__(self, args):
@@ -175,6 +183,7 @@ class ElastAlerter(object):
             self.statsd = None
         self.add_metadata_alert = self.conf.get('add_metadata_alert', False)
         self.prometheus_port = self.args.prometheus_port
+        self.prometheus_addr = self.args.prometheus_addr
         self.show_disabled_rules = self.conf.get('show_disabled_rules', True)
         self.pretty_ts_format = self.conf.get('custom_pretty_ts_format')
 
@@ -1333,6 +1342,15 @@ class ElastAlerter(object):
         except Exception as e:
             self.handle_uncaught_exception(e, rule)
 
+    def include_rule_params_in_matches(self, matches, rule):
+        if len(rule.get('include_rule_params_in_matches',[])) > 0:
+            tmp_matches = matches
+            if rule.get('include_rule_params_in_first_match_only', False):
+                tmp_matches = [matches[0]]
+            for match in tmp_matches:
+                for param in rule.get('include_rule_params_in_matches'):
+                    match['rule_param_' + param] = rule.get(param)
+
     def send_alert(self, matches, rule, alert_time=None, retried=False):
         """ Send out an alert.
 
@@ -1379,7 +1397,7 @@ class ElastAlerter(object):
                 opsh_link_formatter = self.get_opensearch_discover_external_url_formatter(rule)
                 matches[0]['opensearch_discover_url'] =  opsh_link_formatter.format(opsh_link)
 
-
+        self.include_rule_params_in_matches(matches, rule)
         
         # Enhancements were already run at match time if
         # run_enhancements_first is set or

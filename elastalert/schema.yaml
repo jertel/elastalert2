@@ -295,6 +295,8 @@ properties:
 
   include: {type: array, items: {type: string}}
   include_fields: {type: array, item: {type: string}}
+  include_rule_params_in_matches: {type: array, items: {type: string}}
+  include_rule_params_in_first_match_only: {type: boolean}
   top_count_keys: {type: array, items: {type: string}}
   top_count_number: {type: integer}
   raw_count_keys: {type: boolean}

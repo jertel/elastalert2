@@ -13,6 +13,12 @@ To expose ElastAlert rule metrics on port ``9979`` run the following command:
 
     $ elastalert --config config.yaml --prometheus_port 9979 
 
+The ``--prometheus_addr`` configuration flag can also be used to bind the Prometheus metrics server to a different host address.
+
+.. code-block:: console
+
+   $ elastalert --config config.yaml --prometheus_port 9979 --prometheus_addr "::"
+
 Rule Metrics
 ------------
 

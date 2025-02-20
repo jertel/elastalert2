@@ -7,6 +7,7 @@ class PrometheusWrapper:
 
     def __init__(self, client):
         self.prometheus_port = client.prometheus_port
+        self.prometheus_addr = client.prometheus_addr
         self.run_rule = client.run_rule
         self.writeback = client.writeback
 
@@ -24,7 +25,7 @@ class PrometheusWrapper:
         self.prom_alerts_silenced = prometheus_client.Counter('elastalert_alerts_silenced', 'Number of silenced alerts', ['rule_name'])
 
     def start(self):
-        prometheus_client.start_http_server(self.prometheus_port)
+        prometheus_client.start_http_server(port=self.prometheus_port, addr=self.prometheus_addr)
 
     def metrics_run_rule(self, rule, endtime, starttime=None):
         """ Increment counter every time rule is run """

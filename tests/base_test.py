@@ -1484,3 +1484,54 @@ def test_get_kibana_discover_external_url_formatter_smoke(ea):
     formatter = ea.get_kibana_discover_external_url_formatter(rule)
     assert type(formatter) is ShortKibanaExternalUrlFormatter
     assert formatter.security_tenant == 'global'
+
+
+def test_include_rule_params_in_matches(ea):
+    rule = {
+        'include_rule_params_in_matches': ['name', 'foo'],
+        'foo': 2,
+        'name': 'test-name'
+    }
+    matches = [
+        {
+            'bar': 1,
+        },
+        {
+            'bar': 10,
+        }
+    ]
+
+    ea.include_rule_params_in_matches(matches, rule)
+
+    assert matches[0]['rule_param_name'] == 'test-name'
+    assert matches[0]['rule_param_foo'] == 2
+    assert matches[0]['bar'] == 1
+    assert matches[1]['rule_param_name'] == 'test-name'
+    assert matches[1]['rule_param_foo'] == 2
+    assert matches[1]['bar'] == 10
+
+
+def test_include_rule_params_in_first_match_only(ea):
+    rule = {
+        'include_rule_params_in_matches': ['name', 'foo'],
+        'include_rule_params_in_first_match_only': True,
+        'foo': 2,
+        'name': 'test-name'
+    }
+    matches = [
+        {
+            'bar': 1,
+        },
+        {
+            'bar': 10,
+        }
+    ]
+
+    ea.include_rule_params_in_matches(matches, rule)
+
+    assert matches[0]['rule_param_name'] == 'test-name'
+    assert matches[0]['rule_param_foo'] == 2
+    assert matches[0]['bar'] == 1
+    assert 'rule_param_name' not in matches[1]
+    assert 'rule_param_foo' not in matches[1]
+    assert matches[1]['bar'] == 10

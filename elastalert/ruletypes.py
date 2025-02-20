@@ -523,7 +523,7 @@ class SpikeRule(RuleType):
     def find_matches(self, ref, cur):
         """ Determines if an event spike or dip happening. """
         # Apply threshold limits
-        if self.field_value is None:
+        if self.field_value is None and cur is not None and ref is not None:
             if (cur < self.rules.get('threshold_cur', 0) or
                     ref < self.rules.get('threshold_ref', 0)):
                 return False

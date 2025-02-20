@@ -49,7 +49,7 @@ image:
   # docker image
   repository: jertel/elastalert2
   # docker image tag
-  tag: 2.22.0
+  tag: 2.23.0
   pullPolicy: IfNotPresent
   pullSecret: ""
 
@@ -218,6 +218,12 @@ rules: {}
   #   pagerduty:
   #   pagerduty_service_key: dummy
   #   pagerduty_client_name: ElastAlert Deadman Switch
+
+# Probes configuration
+livenessProbe:
+  enabled: false
+readinessProbe:
+  enabled: false
 
 serviceAccount:
   # Specifies whether a service account should be created

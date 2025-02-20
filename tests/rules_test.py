@@ -253,6 +253,32 @@ def test_spike_deep_key():
     assert 'LOL' in rule.cur_windows
 
 
+def test_spike_no_data():
+    rules = {'threshold_ref': 10,
+             'spike_height': 2,
+             'timeframe': datetime.timedelta(seconds=10),
+             'spike_type': 'both',
+             'timestamp_field': '@timestamp',
+             'query_key': 'foo.bar.baz',
+             'field_value': None}
+    rule = SpikeRule(rules)
+    result = rule.find_matches(1, None)
+    assert not result
+
+
+def test_spike_no_ref_data():
+    rules = {'threshold_ref': 10,
+             'spike_height': 2,
+             'timeframe': datetime.timedelta(seconds=10),
+             'spike_type': 'both',
+             'timestamp_field': '@timestamp',
+             'query_key': 'foo.bar.baz',
+             'field_value': None}
+    rule = SpikeRule(rules)
+    result = rule.find_matches(None, 1)
+    assert not result
+
+
 def test_spike():
     # Events are 1 per second
     events = hits(100, timestamp_field='ts')
