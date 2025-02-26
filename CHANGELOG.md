@@ -7,7 +7,7 @@
 - [MicrosoftPowerAutomate] Add support for 'ms_power_automate_webhook_url_from_field' option to dynamically select the webhook URL from the match. - [#1623](https://github.com/jertel/elastalert2/pull/1623) - @aizerin
 
 ## Other changes
-- None
+- Fix `schema.yaml` to support Kibana 8.17
 
 # 2.23.0
 
