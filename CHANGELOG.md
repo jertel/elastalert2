@@ -8,7 +8,7 @@
 
 ## Other changes
 - Fix `schema.yaml` to support Kibana 8.17 - [#1631](https://github.com/jertel/elastalert2/pull/1631) - @vpiserchia
-- [Helm] Clarified documentation around rootRulesFolder - [#1634](https://github.com/jertel/elastalert2/pull/1634) - @jertel
+- [Helm] Clarified documentation around rootRulesFolder - @jertel
 
 # 2.23.0
 
