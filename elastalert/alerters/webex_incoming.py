@@ -43,12 +43,13 @@ class WebexIncomingAlerter(Alerter):
             warnings.resetwarnings()
             response.raise_for_status()
         except RequestException as e:
-            raise EAException("Error posting to webex: %s" % e)
+            raise EAException("Error posting to webex_incoming: %s" % e)
 
-        elastalert_logger.info("Trigger sent to webex")
+        elastalert_logger.info("Trigger sent to webex_incoming")
 
     def get_info(self):
         return {
             "type": "webex_incoming",
+            "webex_incoming_msgtype": self.webex_incoming_msgtype,
             "webex_incoming_webhook_url": self.webex_incoming_webhook_url,
         }
