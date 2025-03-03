@@ -2526,7 +2526,7 @@ Example with SMS usage::
     twilio_account_sid: "ABCDEFGHIJKLMNOPQRSTUVWXYZ01234567"
 
 Webex Incoming Webhook
-~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~
 
 Webex Incoming Webhook alerter will send notification to a predefined incoming webhook in Webex application. The body of the notification is formatted the same as with other alerters.
 
@@ -2538,6 +2538,7 @@ Required:
 ``webex_incoming_msgtype``:  Webex incoming webhook message format. default to ``text``. ``markdown``
 
 Example usage::
+
     alert_text: "**{0}** - ALERT on host {1}"
     alert_text_args:
       - name
