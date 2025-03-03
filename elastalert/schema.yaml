@@ -899,6 +899,10 @@ properties:
   twilio_message_service_sid: {type: string}
   twilio_use_copilot: {type: boolean}
 
+  ### Webex Incoming
+  webex_incoming_webhook_id: { type: string }
+  webex_incoming_msgtype: { type: string }
+
   ### WorkWechat
   work_wechat_bot_id: { type: string }
   work_wechat_msgtype: { type: string }
