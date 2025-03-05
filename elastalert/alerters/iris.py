@@ -77,10 +77,6 @@ class IrisAlerter(Alerter):
             event_timestamp = matches[0].get('@timestamp')
         else:
             event_timestamp = datetime.now().strftime("%Y-%m-%dT%H:%M:%S")
-
-        # If no description is supplied use the built-in alert body generator which accounts for alert_text and alert_text_args
-        if not self.description:
-            self.description = self.create_alert_body(matches)
         
         alert_data = {
             "alert_title": self.create_title(matches),
@@ -93,6 +89,12 @@ class IrisAlerter(Alerter):
             "alert_tags": self.alert_tags,
             "alert_customer_id": self.customer_id,
         }
+
+        # If there is an exisiting description, it will populate in alert_data otherwise update the alert_data with the create_alert_body data.
+        if not self.description:
+            alert_data.update(
+                {"alert_description": self.create_alert_body(matches)}
+            ) 
 
         if self.alert_source_link:
             alert_data.update(
