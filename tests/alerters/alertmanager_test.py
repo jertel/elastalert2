@@ -450,3 +450,88 @@ def test_alertmanager_resolve_timeout(caplog):
     )
     assert expected_data == json.loads(mock_post_request.call_args_list[0][1]['data'])
     assert ('elastalert', logging.INFO, "Alert sent to Alertmanager") == caplog.record_tuples[0]
+
+
+def test_alertmanager_labels_and_annotations_with_jinja2():
+    rule = {
+        'name': 'Test Alertmanager Rule',
+        'type': 'any',
+        'jinja_root_name': '_something',
+        'alertmanager_hosts': ['http://alertmanager:9093'],
+        'alertmanager_alertname': 'Title',
+        'alertmanager_annotations': {
+            'severity': 'error',
+            'some_custom_annotation': '{{ _something["host"] }}:{{ service.name }}'
+        },
+        'alertmanager_labels': {
+            'source': 'elastalert',
+            'service_name': '{{ service.name }}',
+            'environment': '{{ env.name }}',
+            'region': '{{ env.region }}',
+            'host': '{{ _something["host"] }}',
+        },
+        'alertmanager_fields': {'msg': 'message', 'log': '@log_name'},
+        'alert_subject_args': ['message', '@log_name'],
+        'alert': []
+    }
+
+    rules_loader = FileRulesLoader({})
+    rules_loader.load_modules(rule)
+    alert = AlertmanagerAlerter(rule)
+
+    match = {
+        'service': {'name': 'my-service'},
+        'env': {'name': 'production', 'region': 'us-east-1'},
+        'host': 'server01.example.com',
+        'message': 'some message',
+        '@log_name': 'some.log.name'
+    }
+
+    with mock.patch('requests.post') as mock_post_request:
+        alert.alert([match])
+
+    payload = json.loads(mock_post_request.call_args[1]['data'])[0]
+
+    assert payload['labels']['source'] == 'elastalert'
+    assert payload['labels']['service_name'] == 'my-service'
+    assert payload['labels']['environment'] == 'production'
+    assert payload['labels']['region'] == 'us-east-1'
+    assert payload['labels']['host'] == 'server01.example.com'
+    assert payload['labels']['log'] == 'some.log.name'
+    assert payload['labels']['msg'] == 'some message'
+    assert payload['annotations']['severity'] == 'error'
+    assert payload['annotations']['some_custom_annotation'] == 'server01.example.com:my-service'
+
+
+def test_alertmanager_labels_with_invalid_jinja2_syntax():
+    rule = {
+        'name': 'Test Alertmanager Rule',
+        'type': 'any',
+        'jinja_root_name': '_something',
+        'alertmanager_hosts': ['http://alertmanager:9093'],
+        'alertmanager_alertname': 'Title',
+        'alertmanager_annotations': {'severity': 'error'},
+        'alertmanager_labels': {
+            'source': 'elastalert',
+            'environment': 'some_name: {{ env.name ',
+        },
+        'alertmanager_fields': {'msg': 'message', 'log': '@log_name'},
+        'alert_subject_args': ['message', '@log_name'],
+        'alert': []
+    }
+
+    rules_loader = FileRulesLoader({})
+    rules_loader.load_modules(rule)
+    alert = AlertmanagerAlerter(rule)
+
+    match = {
+        'env': {'name': 'production', 'region': 'us-east-1'},
+        'host': 'server01.example.com',
+        'message': 'some message',
+        '@log_name': 'some.log.name'
+    }
+
+    with pytest.raises(ValueError) as error:
+        alert.alert([match])
+
+    assert "Alertmanager: The template provided by key 'environment' has an invalid Jinja2 syntax." in str(error)
