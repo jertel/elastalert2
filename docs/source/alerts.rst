@@ -57,6 +57,7 @@ or
       - webex_webhook
       - workwechat
       - zabbix
+      - yzj
 
 Options for each alerter can either defined at the top level of the YAML file, or nested within the alert name, allowing for different settings
 for multiple of the same alerter. For example, consider sending multiple emails, but with different 'To' and 'From' fields:
@@ -2605,3 +2606,30 @@ Example usage::
     zbx_key: "sender_load1"
 
 where ``hostname`` is the available elasticsearch field.
+
+YZJ
+~~~~~~~
+
+YZJ will send notification to a YZJ application. The body of the notification is formatted the same as with other alerters.
+
+Required:
+
+``yzj_token``:  The request token.
+
+Optional:
+
+``yzj_webhook_url``:  The webhook URL.
+
+``yzj_type``: Default 0, send text message. https://www.yunzhijia.com/opendocs/docs.html#/server-api/im/index?id=%e7%be%a4%e7%bb%84%e6%9c%ba%e5%99%a8%e4%ba%ba
+
+``yzj_proxy``: By default ElastAlert 2 will not use a network proxy to send notifications to YZJ. Set this option using ``hostname:port`` if you need to use a proxy. only supports https.
+
+``yzj_custom_loc``: The YZJ custom loc for privately deployed.
+
+
+Example usage::
+
+    alert:
+    - "yzj"
+    yzj_token: "token"
+
