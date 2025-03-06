@@ -53,6 +53,7 @@ or
       - tencent_sms
       - twilio
       - victorops
+      - webex_webhook
       - workwechat
       - zabbix
 
@@ -2507,6 +2508,30 @@ Example with SMS usage::
     twilio_from_number: "9876543210"
     twilio_auth_token: "abcdefghijklmnopqrstuvwxyz012345"
     twilio_account_sid: "ABCDEFGHIJKLMNOPQRSTUVWXYZ01234567"
+
+Webex Webhook
+~~~~~~~~~~~~~
+
+Webex Webhook alerter will send notification to a predefined incoming webhook in Webex application. The body of the notification is formatted the same as with other alerters.
+
+Official Webex incoming webhook documentation: https://apphub.webex.com/applications/incoming-webhooks-cisco-systems-38054-23307-75252
+
+Required:
+
+``webex_webhook_id``:  Webex webhook ID.
+``webex_webhook_msgtype``:  Webex webhook message format. Can be ``text`` or ``markdown``. Defaults to ``text``.
+
+Example usage::
+
+    alert_text: "**{0}** - ALERT on host {1}"
+    alert_text_args:
+      - name
+      - hostname
+    alert:
+      - webex_webhook
+    alert_text_type: alert_text_only
+    webex_webhook_id: "your webex incoming webhook id"
+    webex_webhook: "markdown"
 
 WorkWechat
 ~~~~~~~~~~

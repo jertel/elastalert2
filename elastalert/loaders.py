@@ -36,6 +36,7 @@ import elastalert.alerters.telegram
 import elastalert.alerters.thehive
 import elastalert.alerters.twilio
 import elastalert.alerters.victorops
+import elastalert.alerters.webex_webhook
 import elastalert.alerters.workwechat
 from elastalert import alerts
 from elastalert import enhancements
@@ -132,6 +133,7 @@ class RulesLoader(object):
         'discord': elastalert.alerters.discord.DiscordAlerter,
         'dingtalk': elastalert.alerters.dingtalk.DingTalkAlerter,
         'lark': elastalert.alerters.lark.LarkAlerter,
+        'webex_webhook': elastalert.alerters.webex_webhook.WebexWebhookAlerter,
         'workwechat': elastalert.alerters.workwechat.WorkWechatAlerter,
         'chatwork': elastalert.alerters.chatwork.ChatworkAlerter,
         'datadog': elastalert.alerters.datadog.DatadogAlerter,
