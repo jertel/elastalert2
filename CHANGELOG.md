@@ -5,6 +5,7 @@
 
 ## New features
 - [MicrosoftPowerAutomate] Add support for 'ms_power_automate_webhook_url_from_field' option to dynamically select the webhook URL from the match. - [#1623](https://github.com/jertel/elastalert2/pull/1623) - @aizerin
+- Add Webex Incoming Webhook alerter - [#1635](https://github.com/jertel/elastalert2/pull/1635) - @dennis-trapp
 
 ## Other changes
 - Fix `schema.yaml` to support Kibana 8.17 - [#1631](https://github.com/jertel/elastalert2/pull/1631) - @vpiserchia
