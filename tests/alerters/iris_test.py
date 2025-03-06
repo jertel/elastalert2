@@ -378,6 +378,269 @@ event_status: success\nevent_type: login\nsrc_ip: 172.20.1.1\nusername: evil_use
     actual_data = alert.make_alert([match])
     assert expected_data == actual_data
 
+def test_iris_make_alert_auto_description_realert(caplog):
+    """Test for the built-in elastalert2 create_title and create_body functions
+
+    These functions use the alert_subject and alert_text fields to automatically
+    build the title and description based on alert match data if available.
+    Testing for a bug where follow up alerts are having their description
+    overwritten. This time testing with a filled description.
+    """
+
+    caplog.set_level(logging.INFO)
+    rule = {
+        'name': 'Test Maximal Alert Body',
+        'alert_subject': 'Test Alert Subject',
+        'alert_text': 'Test alert text',
+        'type': 'any',
+        'iris_host': '127.0.0.1',
+        'iris_api_token': 'token 12345',
+        'iris_customer_id': 1,
+        'iris_alert_note': 'test note',
+        'iris_alert_tags': 'test, alert',
+        'iris_overwrite_timestamp': True,
+        'iris_alert_source_link': 'https://example.com',
+        'iris_iocs': [
+            {
+                'ioc_description': 'source address',
+                'ioc_tags': 'ip, ipv4',
+                'ioc_tlp_id': 1,
+                'ioc_type_id': 76,
+                'ioc_value': 'src_ip'
+            },
+            {
+                'ioc_description': 'target username',
+                'ioc_tags': 'login, username',
+                'ioc_tlp_id': 3,
+                'ioc_type_id': 3,
+                'ioc_value': 'username'
+            }
+        ],
+        'iris_alert_context': {'username': 'username', 'ip': 'src_ip', 'login_status': 'event_status'},
+        'alert': [],
+    }
+
+    rules_loader = FileRulesLoader({})
+    rules_loader.load_modules(rule)
+    alert = IrisAlerter(rule)
+
+    first_match = {
+        '@timestamp': '2023-10-21 20:00:00.000', 'username': 'evil_user', 'src_ip': '172.20.1.1', 'dst_ip': '10.0.0.1',
+        'event_type': 'login', 'event_status': 'success'
+    }
+
+    first_expected_data = {
+        "alert_title": 'Test Alert Subject',
+        "alert_description": 'Test alert text\n\n@timestamp: 2023-10-21 20:00:00.000\ndst_ip: 10.0.0.1\n\
+event_status: success\nevent_type: login\nsrc_ip: 172.20.1.1\nusername: evil_user\n',
+        "alert_source": "ElastAlert2",
+        "alert_severity_id": 1,
+        "alert_status_id": 2,
+        "alert_source_event_time": '2023-10-21 20:00:00.000',
+        "alert_note": 'test note',
+        "alert_tags": 'test, alert',
+        "alert_customer_id": 1,
+        "alert_source_link": 'https://example.com',
+        "alert_iocs": [
+            {
+                'ioc_description': 'source address',
+                'ioc_tags': 'ip, ipv4',
+                'ioc_tlp_id': 1,
+                'ioc_type_id': 76,
+                'ioc_value': '172.20.1.1'
+            },
+            {
+                'ioc_description': 'target username',
+                'ioc_tags': 'login, username',
+                'ioc_tlp_id': 3,
+                'ioc_type_id': 3,
+                'ioc_value': 'evil_user'
+            }
+        ],
+        "alert_context": {
+            'username': 'evil_user',
+            'ip': '172.20.1.1',
+            'login_status': 'success'
+        },
+    }
+
+    second_match = {
+        '@timestamp': '2023-10-21 20:00:00.000', 'username': 'good_user', 'src_ip': '192.168.125.33', 'dst_ip': '216.73.245.89',
+        'event_type': 'login', 'event_status': 'failure'
+    }
+
+    second_expected_data = {
+        "alert_title": 'Test Alert Subject',
+        "alert_description": 'Test alert text\n\n@timestamp: 2023-10-21 20:00:00.000\ndst_ip: 216.73.245.89\n\
+event_status: failure\nevent_type: login\nsrc_ip: 192.168.125.33\nusername: good_user\n',
+        "alert_source": "ElastAlert2",
+        "alert_severity_id": 1,
+        "alert_status_id": 2,
+        "alert_source_event_time": '2023-10-21 20:00:00.000',
+        "alert_note": 'test note',
+        "alert_tags": 'test, alert',
+        "alert_customer_id": 1,
+        "alert_source_link": 'https://example.com',
+        "alert_iocs": [
+            {
+                'ioc_description': 'source address',
+                'ioc_tags': 'ip, ipv4',
+                'ioc_tlp_id': 1,
+                'ioc_type_id': 76,
+                'ioc_value': '192.168.125.33'
+            },
+            {
+                'ioc_description': 'target username',
+                'ioc_tags': 'login, username',
+                'ioc_tlp_id': 3,
+                'ioc_type_id': 3,
+                'ioc_value': 'good_user'
+            }
+        ],
+        "alert_context": {
+            'username': 'good_user',
+            'ip': '192.168.125.33',
+            'login_status': 'failure'
+        },
+    }
+
+    first_data = alert.make_alert([first_match])
+    second_data = alert.make_alert([second_match])
+
+    assert first_expected_data == first_data
+    assert second_expected_data == second_data
+
+def test_iris_make_alert_auto_blank_description_realert(caplog):
+    """Test for the built-in elastalert2 create_title and create_body functions
+
+    These functions use the alert_subject and alert_text fields to automatically
+    build the title and description based on alert match data if available.
+    Testing for a bug where follow up alerts are having their description
+    overwritten. This time testing with a blank description.
+    """
+
+    caplog.set_level(logging.INFO)
+    rule = {
+        'name': 'Test Maximal Alert Body',
+        'alert_subject': 'Test Alert Subject',
+        'alert_text': '',
+        'type': 'any',
+        'iris_host': '127.0.0.1',
+        'iris_api_token': 'token 12345',
+        'iris_customer_id': 1,
+        'iris_alert_note': 'test note',
+        'iris_alert_tags': 'test, alert',
+        'iris_overwrite_timestamp': True,
+        'iris_alert_source_link': 'https://example.com',
+        'iris_iocs': [
+            {
+                'ioc_description': 'source address',
+                'ioc_tags': 'ip, ipv4',
+                'ioc_tlp_id': 1,
+                'ioc_type_id': 76,
+                'ioc_value': 'src_ip'
+            },
+            {
+                'ioc_description': 'target username',
+                'ioc_tags': 'login, username',
+                'ioc_tlp_id': 3,
+                'ioc_type_id': 3,
+                'ioc_value': 'username'
+            }
+        ],
+        'iris_alert_context': {'username': 'username', 'ip': 'src_ip', 'login_status': 'event_status'},
+        'alert': [],
+    }
+
+    rules_loader = FileRulesLoader({})
+    rules_loader.load_modules(rule)
+    alert = IrisAlerter(rule)
+
+    first_match = {
+        '@timestamp': '2023-10-21 20:00:00.000', 'username': 'evil_user', 'src_ip': '172.20.1.1', 'dst_ip': '10.0.0.1',
+        'event_type': 'login', 'event_status': 'success'
+    }
+
+    first_expected_data = {
+        "alert_title": 'Test Alert Subject',
+        "alert_description": '\n\n@timestamp: 2023-10-21 20:00:00.000\ndst_ip: 10.0.0.1\n\
+event_status: success\nevent_type: login\nsrc_ip: 172.20.1.1\nusername: evil_user\n',
+        "alert_source": "ElastAlert2",
+        "alert_severity_id": 1,
+        "alert_status_id": 2,
+        "alert_source_event_time": '2023-10-21 20:00:00.000',
+        "alert_note": 'test note',
+        "alert_tags": 'test, alert',
+        "alert_customer_id": 1,
+        "alert_source_link": 'https://example.com',
+        "alert_iocs": [
+            {
+                'ioc_description': 'source address',
+                'ioc_tags': 'ip, ipv4',
+                'ioc_tlp_id': 1,
+                'ioc_type_id': 76,
+                'ioc_value': '172.20.1.1'
+            },
+            {
+                'ioc_description': 'target username',
+                'ioc_tags': 'login, username',
+                'ioc_tlp_id': 3,
+                'ioc_type_id': 3,
+                'ioc_value': 'evil_user'
+            }
+        ],
+        "alert_context": {
+            'username': 'evil_user',
+            'ip': '172.20.1.1',
+            'login_status': 'success'
+        },
+    }
+
+    second_match = {
+        '@timestamp': '2023-10-21 20:00:00.000', 'username': 'good_user', 'src_ip': '192.168.125.33', 'dst_ip': '216.73.245.89',
+        'event_type': 'login', 'event_status': 'failure'
+    }
+
+    second_expected_data = {
+        "alert_title": 'Test Alert Subject',
+        "alert_description": '\n\n@timestamp: 2023-10-21 20:00:00.000\ndst_ip: 216.73.245.89\n\
+event_status: failure\nevent_type: login\nsrc_ip: 192.168.125.33\nusername: good_user\n',
+        "alert_source": "ElastAlert2",
+        "alert_severity_id": 1,
+        "alert_status_id": 2,
+        "alert_source_event_time": '2023-10-21 20:00:00.000',
+        "alert_note": 'test note',
+        "alert_tags": 'test, alert',
+        "alert_customer_id": 1,
+        "alert_source_link": 'https://example.com',
+        "alert_iocs": [
+            {
+                'ioc_description': 'source address',
+                'ioc_tags': 'ip, ipv4',
+                'ioc_tlp_id': 1,
+                'ioc_type_id': 76,
+                'ioc_value': '192.168.125.33'
+            },
+            {
+                'ioc_description': 'target username',
+                'ioc_tags': 'login, username',
+                'ioc_tlp_id': 3,
+                'ioc_type_id': 3,
+                'ioc_value': 'good_user'
+            }
+        ],
+        "alert_context": {
+            'username': 'good_user',
+            'ip': '192.168.125.33',
+            'login_status': 'failure'
+        },
+    }
+
+    first_data = alert.make_alert([first_match])
+    second_data = alert.make_alert([second_match])
+
+    assert first_expected_data == first_data
+    assert second_expected_data == second_data
 
 def test_iris_make_alert_auto_description_args(caplog):
     """Test for the built-in elastalert2 create_title and create_body functions
