@@ -918,4 +918,5 @@ properties:
   yzj_token: {type: string}
   yzj_type: {type: integer, enum: [0]}
   yzj_custom_loc: {type: string}
+  yzj_proxy: {type: string}
 
