@@ -378,6 +378,7 @@ event_status: success\nevent_type: login\nsrc_ip: 172.20.1.1\nusername: evil_use
     actual_data = alert.make_alert([match])
     assert expected_data == actual_data
 
+
 def test_iris_make_alert_auto_description_realert(caplog):
     """Test for the built-in elastalert2 create_title and create_body functions
 
@@ -510,6 +511,7 @@ event_status: failure\nevent_type: login\nsrc_ip: 192.168.125.33\nusername: good
     assert first_expected_data == first_data
     assert second_expected_data == second_data
 
+
 def test_iris_make_alert_auto_blank_description_realert(caplog):
     """Test for the built-in elastalert2 create_title and create_body functions
 
@@ -641,6 +643,7 @@ event_status: failure\nevent_type: login\nsrc_ip: 192.168.125.33\nusername: good
 
     assert first_expected_data == first_data
     assert second_expected_data == second_data
+
 
 def test_iris_make_alert_auto_description_args(caplog):
     """Test for the built-in elastalert2 create_title and create_body functions
