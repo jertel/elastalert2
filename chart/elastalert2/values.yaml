@@ -19,9 +19,7 @@ replicaCount: 1
 # update strategy to use (default : RollingUpdate) but can be Recreate
 updateStrategy:
   type: RollingUpdate
-  rollingUpdate:
-    maxUnavailable: 25%
-    maxSurge: 25%
+  rollingUpdate: {}
 
 # number of helm release revisions to retain
 revisionHistoryLimit: 5
