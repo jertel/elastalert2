@@ -1256,6 +1256,38 @@ def test_metric_aggregation_complex_query_key():
     assert rule.matches[1]['sub_qk'] == 'sub_qk_val2'
 
 
+def test_metric_aggregation_complex_query_key_formatted():
+    rules = {'buffer_time': datetime.timedelta(minutes=5),
+             'timestamp_field': '@timestamp',
+             'metric_agg_type': 'avg',
+             'metric_agg_key': 'some_val',
+             'metric_format_string': '{:.2f}',
+             'compound_query_key': ['qk', 'sub_qk'],
+             'query_key': 'qk,sub_qk',
+             'max_threshold': 0.8}
+
+    query = {"bucket_aggs": {"buckets": [
+        {"metric_some_val_avg": {"value": 1000.9133333}, "key": "sub_qk_val1"},
+        {"metric_some_val_avg": {"value": 10.9}, "key": "sub_qk_val2"},
+        {"metric_some_val_avg": {"value": 0.89999}, "key": "sub_qk_val3"}]
+    }, "key": "qk_val"}
+
+    rule = MetricAggregationRule(rules)
+    rule.check_matches(datetime.datetime.now(), 'qk_val', query)
+    assert len(rule.matches) == 3
+    assert rule.matches[0]['qk'] == 'qk_val'
+    assert rule.matches[1]['qk'] == 'qk_val'
+    assert rule.matches[0]['sub_qk'] == 'sub_qk_val1'
+    assert rule.matches[1]['sub_qk'] == 'sub_qk_val2'
+    assert rule.matches[1]['sub_qk'] == 'sub_qk_val2'
+    assert rule.matches[0]['metric_agg_value_formatted'] == '1000.91'
+    assert rule.matches[0]["metric_some_val_avg_formatted"] == "1000.91"
+    assert rule.matches[1]['metric_agg_value_formatted'] == '10.90'
+    assert rule.matches[1]["metric_some_val_avg_formatted"] == "10.90"
+    assert rule.matches[2]['metric_agg_value_formatted'] == '0.90'
+    assert rule.matches[2]["metric_some_val_avg_formatted"] == "0.90"
+
+
 def test_metric_aggregation_complex_query_key_bucket_interval():
     rules = {'buffer_time': datetime.timedelta(minutes=5),
              'timestamp_field': '@timestamp',
