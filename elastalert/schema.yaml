@@ -659,9 +659,6 @@ properties:
   lark_bot_id: { type: string }
   lark_msgtype: { type: string, enum: [ 'text' ] }
 
-  ### Line Notify
-  linenotify_access_token: {type: string}
-
   ### Matrix Hookshot
   matrixhookshot_ca_certs: {type: [boolean, string]}
   matrixhookshot_webhook_url: *arrayOfString
