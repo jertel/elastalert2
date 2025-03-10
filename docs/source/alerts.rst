@@ -2624,7 +2624,7 @@ Optional:
 
 ``yzj_proxy``: By default ElastAlert 2 will not use a network proxy to send notifications to YZJ. Set this option using ``hostname:port`` if you need to use a proxy. only supports https.
 
-``yzj_custom_loc``: The YZJ custom loc for privately deployed.
+``yzj_custom_loc``: The YZJ custom net location, include domain name and port, like: www.xxxx.com:80.
 
 
 Example usage::
