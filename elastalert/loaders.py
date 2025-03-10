@@ -53,6 +53,7 @@ from elastalert.alerters.slack import SlackAlerter
 from elastalert.alerters.sns import SnsAlerter
 from elastalert.alerters.teams import MsTeamsAlerter
 from elastalert.alerters.powerautomate import MsPowerAutomateAlerter
+from elastalert.alerters.yzj import YzjAlerter
 from elastalert.alerters.zabbix import ZabbixAlerter
 from elastalert.alerters.tencentsms import TencentSMSAlerter
 from elastalert.alerters.indexer import IndexerAlerter
@@ -145,6 +146,7 @@ class RulesLoader(object):
         'iris': elastalert.alerters.iris.IrisAlerter,
         'indexer': IndexerAlerter,
         'matrixhookshot': MatrixHookshotAlerter,
+        'yzj': YzjAlerter,
     }
 
     # A partial ordering of alert types. Relative order will be preserved in the resulting alerts list

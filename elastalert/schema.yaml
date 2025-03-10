@@ -63,7 +63,7 @@ definitions:
     additionalProperties: false
     properties:
       name: {type: string}
-      value: {type: string}    
+      value: {type: string}
 
   arrayOfMsTeamsFacts: &arrayOfMsTeamsFacts
     type: array
@@ -913,3 +913,10 @@ properties:
   zbx_host_from_field: {type: boolean}
   zbx_host: {type: string}
   zbx_key: {type: string}
+
+  ### YZJ
+  yzj_token: {type: string}
+  yzj_type: {type: integer, enum: [0]}
+  yzj_custom_loc: {type: string}
+  yzj_proxy: {type: string}
+
