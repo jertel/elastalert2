@@ -318,9 +318,9 @@ Optional:
 
 ``alertmanager_alertname``: ``alertname`` is the only required label. Defaults to using the rule name of the alert.
 
-``alertmanager_labels``: Key:value pairs of arbitrary labels to be attached to every alert. Keys should match the regular expression ``^[a-zA-Z_][a-zA-Z0-9_]*$``.
+``alertmanager_labels``: Key:value pairs of arbitrary labels to be attached to every alert. Keys should match the regular expression ``^[a-zA-Z_][a-zA-Z0-9_]*$``. Jinja2 templating, such as ``{{ field }}``, can be used in the value to reference any field in the matched events. When field names use dot notation or reserved characters, ``_data`` can be used to access these fields. If ``_data`` conflicts with your top level data, use ``jinja_root_name`` to change its name.
 
-``alertmanager_annotations``: Key:value pairs of arbitrary annotations to be attached to every alert. Keys should match the regular expression ``^[a-zA-Z_][a-zA-Z0-9_]*$``.
+``alertmanager_annotations``: Key:value pairs of arbitrary annotations to be attached to every alert. Keys should match the regular expression ``^[a-zA-Z_][a-zA-Z0-9_]*$``. Jinja2 templating, such as ``{{ field }}``, can be used in the value to reference any field in the matched events. When field names use dot notation or reserved characters, ``_data`` can be used to access these fields. If ``_data`` conflicts with your top level data, use ``jinja_root_name`` to change its name.
 
 ``alertmanager_fields``: Key:value pairs of labels and corresponding match fields. When using ``alertmanager_fields`` you can access nested fields and index into arrays the same way as with ``alert_text_args``. Keys should match the regular expression ``^[a-zA-Z_][a-zA-Z0-9_]*$``. This dictionary will be merged with the ``alertmanager_labels``.
 
@@ -363,25 +363,26 @@ Additional explanation:
 
 ElastAlert 2 can send two categories of data to Alertmanager: labels and annotations
 
-Labels are sent as either static values or a single field value lookup. So if you specify the following::
+Labels are sent either as static values or can be formatted using jinja2 templates that reference any field values from the Elastic record that triggered the alert. For example::
 
     alertmanager_labels:
       someStaticLabel: "Verify this issue"
-      anotherStaticLabel: "someone@somewhere.invalid"
+      someTemplatedLabel: "{{ someElasticFieldName }}"
+      someOtherTemplatedLabel: "{{ someElasticFieldName }}:{{ _data["some.elastic.field.name"] }}"
+
+Alternatively you can use the ``alertmanager_fields`` option to define a dictionary of labels and corresponding field names from the Elastic record which will then be merged back into the dictionary defined by ``alertmanager_labels``.
 
     alertmanager_fields:
-      myLabelName: someElasticFieldName
-      anotherLabel: anotherElasticFieldName
+      someLabel: "someElasticFieldName"
+      someOtherLabel: "someOtherElasticFieldName"
 
-The first labels will be static, but the two field will be replaced with the corresponding field values from the Elastic record that triggered the alert, and then merged back into the list of labels sent to Alertmanager.
-
-Annotations are slightly different. You can have many static (hardcoded) annotations and only two annotations that will be formatted according to the `alert_text` and `alert_subject` [documentation](https://elastalert2.readthedocs.io/en/latest/ruletypes.html#alert-subject). 
+Annotations are similar to labels where it can either be a static value or formatted using jinja2 templates. The only difference is that ``alert_text`` and ``alert_subject`` are merged back into the dictionary defined by ``alertmanager_annotations`` and are subjected to [different formatting rules](https://elastalert2.readthedocs.io/en/latest/ruletypes.html#alert-subject).
 
 For example::
 
     alertmanager_annotations:
       someStaticAnnotation: "This is a static annotation value, it never changes"
-      severity: P3
+      someTemplatedAnnotation: "This is a templated annotation value: {{ someElasticFieldName }}"
 
     alertmanager_alert_subject_labelname: myCustomAnnotationName1
     alertmanager_alert_text_labelname: myCustomAnnotationName2

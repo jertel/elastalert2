@@ -3,6 +3,7 @@ import warnings
 
 from datetime import datetime, timedelta, timezone
 import requests
+from jinja2 import Template, TemplateSyntaxError
 from requests import RequestException
 from requests.auth import HTTPBasicAuth
 
@@ -35,6 +36,7 @@ class AlertmanagerAlerter(Alerter):
             self.resolve_timeout = timedelta(**rule['alertmanager_resolve_time'])
         else:
             self.resolve_timeout = None
+        self.jinja_root_name = self.rule.get('jinja_root_name', None)
 
     @staticmethod
     def _json_or_string(obj):
@@ -43,24 +45,49 @@ class AlertmanagerAlerter(Alerter):
             return obj
         return json.dumps(obj, cls=DateTimeEncoder)
 
+    def _render_jinja_templates(self, templates, context):
+        """Helper method to render Jinja2 templates."""
+        rendered = {}
+        for key, template_str in templates.items():
+            try:
+                jinja_template = Template(template_str)
+                rendered[key] = jinja_template.render(context)
+            except TemplateSyntaxError as e:
+                raise ValueError(f"Alertmanager: The template provided by key '{key}' has an invalid Jinja2 syntax. "
+                                f"Please check your template syntax: {e}")
+        return rendered
+
     def alert(self, matches):
         headers = {'content-type': 'application/json'}
         proxies = {'https': self.proxies} if self.proxies else None
         auth = HTTPBasicAuth(self.alertmanager_basic_auth_login, self.alertmanager_basic_auth_password) if self.alertmanager_basic_auth_login else None
 
-        self.labels.update({
+        resolved_labels = {}
+
+        if self.jinja_root_name:
+            context = matches[0] | {self.jinja_root_name: matches[0]}
+        else:
+            context = matches[0]
+
+        resolved_labels = self._render_jinja_templates(self.labels, context)
+
+        resolved_labels.update({
             label: self._json_or_string(lookup_es_key(matches[0], term))
             for label, term in self.fields.items()})
-        self.labels.update(
+        resolved_labels.update(
             alertname=self.alertname,
             elastalert_rule=self.rule.get('name'))
-        self.annotations.update({
+
+        resolved_annotations = {}
+        resolved_annotations = self._render_jinja_templates(self.annotations, context)
+
+        resolved_annotations.update({
             self.title_labelname: self.create_title(matches),
             self.body_labelname: self.create_alert_body(matches)})
 
         payload = {
-            'annotations': self.annotations,
-            'labels': self.labels
+            'annotations': resolved_annotations,
+            'labels': resolved_labels
         }
 
         if self.resolve_timeout is not None:

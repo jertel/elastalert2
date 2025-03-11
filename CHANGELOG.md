@@ -6,11 +6,13 @@
 ## New features
 - [MicrosoftPowerAutomate] Add support for 'ms_power_automate_webhook_url_from_field' option to dynamically select the webhook URL from the match. - [#1623](https://github.com/jertel/elastalert2/pull/1623) - @aizerin
 - Add Webex Incoming Webhook alerter - [#1635](https://github.com/jertel/elastalert2/pull/1635) - @dennis-trapp
+- Support jinja2 templates in `alertmanager_labels` and `alertmanager_annotations` - [#1642](https://github.com/jertel/elastalert2/pull/1642) - @tgxworld
 
 ## Other changes
 - Fix `schema.yaml` to support Kibana 8.17 - [#1631](https://github.com/jertel/elastalert2/pull/1631) - @vpiserchia
 - [Helm] Clarified documentation around rootRulesFolder - @jertel
 - [IRIS] Fix `iris.py` to overcome a description overwriting bug - [#1643](https://github.com/jertel/elastalert2/pull/1643) - @jmolletAMNH
+- Add `metric_<metric_key>_formatted` and `metric_agg_value_formatted` to metric aggregation when using compound query keys - [#1647](https://github.com/jertel/elastalert2/pull/1647) - @dennis-trapp
 
 # 2.23.0
 
