@@ -1146,6 +1146,10 @@ class MetricAggregationRule(BaseAggregationRule):
                     # add compound key to payload to allow alerts to trigger for every unique occurence
                     compound_value = [match_data[key] for key in self.rules['compound_query_key']]
                     match_data[self.rules['query_key']] = ",".join([str(value) for value in compound_value])
+                    metric_format_string = self.rules.get('metric_format_string', None)
+                    if metric_format_string:
+                        match_data[self.metric_key +'_formatted'] = format_string(metric_format_string, metric_val)
+                        match_data['metric_agg_value_formatted'] = format_string(metric_format_string, metric_val)
                     self.add_match(match_data)
 
     def crossed_thresholds(self, metric_value):
