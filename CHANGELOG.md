@@ -11,7 +11,7 @@
 - Fix `schema.yaml` to support Kibana 8.17 - [#1631](https://github.com/jertel/elastalert2/pull/1631) - @vpiserchia
 - [Helm] Clarified documentation around rootRulesFolder - @jertel
 - [IRIS] Fix `iris.py` to overcome a description overwriting bug - [#1643](https://github.com/jertel/elastalert2/pull/1643) - @jmolletAMNH
-- Add `metric_<metric_key>_formatted` and `metric_agg_value_formatted` to metric aggregation - [#1647](https://github.com/jertel/elastalert2/pull/1647) - @dennis-trapp
+- Add `metric_<metric_key>_formatted` and `metric_agg_value_formatted` to metric aggregation when using compound query keys - [#1647](https://github.com/jertel/elastalert2/pull/1647) - @dennis-trapp
 
 # 2.23.0
 
