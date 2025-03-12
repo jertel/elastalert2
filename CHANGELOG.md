@@ -13,6 +13,8 @@
 - [Helm] Clarified documentation around rootRulesFolder - @jertel
 - [IRIS] Fix `iris.py` to overcome a description overwriting bug - [#1643](https://github.com/jertel/elastalert2/pull/1643) - @jmolletAMNH
 - Add `metric_<metric_key>_formatted` and `metric_agg_value_formatted` to metric aggregation when using compound query keys - [#1647](https://github.com/jertel/elastalert2/pull/1647) - @dennis-trapp
+- Remove lineNotifyAlerter [#1638](https://github.com/jertel/elastalert2/pull/1638) - @nsano-rururu
+- Fixed an issue where the test-docker command would cause an error when running old docker-compose [#1638](https://github.com/jertel/elastalert2/pull/1638) - @nsano-rururu
 
 # 2.23.0
 
