@@ -1,6 +1,6 @@
 .PHONY: all production test docs clean
 
-COMPOSE = $(shell if docker compose version >/dev/null 2>&1; then echo "compose"; else echo "-compose"; fi)
+COMPOSE = $(shell if docker compose version >/dev/null 2>&1; then echo " compose"; else echo "-compose"; fi)
 
 all: production
 
