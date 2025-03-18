@@ -63,7 +63,7 @@ definitions:
     additionalProperties: false
     properties:
       name: {type: string}
-      value: {type: string}    
+      value: {type: string}
 
   arrayOfMsTeamsFacts: &arrayOfMsTeamsFacts
     type: array
@@ -326,7 +326,7 @@ properties:
   generate_kibana_discover_url: {type: boolean}
   shorten_kibana_discover_url: {type: boolean}
   kibana_discover_app_url: {type: string}
-  kibana_discover_version: {type: string, enum: ['8.16','8.15','8.14','8.13','8.12','8.11', '8.10', '8.9', '8.8', '8.7', '8.6', '8.5', '8.4', '8.3', '8.2', '8.1', '8.0', '7.17', '7.16', '7.15', '7.14', '7.13', '7.12', '7.11', '7.10', '7.9', '7.8', '7.7', '7.6', '7.5', '7.4', '7.3', '7.2', '7.1', '7.0']}
+  kibana_discover_version: {type: string, enum: ['8.17','8.16','8.15','8.14','8.13','8.12','8.11', '8.10', '8.9', '8.8', '8.7', '8.6', '8.5', '8.4', '8.3', '8.2', '8.1', '8.0', '7.17', '7.16', '7.15', '7.14', '7.13', '7.12', '7.11', '7.10', '7.9', '7.8', '7.7', '7.6', '7.5', '7.4', '7.3', '7.2', '7.1', '7.0']}
   kibana_discover_index_pattern_id: {type: string, minLength: 1}
   kibana_discover_columns: {type: array, items: {type: string, minLength: 1}, minItems: 1}
   kibana_discover_from_timedelta: *timedelta
@@ -659,9 +659,6 @@ properties:
   lark_bot_id: { type: string }
   lark_msgtype: { type: string, enum: [ 'text' ] }
 
-  ### Line Notify
-  linenotify_access_token: {type: string}
-
   ### Matrix Hookshot
   matrixhookshot_ca_certs: {type: [boolean, string]}
   matrixhookshot_webhook_url: *arrayOfString
@@ -717,6 +714,7 @@ properties:
 
   ### Microsoft Power Automate
   ms_power_automate_webhook_url: *arrayOfString
+  ms_power_automate_webhook_url_from_field: { type: string }
   ms_power_automate_alert_summary: {type: string}
   ms_power_automate_summary_text_size: {type: string, enum: ['default', 'small', 'medium', 'large', 'extraLarge']}
   ms_power_automate_body_text_size: {type: string, enum: ['default', 'small', 'medium', 'large', 'extraLarge']}
@@ -909,6 +907,10 @@ properties:
   twilio_message_service_sid: {type: string}
   twilio_use_copilot: {type: boolean}
 
+  ### Webex Webhook
+  webex_webhook_id: { type: string }
+  webex_webhook_msgtype: { type: string }
+
   ### WorkWechat
   work_wechat_bot_id: { type: string }
   work_wechat_msgtype: { type: string }
@@ -919,3 +921,10 @@ properties:
   zbx_host_from_field: {type: boolean}
   zbx_host: {type: string}
   zbx_key: {type: string}
+
+  ### YZJ
+  yzj_token: {type: string}
+  yzj_type: {type: integer, enum: [0]}
+  yzj_custom_loc: {type: string}
+  yzj_proxy: {type: string}
+

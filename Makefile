@@ -1,10 +1,6 @@
 .PHONY: all production test docs clean
 
-COMPOSE = "-compose"
-$(which shell && shell docker$(COMPOSE) 2> /dev/null)
-ifneq ($(.SHELLSTATUS),0)
-	COMPOSE = " compose"
-endif
+COMPOSE = $(shell if docker compose version >/dev/null 2>&1; then echo " compose"; else echo "-compose"; fi)
 
 all: production
 

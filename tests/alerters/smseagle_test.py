@@ -37,7 +37,8 @@ def test_smseagle_send_sms(caplog):
         alert.alert([match])
 
     expected_data = {
-        'text': 'Test Rule\n\n@timestamp: 2025-01-01T00:00:00\nsomefield: foobarbaz\n'
+        'to': ['111222333'],
+        'message': 'Test SMSEagle\n\n@timestamp: 2025-01-01T00:00:00\nsomefield: foobarbaz\n'
     }
     
     mock_post_request.assert_called_once_with(
@@ -47,7 +48,7 @@ def test_smseagle_send_sms(caplog):
     )
     
     assert expected_data == json.loads(mock_post_request.call_args_list[0][1]['data'])
-    assert ('elastalert', logging.INFO, "Alert 'Test Rule' sent to SMSEagle") == caplog.record_tuples[0]
+    assert ('elastalert', logging.INFO, "Alert 'Test SMSEagle' sent to SMSEagle") == caplog.record_tuples[0]
     
 
 def test_smseagle_alerter_post_ea_exception():
@@ -78,7 +79,7 @@ def test_smseagle_getinfo():
     rule = {
         'name': 'Test SMSEagle',
         'type': 'any',
-        'smseagle_url': 'http://smseagle_url',
+        'msg_type': 'sms',
         'alert': []
     }
     rules_loader = FileRulesLoader({})
@@ -87,7 +88,7 @@ def test_smseagle_getinfo():
 
     expected_data = {
         'type': 'smseagle',
-        'smseagle_url': ['http://smseagle_url']
+        'msg_type': 'sms'
     }
     actual_data = alert.get_info()
     assert expected_data == actual_data

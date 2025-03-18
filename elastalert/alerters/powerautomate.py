@@ -3,7 +3,7 @@ import json
 import requests
 
 from elastalert.alerts import Alerter, DateTimeEncoder
-from elastalert.util import EAException, elastalert_logger, lookup_es_key
+from elastalert.util import EAException, elastalert_logger, lookup_es_key, expand_string_into_array
 from requests.exceptions import RequestException
 
 
@@ -121,8 +121,13 @@ class MsPowerAutomateAlerter(Alerter):
                     "url": opensearch_discover_url,
                     "style": self.ms_power_automate_opensearch_discover_color
                 })                     
+        urls = self.ms_power_automate_webhook_url
+        if 'ms_power_automate_webhook_url_from_field' in self.rule:
+            webhook = lookup_es_key(matches[0], self.rule['ms_power_automate_webhook_url_from_field'])
+            if isinstance(webhook, str):
+                urls = expand_string_into_array(webhook)
 
-        for url in self.ms_power_automate_webhook_url:
+        for url in urls:
             try:
                 response = requests.post(url, data=json.dumps(payload, cls=DateTimeEncoder),
                                          headers=headers, proxies=proxies, verify=verify)

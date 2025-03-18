@@ -67,6 +67,7 @@ Currently, we have support built in for these alert types:
 - Tencent SMS
 - TheHive
 - Twilio
+- Webex Incoming Webhook
 - WorkWechat  
 - Zabbix
 
