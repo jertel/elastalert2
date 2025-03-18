@@ -26,6 +26,7 @@ or
       - discord
       - email
       - exotel
+      - flashduty
       - gitter
       - googlechat
       - gelf
@@ -2634,3 +2635,38 @@ Example usage::
     - "yzj"
     yzj_token: "token"
 
+
+Flashduty
+~~~~~~~~~~~~~
+
+Flashduty is positioned as an All-in-One Alert Response Platform for enterprises. We help developers, DevOps engineers, operations teams, and business owners accelerate alert response, improve product experience, and reduce incident losses
+Official  documentation: https://docs.flashcat.cloud/?nav=01JCQ7A4N4WRWNXW8EWEHXCMF5
+
+Required:
+
+``flashduty_url``:  Flashduty Push URL.
+``flashduty_title``:  Alert title.
+``flashduty_event_status``:  Alert status. Can be ``Info``, ``Warning``, ``Critical``, ``Ok``. Defaults to ``Info``.
+
+
+Example usage::
+
+    alert_text: "**{0}** - ALERT on host {1}"
+    alert_text_args:
+      - name
+      - hostname
+    alert:
+      - flashduty
+    flashduty_url: https://api.flashcat.cloud/event/push/alert/standard?integration_key=xxx
+    flashduty_title: elastalert 
+    flashduty_event_status: Warning
+    flashduty_alert_key: abc
+    flashduty_description: log error
+    flashduty_check: Too many occurrences of error logs
+    flashduty_resource: index_name
+    flashduty_service: service_name
+    flashduty_metric: The number of error logs is greater than 5
+    flashduty_group: sre
+    flashduty_cluster: k8s
+    flashduty_app: app
+    flashduty_env: dev

@@ -920,3 +920,10 @@ properties:
   yzj_custom_loc: {type: string}
   yzj_proxy: {type: string}
 
+  ### Flashduty
+  flashduty_url: {type: string}
+  flashduty_title: {type: string}
+  flashduty_description: {type: string}
+  flashduty_event_status: {type: string, enum: [Info, Warning, Critical, Ok]}
+  flashduty_labels: {type: object}
+  flashduty_alert_key: {type: string}
