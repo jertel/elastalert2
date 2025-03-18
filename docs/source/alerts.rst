@@ -35,7 +35,6 @@ or
       - iris
       - jira
       - lark
-      - linenotify
       - matrixhookshot
       - mattermost
       - ms_teams
@@ -1417,21 +1416,6 @@ Example usage::
       - "lark"
     lark_bot_id: "your lark bot id"
     lark_msgtype: "text"
-
-Line Notify
-~~~~~~~~~~~
-
-Line Notify will send notification to a Line application. The body of the notification is formatted the same as with other alerters.
-
-Required:
-
-``linenotify_access_token``: The access token that you got from https://notify-bot.line.me/my/
-
-Example usage::
-
-    alert:
-      - "linenotify"
-    linenotify_access_token: "Your linenotify access token"
 
 Matrix Hookshot
 ~~~~~~~~~~~~~~~
