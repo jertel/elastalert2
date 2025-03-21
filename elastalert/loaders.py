@@ -8,6 +8,7 @@ import sys
 import jsonschema
 import yaml
 import yaml.scanner
+from elastalert.alerters.flashduty import FlashdutyAlerter
 from jinja2 import Environment
 from jinja2 import FileSystemLoader
 from jinja2 import Template
@@ -145,6 +146,7 @@ class RulesLoader(object):
         'indexer': IndexerAlerter,
         'matrixhookshot': MatrixHookshotAlerter,
         'yzj': YzjAlerter,
+        'flashduty': FlashdutyAlerter,
     }
 
     # A partial ordering of alert types. Relative order will be preserved in the resulting alerts list
