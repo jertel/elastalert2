@@ -2629,7 +2629,7 @@ Official  documentation: https://docs.flashcat.cloud/?nav=01JCQ7A4N4WRWNXW8EWEHX
 Required:
 
 ``flashduty_url``:  Flashduty Push URL.
-``flashduty_title``:  Alert title.
+``flashduty_title``:  Alert title , no more than 512 characters, will be truncated if exceeded.
 ``flashduty_event_status``:  Alert status. Can be ``Info``, ``Warning``, ``Critical``, ``Ok``. Defaults to ``Info``.
 
 
