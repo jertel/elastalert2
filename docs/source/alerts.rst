@@ -2641,16 +2641,16 @@ Example usage::
       - hostname
     alert:
       - flashduty
-    flashduty_url: https://api.flashcat.cloud/event/push/alert/standard?integration_key=xxx
-    flashduty_title: elastalert 
-    flashduty_event_status: Warning
-    flashduty_alert_key: abc
-    flashduty_description: log error
-    flashduty_check: Too many occurrences of error logs
-    flashduty_resource: index_name
-    flashduty_service: service_name
-    flashduty_metric: The number of error logs is greater than 5
-    flashduty_group: sre
-    flashduty_cluster: k8s
-    flashduty_app: app
-    flashduty_env: dev
+    flashduty_url: "https://api.flashcat.cloud/event/push/alert/standard?integration_key=xxx"
+    flashduty_title: "elastalert"
+    flashduty_event_status: "Warning"
+    flashduty_alert_key: "abc"
+    flashduty_description: "log error"
+    flashduty_check: "Too many occurrences of error logs"
+    flashduty_resource: "index_name"
+    flashduty_service: "service_name"
+    flashduty_metric: "The number of error logs is greater than 5"
+    flashduty_group: "sre"
+    flashduty_cluster: "k8s"
+    flashduty_app: "app"
+    flashduty_env: "dev"
