@@ -10,11 +10,11 @@ from requests import RequestException
 class FlashdutyAlerter(Alerter):
     """Creates a Flashduty message for each alert"""
 
-    required_options = frozenset(["flashduty_url"])
+    required_options = frozenset(["flashduty_integration_key"])
 
     def __init__(self, rule):
         super(FlashdutyAlerter, self).__init__(rule)
-        self.flashduty_url = self.rule.get("flashduty_url", None)
+        self.flashduty_integration_key = self.rule.get("flashduty_integration_key", None)
         self.flashduty_title = self.rule.get("flashduty_title", "ElastAlert Alert")
         self.flashduty_alert_key = self.rule.get("flashduty_alert_key", None)
         self.flashduty_description = self.rule.get("flashduty_description", None)
@@ -56,7 +56,7 @@ class FlashdutyAlerter(Alerter):
 
         try:
             response = requests.post(
-                self.flashduty_url,
+                "https://api.flashcat.cloud/event/push/alert/standard?integration_key=" + self.flashduty_integration_key,
                 data=json.dumps(payload, cls=DateTimeEncoder),
                 headers=headers,
             )
@@ -70,7 +70,7 @@ class FlashdutyAlerter(Alerter):
     def get_info(self):
         return {
             "type": "flashduty",
-            "flashduty_url": self.flashduty_url,
+            "flashduty_integration_key": self.flashduty_integration_key,
             "flashduty_title": self.flashduty_title,
             "flashduty_description": self.flashduty_description,
             "flashduty_event_status": self.flashduty_event_status,

@@ -15,7 +15,7 @@ def test_flashduty_alert(caplog):
     rule = {
         'name': 'Test Flashduty Rule',
         'type': 'any',
-        'flashduty_url': 'https://api.flashcat.cloud/event/push/alert/standard?integration_key=xxx',
+        'flashduty_integration_key': 'xxx',
         'flashduty_title': 'Test Alert',
         'flashduty_description': 'Test Description',
         'flashduty_event_status': 'Info',
@@ -60,7 +60,7 @@ def test_flashduty_alert(caplog):
     }
 
     mock_post_request.assert_called_once_with(
-        'https://api.flashcat.cloud/event/push/alert/standard?integration_key=xxx',
+        'https://api.flashcat.cloud/event/push/alert/standard?integration_key=' + rule['flashduty_integration_key'],
         data=mock.ANY,
         headers={'Content-Type': 'application/json'}
     )
@@ -71,22 +71,22 @@ def test_flashduty_alert(caplog):
 
 
 def test_flashduty_ea_exception():
-    with pytest.raises(EAException) as ea:
-        rule = {
-            'name': 'Test Flashduty Rule',
-            'type': 'any',
-            'flashduty_url': 'https://api.flashcat.cloud/event/push/alert/standard?integration_key=xxx',
-            'alert': [],
-        }
-        rules_loader = FileRulesLoader({})
-        rules_loader.load_modules(rule)
-        alert = FlashdutyAlerter(rule)
-        match = {
-            '@timestamp': '2025-03-20T00:00:00',
-            'somefield': 'foobar'
-        }
-        mock_run = mock.MagicMock(side_effect=RequestException)
-        with mock.patch('requests.post', mock_run), pytest.raises(RequestException):
+    rule = {
+        'name': 'Test Flashduty Rule',
+        'type': 'any',
+        'flashduty_integration_key': 'xxx',
+        'alert': [],
+    }
+    rules_loader = FileRulesLoader({})
+    rules_loader.load_modules(rule)
+    alert = FlashdutyAlerter(rule)
+    match = {
+        '@timestamp': '2025-03-20T00:00:00',
+        'somefield': 'foobar'
+    }
+    mock_run = mock.MagicMock(side_effect=RequestException)
+    with mock.patch('requests.post', mock_run):
+        with pytest.raises(EAException) as ea:
             alert.alert([match])
     assert 'Error posting to flashduty: ' in str(ea)
 
@@ -95,7 +95,7 @@ def test_flashduty_getinfo():
     rule = {
         'name': 'Test Flashduty Rule',
         'type': 'any',
-        'flashduty_url': 'https://api.flashcat.cloud/event/push/alert/standard?integration_key=xxx',
+        'flashduty_integration_key': 'xxx',
         'flashduty_title': 'Test Alert',
         'flashduty_description': 'Test Description',
         'flashduty_event_status': 'Info',
@@ -116,7 +116,7 @@ def test_flashduty_getinfo():
 
     expected_data = {
         'type': 'flashduty',
-        'flashduty_url': 'https://api.flashcat.cloud/event/push/alert/standard?integration_key=xxx',
+        'flashduty_integration_key': 'xxx',
         'flashduty_title': 'Test Alert',
         'flashduty_description': 'Test Description',
         'flashduty_event_status': 'Info',
@@ -145,4 +145,4 @@ def test_flashduty_required_error():
         rules_loader.load_modules(rule)
         FlashdutyAlerter(rule)
     except Exception as ea:
-        assert 'Missing required option(s): flashduty_url' in str(ea) 
+        assert 'Missing required option(s): flashduty_integration_key' in str(ea) 

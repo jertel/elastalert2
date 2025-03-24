@@ -2623,12 +2623,11 @@ Example usage::
 Flashduty
 ~~~~~~~~~~~~~
 
-Flashduty is positioned as an All-in-One Alert Response Platform for enterprises. We help developers, DevOps engineers, operations teams, and business owners accelerate alert response, improve product experience, and reduce incident losses
-Official  documentation: https://docs.flashcat.cloud/?nav=01JCQ7A4N4WRWNXW8EWEHXCMF5
+Flashduty alerter will send notification to a Flashduty application. The body of the notification formatted the same as with other alerters.
 
 Required:
 
-``flashduty_url``:  Flashduty Push URL.
+``flashduty_integration_key``:  Flashduty integration key.
 ``flashduty_title``:  Alert title , no more than 512 characters, will be truncated if exceeded. Default to ``ElastAlert Alert``.
 ``flashduty_event_status``:  Alert status. Can be ``Info``, ``Warning``, ``Critical``, ``Ok``. Defaults to ``Info``.
 
@@ -2641,7 +2640,7 @@ Example usage::
       - hostname
     alert:
       - flashduty
-    flashduty_url: "https://api.flashcat.cloud/event/push/alert/standard?integration_key=xxx"
+    flashduty_integration_key: "xxx"
     flashduty_title: "elastalert"
     flashduty_event_status: "Warning"
     flashduty_alert_key: "abc"
@@ -2654,3 +2653,5 @@ Example usage::
     flashduty_cluster: "k8s"
     flashduty_app: "app"
     flashduty_env: "dev"
+
+ Please refer to the parameter definition: https://docs.flashcat.cloud/en/flashduty/elastalert2-integration-guide
