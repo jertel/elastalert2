@@ -55,7 +55,7 @@ def test_flashduty_alert(caplog):
             'group': 'test-group',
             'env': 'test-env',
             'app': 'test-app',
-            'information': '@timestamp: 2025-03-20T00:00:00\nsomefield: foobar\n'
+            'information': 'Test Flashduty Rule\n\n@timestamp: 2025-03-20T00:00:00\nsomefield: foobar\n'
         }
     }
 
