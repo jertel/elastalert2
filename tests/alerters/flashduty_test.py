@@ -145,4 +145,4 @@ def test_flashduty_required_error():
         rules_loader.load_modules(rule)
         FlashdutyAlerter(rule)
     except Exception as ea:
-        assert 'Missing required option(s): flashduty_integration_key' in str(ea) 
+        assert 'Missing required option(s): flashduty_integration_key' in str(ea)
