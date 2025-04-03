@@ -928,3 +928,17 @@ properties:
   yzj_custom_loc: {type: string}
   yzj_proxy: {type: string}
 
+  ### Flashduty
+  flashduty_integration_key: {type: string}
+  flashduty_title: {type: string}
+  flashduty_description: {type: string}
+  flashduty_event_status: {type: string, enum: [Info, Warning, Critical, Ok]}
+  flashduty_alert_key: {type: string}
+  flashduty_check: {type: string}
+  flashduty_service: {type: string}
+  flashduty_cluster: {type: string}
+  flashduty_resource: {type: string}
+  flashduty_metric: {type: string}
+  flashduty_group: {type: string}
+  flashduty_env: {type: string}
+  flashduty_app: {type: string}

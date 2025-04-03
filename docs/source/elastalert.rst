@@ -39,6 +39,7 @@ Currently, we have support built in for these alert types:
 - Discord
 - Email
 - Exotel
+- Flashduty
 - Gitter
 - GoogleChat
 - Graylog GELF
