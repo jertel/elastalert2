@@ -26,6 +26,7 @@ or
       - discord
       - email
       - exotel
+      - flashduty
       - gitter
       - googlechat
       - gelf
@@ -34,7 +35,6 @@ or
       - iris
       - jira
       - lark
-      - linenotify
       - matrixhookshot
       - mattermost
       - ms_teams
@@ -1417,21 +1417,6 @@ Example usage::
     lark_bot_id: "your lark bot id"
     lark_msgtype: "text"
 
-Line Notify
-~~~~~~~~~~~
-
-Line Notify will send notification to a Line application. The body of the notification is formatted the same as with other alerters.
-
-Required:
-
-``linenotify_access_token``: The access token that you got from https://notify-bot.line.me/my/
-
-Example usage::
-
-    alert:
-      - "linenotify"
-    linenotify_access_token: "Your linenotify access token"
-
 Matrix Hookshot
 ~~~~~~~~~~~~~~~
 
@@ -2634,3 +2619,39 @@ Example usage::
     - "yzj"
     yzj_token: "token"
 
+
+Flashduty
+~~~~~~~~~~~~~
+
+Flashduty alerter will send notification to a Flashduty application. The body of the notification formatted the same as with other alerters.
+
+Required:
+
+``flashduty_integration_key``:  Flashduty integration key.
+``flashduty_title``:  Alert title , no more than 512 characters, will be truncated if exceeded. Default to ``ElastAlert Alert``.
+``flashduty_event_status``:  Alert status. Can be ``Info``, ``Warning``, ``Critical``, ``Ok``. Defaults to ``Info``.
+
+
+Example usage::
+
+    alert_text: "**{0}** - ALERT on host {1}"
+    alert_text_args:
+      - name
+      - hostname
+    alert:
+      - flashduty
+    flashduty_integration_key: "xxx"
+    flashduty_title: "elastalert"
+    flashduty_event_status: "Warning"
+    flashduty_alert_key: "abc"
+    flashduty_description: "log error"
+    flashduty_check: "Too many occurrences of error logs"
+    flashduty_resource: "index_name"
+    flashduty_service: "service_name"
+    flashduty_metric: "The number of error logs is greater than 5"
+    flashduty_group: "sre"
+    flashduty_cluster: "k8s"
+    flashduty_app: "app"
+    flashduty_env: "dev"
+
+ Please refer to the parameter definition: https://docs.flashcat.cloud/en/flashduty/elastalert2-integration-guide

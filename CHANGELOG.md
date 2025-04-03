@@ -8,12 +8,16 @@
 - Add Webex Incoming Webhook alerter - [#1635](https://github.com/jertel/elastalert2/pull/1635) - @dennis-trapp
 - Support jinja2 templates in `alertmanager_labels` and `alertmanager_annotations` - [#1642](https://github.com/jertel/elastalert2/pull/1642) - @tgxworld
 - [Helm] Add support of update strategy in the deployment [#1642](https://github.com/jertel/elastalert2/pull/1646) - @efazenda
+- Add Flashduty alerter - [#1649](https://github.com/jertel/elastalert2/pull/1649) - @pijiang3
+
 
 ## Other changes
 - Fix `schema.yaml` to support Kibana 8.17 - [#1631](https://github.com/jertel/elastalert2/pull/1631) - @vpiserchia
 - [Helm] Clarified documentation around rootRulesFolder - @jertel
 - [IRIS] Fix `iris.py` to overcome a description overwriting bug - [#1643](https://github.com/jertel/elastalert2/pull/1643) - @jmolletAMNH
 - Add `metric_<metric_key>_formatted` and `metric_agg_value_formatted` to metric aggregation when using compound query keys - [#1647](https://github.com/jertel/elastalert2/pull/1647) - @dennis-trapp
+- Remove lineNotifyAlerter [#1638](https://github.com/jertel/elastalert2/pull/1638) - @nsano-rururu
+- Fixed an issue where the test-docker command would cause an error when running old docker-compose [#1638](https://github.com/jertel/elastalert2/pull/1638) - @nsano-rururu
 
 # 2.23.0
 

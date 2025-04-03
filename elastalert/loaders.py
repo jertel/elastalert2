@@ -8,6 +8,7 @@ import sys
 import jsonschema
 import yaml
 import yaml.scanner
+from elastalert.alerters.flashduty import FlashdutyAlerter
 from jinja2 import Environment
 from jinja2 import FileSystemLoader
 from jinja2 import Template
@@ -27,7 +28,6 @@ import elastalert.alerters.httppost
 import elastalert.alerters.httppost2
 import elastalert.alerters.iris
 import elastalert.alerters.lark
-import elastalert.alerters.line
 import elastalert.alerters.pagertree
 import elastalert.alerters.rocketchat
 import elastalert.alerters.servicenow
@@ -130,7 +130,6 @@ class RulesLoader(object):
         'post': elastalert.alerters.httppost.HTTPPostAlerter,
         'post2': elastalert.alerters.httppost2.HTTPPost2Alerter,
         'pagertree': elastalert.alerters.pagertree.PagerTreeAlerter,
-        'linenotify': elastalert.alerters.line.LineNotifyAlerter,
         'hivealerter': elastalert.alerters.thehive.HiveAlerter,
         'zabbix': ZabbixAlerter,
         'discord': elastalert.alerters.discord.DiscordAlerter,
@@ -147,6 +146,7 @@ class RulesLoader(object):
         'indexer': IndexerAlerter,
         'matrixhookshot': MatrixHookshotAlerter,
         'yzj': YzjAlerter,
+        'flashduty': FlashdutyAlerter,
     }
 
     # A partial ordering of alert types. Relative order will be preserved in the resulting alerts list
