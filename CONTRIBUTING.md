@@ -7,13 +7,14 @@ the automated CI workflows. To test your changes before creating a PR, run
 `sudo make clean; sudo make test-docker` from the root of the repository (requires Docker to be
 running on your machine).
 
-Make sure you follow the existing coding style from the existing codebase. Do not reformatting the existing code to fit your own personal style.
+Make sure you follow the existing coding style from the existing codebase. Do not reformat the existing code to fit your own personal style.
 
 Before submitting the PR review that you have included the following changes, where applicable:
+- Unit Tests: Must cover all new logic paths
 - Documentation: If you're adding new functionality, any new configuration options should be documented appropriately in the docs/ folder.
 - Helm Chart: If your new feature introduces settings consider adding those to the Helm chart [README.md](chart/elastalert2/README.md) and [values.yaml](chart/elastalert2/values.yaml)
 - Examples: If your new feature includes new configuration options, review the [Example config file](examples/config.yaml.example) to see if they should be added there for consistency with other configuration options.
-- Change log: Describe your contribution to the appropriate section(s) for the _Upcoming release_, in the [CHANGELOG.md](CHANGELOG.md) file.
+- Changelog: Describe your contribution to the appropriate section(s) for the _Upcoming release_, in the [CHANGELOG.md](CHANGELOG.md) file.
 - Schema: Update the schema.yaml file with new parameters for existing and new alerters and rule types.
 
 ## Releases

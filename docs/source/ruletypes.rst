@@ -1682,7 +1682,7 @@ This rule requires:
 ``match_bucket_filter``: ES filter DSL. This defines a filter for the match bucket, which should match a subset of the documents returned by the
 main query filter.
 
-ssThis rule also requires at least one of the two following options:
+This rule also requires at least one of the two following options:
 
 ``min_percentage``: If the percentage of matching documents is less than this number, an alert will be triggered.
 
