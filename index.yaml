@@ -2,8 +2,22 @@ apiVersion: v1
 entries:
   elastalert2:
   - apiVersion: v1
+    appVersion: 2.24.0
+    created: "2025-04-05T14:03:46.928655893Z"
+    description: Automated rule-based alerting for Elasticsearch
+    digest: c2df6d1631a566fa65239e70171076990340ed27b82c90886c3085c62c67f817
+    home: https://github.com/jertel/elastalert2
+    maintainers:
+    - name: jertel
+    name: elastalert2
+    sources:
+    - https://github.com/jertel/elastalert2
+    urls:
+    - elastalert2-2.24.0.tgz
+    version: 2.24.0
+  - apiVersion: v1
     appVersion: 2.23.0
-    created: "2025-02-01T14:41:10.33577218Z"
+    created: "2025-04-05T14:03:46.927828408Z"
     description: Automated rule-based alerting for Elasticsearch
     digest: f9b3c543390fd3d0fc11f8c8e0be25a1be56908affb873c63c3e28e83dd968f0
     home: https://github.com/jertel/elastalert2
@@ -17,7 +31,7 @@ entries:
     version: 2.23.0
   - apiVersion: v1
     appVersion: 2.22.0
-    created: "2025-02-01T14:41:10.334958834Z"
+    created: "2025-04-05T14:03:46.926998239Z"
     description: Automated rule-based alerting for Elasticsearch
     digest: c53ce6b539aee1d7023f5c0fcfefad20f0f7a5cd730e9814a84cde59232c7444
     home: https://github.com/jertel/elastalert2
@@ -31,7 +45,7 @@ entries:
     version: 2.22.0
   - apiVersion: v1
     appVersion: 2.21.0
-    created: "2025-02-01T14:41:10.334153773Z"
+    created: "2025-04-05T14:03:46.926198927Z"
     description: Automated rule-based alerting for Elasticsearch
     digest: fe851bc8adf7030de1d9b2ec6f8c8917390f600e1943b289dbea8fd482859722
     home: https://github.com/jertel/elastalert2
@@ -45,7 +59,7 @@ entries:
     version: 2.21.0
   - apiVersion: v1
     appVersion: 2.20.0
-    created: "2025-02-01T14:41:10.333356887Z"
+    created: "2025-04-05T14:03:46.925392641Z"
     description: Automated rule-based alerting for Elasticsearch
     digest: 6cdda9b44181e7bab06be838f77287a359e844c17a98c2c40866fce8c4b658dd
     home: https://github.com/jertel/elastalert2
@@ -59,7 +73,7 @@ entries:
     version: 2.20.0
   - apiVersion: v1
     appVersion: 2.19.0
-    created: "2025-02-01T14:41:10.332007441Z"
+    created: "2025-04-05T14:03:46.924075242Z"
     description: Automated rule-based alerting for Elasticsearch
     digest: 8807623e2ee930fe51323a5689be20fc7f3db6a839f46ac4876ad8c234a93756
     home: https://github.com/jertel/elastalert2
@@ -73,7 +87,7 @@ entries:
     version: 2.19.0
   - apiVersion: v1
     appVersion: 2.18.0
-    created: "2025-02-01T14:41:10.33114345Z"
+    created: "2025-04-05T14:03:46.92325959Z"
     description: Automated rule-based alerting for Elasticsearch
     digest: b049021041d69ee4447e5452be9928cc4e5b8e6670ab7c8a356262ed4d651633
     home: https://github.com/jertel/elastalert2
@@ -87,7 +101,7 @@ entries:
     version: 2.18.0
   - apiVersion: v1
     appVersion: 2.17.0
-    created: "2025-02-01T14:41:10.330277776Z"
+    created: "2025-04-05T14:03:46.922411627Z"
     description: Automated rule-based alerting for Elasticsearch
     digest: e5efe59fbc89acc15861ab0b6b369607db5555f6e37076df305a1cb82389ce70
     home: https://github.com/jertel/elastalert2
@@ -101,7 +115,7 @@ entries:
     version: 2.17.0
   - apiVersion: v1
     appVersion: 2.16.0
-    created: "2025-02-01T14:41:10.328969972Z"
+    created: "2025-04-05T14:03:46.921014259Z"
     description: Automated rule-based alerting for Elasticsearch
     digest: 7067a18621c2422548d3360fab3f1b78a2c2fb9815f3b82e527419adc626a0f7
     home: https://github.com/jertel/elastalert2
@@ -115,7 +129,7 @@ entries:
     version: 2.16.0
   - apiVersion: v1
     appVersion: 2.15.0
-    created: "2025-02-01T14:41:10.327615337Z"
+    created: "2025-04-05T14:03:46.919712779Z"
     description: Automated rule-based alerting for Elasticsearch
     digest: fb69881ecf3d1768db2c85da8cdd862cceb2376d45b729088cee724386a92fd6
     home: https://github.com/jertel/elastalert2
@@ -129,7 +143,7 @@ entries:
     version: 2.15.0
   - apiVersion: v1
     appVersion: 2.14.0
-    created: "2025-02-01T14:41:10.326815265Z"
+    created: "2025-04-05T14:03:46.91889887Z"
     description: Automated rule-based alerting for Elasticsearch
     digest: 1a43753244a536f0865a00cf583471b4a14af700a02e22dcdb4ee86681bdc7e0
     home: https://github.com/jertel/elastalert2
@@ -143,7 +157,7 @@ entries:
     version: 2.14.0
   - apiVersion: v1
     appVersion: 2.13.2
-    created: "2025-02-01T14:41:10.325996228Z"
+    created: "2025-04-05T14:03:46.918090722Z"
     description: Automated rule-based alerting for Elasticsearch
     digest: 114faf6d4a1e34a87c5c35bdc7addd915101cab35d015ba74df66de95ce04439
     home: https://github.com/jertel/elastalert2
@@ -157,7 +171,7 @@ entries:
     version: 2.13.2
   - apiVersion: v1
     appVersion: 2.13.1
-    created: "2025-02-01T14:41:10.325179785Z"
+    created: "2025-04-05T14:03:46.917283855Z"
     description: Automated rule-based alerting for Elasticsearch
     digest: 309cb5b9e44f501da2ef395a0c39c9e841c3e232242ff518e83d3f9fced97e9b
     home: https://github.com/jertel/elastalert2
@@ -171,7 +185,7 @@ entries:
     version: 2.13.1
   - apiVersion: v1
     appVersion: 2.13.0
-    created: "2025-02-01T14:41:10.324327937Z"
+    created: "2025-04-05T14:03:46.916468904Z"
     description: Automated rule-based alerting for Elasticsearch
     digest: cdaba2ca5e510de2cca863cb8637c9f29fabd6e63a968168acb763bbdefeb2ce
     home: https://github.com/jertel/elastalert2
@@ -185,7 +199,7 @@ entries:
     version: 2.13.0
   - apiVersion: v1
     appVersion: 2.12.0
-    created: "2025-02-01T14:41:10.32356249Z"
+    created: "2025-04-05T14:03:46.915499284Z"
     description: Automated rule-based alerting for Elasticsearch
     digest: 0cd85431dd63a09d2bcb5745467fa2fc292c8b12e264b6ddddc5e0851958205e
     home: https://github.com/jertel/elastalert2
@@ -199,7 +213,7 @@ entries:
     version: 2.12.0
   - apiVersion: v1
     appVersion: 2.11.0
-    created: "2025-02-01T14:41:10.322608431Z"
+    created: "2025-04-05T14:03:46.914710241Z"
     description: Automated rule-based alerting for Elasticsearch
     digest: 9e3423e89b61afcbfaf985376871325d8eaaea62970a52236097c49098d5441b
     home: https://github.com/jertel/elastalert2
@@ -213,7 +227,7 @@ entries:
     version: 2.11.0
   - apiVersion: v1
     appVersion: 2.10.1
-    created: "2025-02-01T14:41:10.321795786Z"
+    created: "2025-04-05T14:03:46.913864132Z"
     description: Automated rule-based alerting for Elasticsearch
     digest: 8ac312bee473d4b5d48e49c850cf6384aa7bd7d5e7060527cdda4f3e13bf8bd5
     home: https://github.com/jertel/elastalert2
@@ -227,7 +241,7 @@ entries:
     version: 2.10.1
   - apiVersion: v1
     appVersion: 2.10.0
-    created: "2025-02-01T14:41:10.320974214Z"
+    created: "2025-04-05T14:03:46.913060331Z"
     description: Automated rule-based alerting for Elasticsearch
     digest: 7fa1943bface8f6225faec03b5861d35b33a6e344eb78c47f55650389c80e1b6
     home: https://github.com/jertel/elastalert2
@@ -241,7 +255,7 @@ entries:
     version: 2.10.0
   - apiVersion: v1
     appVersion: 2.9.0
-    created: "2025-02-01T14:41:10.342376862Z"
+    created: "2025-04-05T14:03:46.935013581Z"
     description: Automated rule-based alerting for Elasticsearch
     digest: 1f0051614d305a5a398dd818ac4d623da55da5e073118d151f17b28b9b5ee9c0
     home: https://github.com/jertel/elastalert2
@@ -255,7 +269,7 @@ entries:
     version: 2.9.0
   - apiVersion: v1
     appVersion: 2.8.0
-    created: "2025-02-01T14:41:10.341617116Z"
+    created: "2025-04-05T14:03:46.934238394Z"
     description: Automated rule-based alerting for Elasticsearch
     digest: 625d6b74ee46b12989bc0d1d37df1cc27e63788bf6be563ab7a15b10cfdfc3bc
     home: https://github.com/jertel/elastalert2
@@ -269,7 +283,7 @@ entries:
     version: 2.8.0
   - apiVersion: v1
     appVersion: 2.7.0
-    created: "2025-02-01T14:41:10.340651665Z"
+    created: "2025-04-05T14:03:46.933483636Z"
     description: Automated rule-based alerting for Elasticsearch
     digest: b62d2f0eee149daaf4d281a56440fccb15c21f7576a79688f02fa7aa83d567b6
     home: https://github.com/jertel/elastalert2
@@ -283,7 +297,7 @@ entries:
     version: 2.7.0
   - apiVersion: v1
     appVersion: 2.6.0
-    created: "2025-02-01T14:41:10.33967796Z"
+    created: "2025-04-05T14:03:46.932726763Z"
     description: Automated rule-based alerting for Elasticsearch
     digest: 7a6e2e11080e1daa4015185058d525a6fbcdd277a9f8cab6cb89514b6eecb703
     home: https://github.com/jertel/elastalert2
@@ -297,7 +311,7 @@ entries:
     version: 2.6.0
   - apiVersion: v1
     appVersion: 2.5.1
-    created: "2025-02-01T14:41:10.338537286Z"
+    created: "2025-04-05T14:03:46.931950463Z"
     description: Automated rule-based alerting for Elasticsearch
     digest: b71fea1d31f22f34609444a54ca39f78ed8e9a6668c33212c91e36c2547359dc
     home: https://github.com/jertel/elastalert2
@@ -311,7 +325,7 @@ entries:
     version: 2.5.1
   - apiVersion: v1
     appVersion: 2.5.0
-    created: "2025-02-01T14:41:10.337260535Z"
+    created: "2025-04-05T14:03:46.931366123Z"
     description: Automated rule-based alerting for Elasticsearch
     digest: d5b706c1e8212ab51699e716d6de4ecdd489953cd0666224b36b144e61f30f9c
     home: https://github.com/jertel/elastalert2
@@ -325,7 +339,7 @@ entries:
     version: 2.5.0
   - apiVersion: v1
     appVersion: 2.4.0
-    created: "2025-02-01T14:41:10.336739494Z"
+    created: "2025-04-05T14:03:46.929934239Z"
     description: Automated rule-based alerting for Elasticsearch
     digest: 133a5b71adad82db852ce39948ee2e6ab705a939652855cb066d3bbf8bf75361
     home: https://github.com/jertel/elastalert2
@@ -339,7 +353,7 @@ entries:
     version: 2.4.0
   - apiVersion: v1
     appVersion: 2.3.0
-    created: "2025-02-01T14:41:10.336252125Z"
+    created: "2025-04-05T14:03:46.929187696Z"
     description: Automated rule-based alerting for Elasticsearch
     digest: 517a37e6ed260eb955821b40c5990d8da12270b2c7cbd3b05a7ce14bfe5cb86b
     home: https://github.com/jertel/elastalert2
@@ -353,7 +367,7 @@ entries:
     version: 2.3.0
   - apiVersion: v1
     appVersion: 2.2.3
-    created: "2025-02-01T14:41:10.332518373Z"
+    created: "2025-04-05T14:03:46.924566559Z"
     description: Automated rule-based alerting for Elasticsearch
     digest: c49dfdfd50714ad4bd2865aa4a013be3d6d92f2b4c5ad76b490505b20ae90967
     home: https://github.com/jertel/elastalert2
@@ -365,4 +379,4 @@ entries:
     urls:
     - elastalert2-2.2.3.tgz
     version: 2.2.3
-generated: "2025-02-01T14:41:10.318926493Z"
+generated: "2025-04-05T14:03:46.911194782Z"
