@@ -4,6 +4,17 @@
 - None
 
 ## New features
+- None
+
+## Other changes
+- None
+
+# 2.24.0
+
+## Breaking changes
+- None
+
+## New features
 - [MicrosoftPowerAutomate] Add support for 'ms_power_automate_webhook_url_from_field' option to dynamically select the webhook URL from the match. - [#1623](https://github.com/jertel/elastalert2/pull/1623) - @aizerin
 - Add Webex Incoming Webhook alerter - [#1635](https://github.com/jertel/elastalert2/pull/1635) - @dennis-trapp
 - Support jinja2 templates in `alertmanager_labels` and `alertmanager_annotations` - [#1642](https://github.com/jertel/elastalert2/pull/1642) - @tgxworld
