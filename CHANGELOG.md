@@ -7,7 +7,7 @@
 - None
 
 ## Other changes
-- None
+- Fix `--namespace` and `namespaceOverride` value in Helm charts - [#1662](https://github.com/jertel/elastalert2/pull/1662) - @lepouletsuisse
 
 # 2.24.0
 
