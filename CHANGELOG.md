@@ -2,12 +2,14 @@
 
 ## Breaking changes
 - [Helm] An unlikely breaking change could occur if this chart was previously deployed with namespace overrides. Deploy to a pre-prod environment before proceeding with production. - [#1662](https://github.com/jertel/elastalert2/pull/1662) - @lepouletsuisse
+- Add support for Elasticsearch 9 - [#1666](https://github.com/jertel/elastalert2/pull/1666) - @nsano-rururu
 
 ## New features
 - None
 
 ## Other changes
 - [Helm] Fix `--namespace` and `namespaceOverride` value in Helm charts - [#1662](https://github.com/jertel/elastalert2/pull/1662) - @lepouletsuisse
+- Add support for Kibana 8.18 / 9.0 for Kibana Discover - [#1666](https://github.com/jertel/elastalert2/pull/1666) - @nsano-rururu
 
 # 2.24.0
 
