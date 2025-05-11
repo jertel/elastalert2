@@ -523,3 +523,24 @@ Yelp, the developer of the original elastalert, has the following article on its
 `ElastAlert: Alerting At Scale With Elasticsearch, Part 1 <https://engineeringblog.yelp.com/2015/10/elastalert-alerting-at-scale-with-elasticsearch.html>`_.
 
 `ElastAlert: Alerting At Scale With Elasticsearch, Part 2 <https://engineeringblog.yelp.com/2016/03/elastalert-part-two.html>`_.
+
+Does ElastAlert 2 support Elasticsearch 9?
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+ElastAlert 2 supports Elasticsearch 9.
+
+Supported in ElastAlert 2.23.0 and later.
+
+To upgrade an existing ElastAlert 2 installation to Elasticsearch 9 the
+following manual steps are required:
+
+* Shutdown ElastAlert 2.
+* Delete the old ``elastalert*`` indices. See [Elasticsearch
+  documentation](https://www.elastic.co/guide/en/elasticsearch/reference/current/indices-delete-index.html)
+  for instructions on how to delete via the API, or use the Kibana Index Management interface.
+* Upgrade the Elastic cluster to Elasticsearch 9 following the [Elastic 9 upgrade instructions](https://elastic.co/guide/en/elastic-stack/9.0/upgrading-elastic-stack.html).
+* If NOT running ElastAlert 2 via Docker or Kubernetes, run
+  elastalert-create-index to create the new indices. This is not needed when
+  running via a container since the container always attempts to creates the
+  indices at startup, if they're not yet created.
+* Restart ElastAlert 2.

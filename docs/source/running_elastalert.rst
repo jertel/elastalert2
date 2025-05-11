@@ -144,7 +144,7 @@ challenging due to the numerous differences between everyone's environment.
 Requirements
 ------------
 
-- Elasticsearch 7.x or 8.x, or OpenSearch 1.x or 2.x
+- Elasticsearch 7.x or 8.x or 9.x, or OpenSearch 1.x or 2.x
 - ISO8601 or Unix timestamped data
 - Python 3.13. Require OpenSSL 3.0.8 or newer. Note that Python 3.12 is still supported but will be removed in a future release.
 - pip
