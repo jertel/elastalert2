@@ -150,6 +150,38 @@ def test_service_now_impact_and_urgency():
     assert data['urgency'] == rule['servicenow_urgency']
 
 
+def test_service_now_additional_arguments():
+    rule = {
+        'name': 'Test ServiceNow Rule',
+        'type': 'any',
+        'username': 'ServiceNow username',
+        'password': 'ServiceNow password',
+        'servicenow_rest_url': 'https://xxxxxxxxxx',
+        'short_description': 'ServiceNow short_description',
+        'comments': 'ServiceNow comments',
+        'assignment_group': 'ServiceNow assignment_group',
+        'category': 'ServiceNow category',
+        'subcategory': 'ServiceNow subcategory',
+        'cmdb_ci': 'ServiceNow cmdb_ci',
+        'caller_id': 'ServiceNow caller_id',
+        'servicenow_arg_fielda': 1,
+        'servicenow_arg_fieldb': 'Value b',
+        'alert': []
+    }
+    rules_loader = FileRulesLoader({})
+    rules_loader.load_modules(rule)
+    alert = ServiceNowAlerter(rule)
+    match = {
+        '@timestamp': '2021-01-01T00:00:00',
+        'somefield': 'foobarbaz'
+    }
+    with mock.patch('requests.post') as mock_post_request:
+        alert.alert([match])
+    data = json.loads(mock_post_request.call_args_list[0][1]['data'])
+    assert data['fielda'] == rule['servicenow_arg_fielda']
+    assert data['fieldb'] == rule['servicenow_arg_fieldb']
+
+
 def test_service_now_ea_exception():
     with pytest.raises(EAException) as ea:
         rule = {

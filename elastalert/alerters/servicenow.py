@@ -54,6 +54,9 @@ class ServiceNowAlerter(Alerter):
             payload["impact"] = self.impact
         if self.urgency != None:
             payload["urgency"] = self.urgency
+        for snow_field, value in self.rule.items():
+            if snow_field.startswith('servicenow_arg_'):
+                payload[snow_field[15:]] = value
         try:
             response = requests.post(
                 self.servicenow_rest_url,
