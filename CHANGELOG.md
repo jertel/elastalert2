@@ -4,7 +4,7 @@
 - [Helm] An unlikely breaking change could occur if this chart was previously deployed with namespace overrides. Deploy to a pre-prod environment before proceeding with production. - [#1662](https://github.com/jertel/elastalert2/pull/1662) - @lepouletsuisse
 
 ## New features
-- None
+- [ServiceNow] Include arbitrary fields in ServiceNow tickets by prefixing them with `servicenow_args_` in the alerter configuration.
 
 ## Other changes
 - [Helm] Fix `--namespace` and `namespaceOverride` value in Helm charts - [#1662](https://github.com/jertel/elastalert2/pull/1662) - @lepouletsuisse
