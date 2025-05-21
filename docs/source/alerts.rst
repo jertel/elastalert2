@@ -2086,11 +2086,13 @@ Example usage::
 
 Arbitrary ServiceNow fields:
 
-ElastAlert 2 supports setting any arbitrary ServiceNow field that your ServiceNow instance supports. For example, if you had a custom field, called "Affected User", you can set it by providing that field name in ``snake_case`` prefixed with ``servicenow_arg_``. The field needs to be specified using the Column Name not the Display Name. Custom fields in ServiceNow usually have the prefix ``u_`` to distinguish them from out of the box fields. The ``servicenow_arg_`` syntax can be used for either.
+ElastAlert 2 supports setting any arbitrary ServiceNow field that your ServiceNow instance supports. Additional fields must be specified in a `service_now_additional_fields` stanza. For example, if you had a custom field, called "Affected User", you can set it by providing that field name and value. The field needs to be specified using the Column Name not the Display Name. Custom fields in ServiceNow usually have the prefix ``u_`` to distinguish them from out of the box fields. 
 
 Example usage::
 
-    servicenow_arg_u_affected_user: 'Sample User'
+    service_now_additional_fields:
+        u_affected_user: 'Sample User'
+        u_affected_site: 'Sample Location'
 
 Slack
 ~~~~~

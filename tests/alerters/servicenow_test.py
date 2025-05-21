@@ -164,8 +164,10 @@ def test_service_now_additional_arguments():
         'subcategory': 'ServiceNow subcategory',
         'cmdb_ci': 'ServiceNow cmdb_ci',
         'caller_id': 'ServiceNow caller_id',
-        'servicenow_arg_fielda': 1,
-        'servicenow_arg_fieldb': 'Value b',
+        'service_now_additional_fields': {
+            'fielda': 'Value A',
+            'fieldb': 'Value B',
+        },
         'alert': []
     }
     rules_loader = FileRulesLoader({})
@@ -178,8 +180,8 @@ def test_service_now_additional_arguments():
     with mock.patch('requests.post') as mock_post_request:
         alert.alert([match])
     data = json.loads(mock_post_request.call_args_list[0][1]['data'])
-    assert data['fielda'] == rule['servicenow_arg_fielda']
-    assert data['fieldb'] == rule['servicenow_arg_fieldb']
+    assert data['fielda'] == rule['service_now_additional_fields']['fielda']
+    assert data['fieldb'] == rule['service_now_additional_fields']['fieldb']
 
 
 def test_service_now_ea_exception():
