@@ -55,7 +55,6 @@ class ServiceNowAlerter(Alerter):
             payload["impact"] = self.impact
         if self.urgency != None:
             payload["urgency"] = self.urgency
-        snow_arg_prefix = 'servicenow_arg_'
         for snow_field, snow_value in self.service_now_additional_fields.items():
             payload[snow_field] = snow_value
         try:
