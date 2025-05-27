@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ template "elastalert.fullname" . }}
+  namespace: {{ include "common.names.namespace" . | quote }}
   labels:
     {{- if .Values.commonLabels }}
     {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
@@ -18,6 +19,9 @@ spec:
     matchLabels:
       {{- include "common.labels.matchLabels" . | nindent 6 }}
   replicas: {{ .Values.replicaCount }}
+  {{- if .Values.updateStrategy }}
+  strategy: {{- toYaml .Values.updateStrategy | nindent 4 }}
+  {{- end }}
   revisionHistoryLimit: {{ .Values.revisionHistoryLimit }}
   minReadySeconds: {{ .Values.minReadySeconds }}
   template:

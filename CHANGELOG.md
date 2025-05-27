@@ -1,13 +1,26 @@
 # 2.TBD.TBD
 
 ## Breaking changes
+- [Helm] An unlikely breaking change could occur if this chart was previously deployed with namespace overrides. Deploy to a pre-prod environment before proceeding with production. - [#1662](https://github.com/jertel/elastalert2/pull/1662) - @lepouletsuisse
+
+## New features
+- None
+
+## Other changes
+- [Helm] Fix `--namespace` and `namespaceOverride` value in Helm charts - [#1662](https://github.com/jertel/elastalert2/pull/1662) - @lepouletsuisse
+
+# 2.24.0
+
+## Breaking changes
 - None
 
 ## New features
 - [MicrosoftPowerAutomate] Add support for 'ms_power_automate_webhook_url_from_field' option to dynamically select the webhook URL from the match. - [#1623](https://github.com/jertel/elastalert2/pull/1623) - @aizerin
 - Add Webex Incoming Webhook alerter - [#1635](https://github.com/jertel/elastalert2/pull/1635) - @dennis-trapp
 - Support jinja2 templates in `alertmanager_labels` and `alertmanager_annotations` - [#1642](https://github.com/jertel/elastalert2/pull/1642) - @tgxworld
+- [Helm] Add support of update strategy in the deployment [#1646](https://github.com/jertel/elastalert2/pull/1646) - @efazenda
 - Add Flashduty alerter - [#1649](https://github.com/jertel/elastalert2/pull/1649) - @pijiang3
+
 
 ## Other changes
 - Fix `schema.yaml` to support Kibana 8.17 - [#1631](https://github.com/jertel/elastalert2/pull/1631) - @vpiserchia

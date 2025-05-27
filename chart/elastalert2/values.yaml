@@ -16,6 +16,11 @@ appKubernetesIoComponent: elastalert2
 # number of replicas to run
 replicaCount: 1
 
+# update strategy to use (default : RollingUpdate) but can be Recreate
+updateStrategy:
+  type: RollingUpdate
+  rollingUpdate: {}
+
 # number of helm release revisions to retain
 revisionHistoryLimit: 5
 
@@ -49,7 +54,7 @@ image:
   # docker image
   repository: jertel/elastalert2
   # docker image tag
-  tag: 2.23.0
+  tag: 2.24.0
   pullPolicy: IfNotPresent
   pullSecret: ""
 
