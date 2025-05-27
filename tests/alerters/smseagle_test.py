@@ -40,16 +40,16 @@ def test_smseagle_send_sms(caplog):
 
     expected_data = {
         'to': ['111222333'],
-        'message': 'Test SMSEagle Alerter With Payload\n\n@timestamp: 2025-01-30T00:00:00\nsomefield: foobar\n'
+        'text': 'Test SMSEagle Alerter With Payload\n\n@timestamp: 2025-01-30T00:00:00\nsomefield: foobar\n'
     }
     
     mock_post_request.assert_called_once_with(
         rule['url'],
-        data=mock.ANY,
+        json=mock.ANY,
         headers={'content-type': 'application/json', 'access-token': rule['smseagle_token']}
     )
     
-    assert expected_data == json.loads(mock_post_request.call_args_list[0][1]['data'])
+    assert expected_data == mock_post_request.call_args_list[0][1]['json']
     assert ('elastalert', logging.INFO, "Alert 'Test SMSEagle Alerter With Payload' sent to SMSEagle") == caplog.record_tuples[0]
     
 

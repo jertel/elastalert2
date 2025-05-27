@@ -50,7 +50,7 @@ class SMSEagleAlerter(Alerter):
         endpoint = self.get_message_type_endpoint(self.smseagle_message_type)
 
         payload = {
-            "message": body
+            "text": body
         }
         
         if not self.smseagle_to and not self.smseagle_contacts and not self.smseagle_groups:
@@ -78,13 +78,13 @@ class SMSEagleAlerter(Alerter):
                 payload['voice_id'] = 1
                     
         if self.smseagle_text:
-            payload['message'] = self.smseagle_text
+            payload['text'] = self.smseagle_text
 
         for url in self.smseagle_url:
             try:
                 response = requests.post(
                     url+endpoint,
-                    data=json.dumps(payload, cls=DateTimeEncoder),
+                    json=payload,
                     headers=headers
                 )
                 warnings.resetwarnings()
