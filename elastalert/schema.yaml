@@ -818,6 +818,7 @@ properties:
   servicenow_proxy: {type: string}
   servicenow_impact: {type: integer, minimum: 1, maximum: 3}
   servicenow_urgency: {type: integer, minimum: 1, maximum: 3}
+  service_now_additional_fields: {type: object}
 
   ### Slack
   slack_webhook_url: *arrayOfString
