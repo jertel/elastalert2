@@ -98,17 +98,7 @@ class SMSEagleAlerter(Alerter):
         elastalert_logger.info("Alert '%s' sent to SMSEagle" % self.rule['name'])
 
     def get_info(self):
-        ret = {'type': 'smseagle'}
-        
-        if self.smseagle_to:
-            ret['to'] = self.smseagle_to
-            
-        if self.smseagle_contacts:
-            ret['contacts'] = self.smseagle_contacts
-                    
-        if self.smseagle_groups:
-            ret['groups'] = self.smseagle_groups
-            
-        ret['msg_type'] = self.smseagle_message_type
+        return {'type': 'smseagle',
+        'smseagle_webhook_url': self.smseagle_url}
             
         return ret
