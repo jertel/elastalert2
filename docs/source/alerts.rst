@@ -2035,7 +2035,7 @@ For more details, you can refer the `Squadcast documentation <https://support.sq
 ServiceNow
 ~~~~~~~~~~
 
-The ServiceNow alerter will create a ne Incident in ServiceNow. The body of the notification is formatted the same as with other alerters.
+The ServiceNow alerter will create a new Incident in ServiceNow. The body of the notification is formatted the same as with other alerters.
 
 The alerter requires the following options:
 
@@ -2083,7 +2083,17 @@ Example usage::
     cmdb_ci: "xxxxxx"
     caller_id: "xxxxxx"
     servicenow_impact: 1
-    servicenow_urgenc: 3
+    servicenow_urgency: 3
+
+Arbitrary ServiceNow fields:
+
+ElastAlert 2 supports setting any arbitrary ServiceNow field that your ServiceNow instance supports. Additional fields must be specified in a `service_now_additional_fields` stanza. For example, if you had a custom field, called "Affected User", you can set it by providing that field name and value. The field needs to be specified using the Column Name not the Display Name. Custom fields in ServiceNow usually have the prefix ``u_`` to distinguish them from out of the box fields. 
+
+Example usage::
+
+    service_now_additional_fields:
+        u_affected_user: 'Sample User'
+        u_affected_site: 'Sample Location'
 
 Slack
 ~~~~~

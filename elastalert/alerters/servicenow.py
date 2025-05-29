@@ -28,6 +28,7 @@ class ServiceNowAlerter(Alerter):
         self.servicenow_proxy = self.rule.get('servicenow_proxy', None)
         self.impact = self.rule.get('servicenow_impact', None)
         self.urgency = self.rule.get('servicenow_urgency', None)
+        self.service_now_additional_fields = self.rule.get('service_now_additional_fields',{})
 
     def alert(self, matches):
         for match in matches:
@@ -54,6 +55,8 @@ class ServiceNowAlerter(Alerter):
             payload["impact"] = self.impact
         if self.urgency != None:
             payload["urgency"] = self.urgency
+        for snow_field, snow_value in self.service_now_additional_fields.items():
+            payload[snow_field] = snow_value
         try:
             response = requests.post(
                 self.servicenow_rest_url,
