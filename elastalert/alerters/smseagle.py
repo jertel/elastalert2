@@ -31,13 +31,13 @@ class SMSEagleAlerter(Alerter):
     def get_message_type_endpoint(self, message_type):
         match message_type:
             case 'ring':
-                return '/calls/ring'
+                return '/api/v2/calls/ring'
             case 'tts':
-                return '/calls/tts'
+                return '/api/v2/calls/tts'
             case 'tts_adv':
-                return '/calls/tts_advanced'
+                return '/api/v2/calls/tts_advanced'
             case _:
-                return '/messages/sms'
+                return '/api/v2/messages/sms'
 
     def alert(self, matches):
         body = self.create_alert_body(matches)

@@ -23,7 +23,7 @@ def test_smseagle_send_sms(caplog):
         'alert': []
     }
     
-    rule['url'] = rule['smseagle_url'] + '/messages/sms'
+    rule['url'] = rule['smseagle_url'] + '/api/v2/messages/sms'
     
     rules_loader = FileRulesLoader({})
     rules_loader.load_modules(rule)
@@ -40,7 +40,7 @@ def test_smseagle_send_sms(caplog):
 
     expected_data = {
         'to': ['111222333'],
-        'text': 'Test SMSEagle Alerter With Payload\n\n@timestamp: 2025-01-30T00:00:00\nsomefield: foobar\n'
+        'text': 'Test SMSEagle Alerter With SMS Type\n\n@timestamp: 2025-01-30T00:00:00\nsomefield: foobar\n'
     }
     
     mock_post_request.assert_called_once_with(
@@ -64,7 +64,7 @@ def test_smseagle_queue_ring_call(caplog):
         'alert': []
     }
     
-    rule['url'] = rule['smseagle_url'] + '/messages/ring'
+    rule['url'] = rule['smseagle_url'] + '/api/v2/calls/ring'
     
     rules_loader = FileRulesLoader({})
     rules_loader.load_modules(rule)
@@ -80,7 +80,9 @@ def test_smseagle_queue_ring_call(caplog):
         alert.alert([match])
 
     expected_data = {
-        'to': ['111222333']
+        'to': ['111222333'],
+        'duration': 10,
+        'text': 'Test SMSEagle Alerter With Ring Type\n\n@timestamp: 2025-01-30T00:00:00\nsomefield: foobar\n'
     }
     
     mock_post_request.assert_called_once_with(
@@ -104,7 +106,7 @@ def test_smseagle_queue_tts_call(caplog):
         'alert': []
     }
     
-    rule['url'] = rule['smseagle_url'] + '/messages/tts'
+    rule['url'] = rule['smseagle_url'] + '/api/v2/calls/tts'
     
     rules_loader = FileRulesLoader({})
     rules_loader.load_modules(rule)
@@ -121,7 +123,8 @@ def test_smseagle_queue_tts_call(caplog):
 
     expected_data = {
         'to': ['111222333'],
-        'text': 'Test SMSEagle Alerter With Payload\n\n@timestamp: 2025-01-30T00:00:00\nsomefield: foobar\n'
+        'text': 'Test SMSEagle Alerter With TTS Type\n\n@timestamp: 2025-01-30T00:00:00\nsomefield: foobar\n'
+        'duration': 10
     }
     
     mock_post_request.assert_called_once_with(
@@ -145,7 +148,7 @@ def test_smseagle_queue_tts_advanced_call(caplog):
         'alert': []
     }
     
-    rule['url'] = rule['smseagle_url'] + '/messages/tts_advanced'
+    rule['url'] = rule['smseagle_url'] + '/api/v2/calls/tts_advanced'
     
     rules_loader = FileRulesLoader({})
     rules_loader.load_modules(rule)
@@ -162,7 +165,9 @@ def test_smseagle_queue_tts_advanced_call(caplog):
 
     expected_data = {
         'to': ['111222333'],
-        'text': 'Test SMSEagle Alerter With Payload\n\n@timestamp: 2025-01-30T00:00:00\nsomefield: foobar\n'
+        'text': 'Test SMSEagle Alerter With TTS Advanced Type\n\n@timestamp: 2025-01-30T00:00:00\nsomefield: foobar\n',
+        'duration': 10,
+        'voice_id': 1
     }
     
     mock_post_request.assert_called_once_with(

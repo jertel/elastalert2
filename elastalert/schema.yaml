@@ -859,8 +859,8 @@ properties:
   smseagle_message_type: {enum: ['sms', 'ring', 'tts', 'tts_adv']}
   smseagle_text: {type: string}
   smseagle_to: *arrayOfString
-  smseagle_contacts: *arrayOfString
-  smseagle_groups: *arrayOfString
+  smseagle_contacts: {type: array, items: {type: integer}}
+  smseagle_groups: {type: array, items: {type: integer}}
   smseagle_duration: {type: integer}
   smseagle_voice_id: {type: integer}
 

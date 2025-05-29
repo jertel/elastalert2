@@ -2252,7 +2252,8 @@ Example usage:
     smseagle_url: "https://192.168.1.101"
     smseagle_token: "123abc456def789"
     smseagle_message_type: "sms"
-    smseagle_contacts: ["user", "admin"]
+    smseagle_to: ["+123456789", "987654321"]
+    smseagle_contacts: [2, 7]
 
 
 Splunk On-Call (Formerly VictorOps)
