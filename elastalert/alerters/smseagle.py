@@ -91,8 +91,6 @@ class SMSEagleAlerter(Alerter):
                 response.raise_for_status()
                 
                 elastalert_logger.debug('Response: {0}'.format(response))
-                if response.status_code != 200:
-                    elastalert_logger.info("Error response from {0} \nAPI Response: {1}".format(url+endpoint, response))
             except RequestException as e:
                 raise EAException("Error posting SMSEagle alert: %s" % e)                               
         elastalert_logger.info("Alert '%s' sent to SMSEagle" % self.rule['name'])
