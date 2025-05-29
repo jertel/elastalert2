@@ -50,7 +50,7 @@ def test_smseagle_send_sms(caplog):
     )
     
     assert expected_data == mock_post_request.call_args_list[0][1]['json']
-    assert ('elastalert', logging.INFO, "Alert 'Test SMSEagle Alerter With Payload' sent to SMSEagle") == caplog.record_tuples[0]
+    assert ('elastalert', logging.INFO, "Alert 'Test SMSEagle Alerter With SMS Type' sent to SMSEagle") == caplog.record_tuples[0]
     
 def test_smseagle_queue_ring_call(caplog):
     caplog.set_level(logging.INFO)
@@ -92,7 +92,7 @@ def test_smseagle_queue_ring_call(caplog):
     )
     
     assert expected_data == mock_post_request.call_args_list[0][1]['json']
-    assert ('elastalert', logging.INFO, "Alert 'Test SMSEagle Alerter With Payload' sent to SMSEagle") == caplog.record_tuples[0]
+    assert ('elastalert', logging.INFO, "Alert 'Test SMSEagle Alerter With Ring Type' sent to SMSEagle") == caplog.record_tuples[0]
     
 def test_smseagle_queue_tts_call(caplog):
     caplog.set_level(logging.INFO)
@@ -123,7 +123,7 @@ def test_smseagle_queue_tts_call(caplog):
 
     expected_data = {
         'to': ['111222333'],
-        'text': 'Test SMSEagle Alerter With TTS Type\n\n@timestamp: 2025-01-30T00:00:00\nsomefield: foobar\n'
+        'text': 'Test SMSEagle Alerter With TTS Type\n\n@timestamp: 2025-01-30T00:00:00\nsomefield: foobar\n',
         'duration': 10
     }
     
@@ -134,7 +134,7 @@ def test_smseagle_queue_tts_call(caplog):
     )
     
     assert expected_data == mock_post_request.call_args_list[0][1]['json']
-    assert ('elastalert', logging.INFO, "Alert 'Test SMSEagle Alerter With Payload' sent to SMSEagle") == caplog.record_tuples[0]
+    assert ('elastalert', logging.INFO, "Alert 'Test SMSEagle Alerter With TTS Type' sent to SMSEagle") == caplog.record_tuples[0]
     
 def test_smseagle_queue_tts_advanced_call(caplog):
     caplog.set_level(logging.INFO)
@@ -177,7 +177,7 @@ def test_smseagle_queue_tts_advanced_call(caplog):
     )
     
     assert expected_data == mock_post_request.call_args_list[0][1]['json']
-    assert ('elastalert', logging.INFO, "Alert 'Test SMSEagle Alerter With Payload' sent to SMSEagle") == caplog.record_tuples[0]
+    assert ('elastalert', logging.INFO, "Alert 'Test SMSEagle Alerter With TTS Advanced Type' sent to SMSEagle") == caplog.record_tuples[0]
 
 def test_smseagle_alerter_post_ea_exception():
     with pytest.raises(EAException) as ea:
@@ -216,7 +216,7 @@ def test_smseagle_getinfo():
 
     expected_data = {
         'type': 'smseagle',
-        'smseagle_webhook_url': ['http://smseagle_url']
+        'smseagle_url': 'http://smseagle_url'
     }
     actual_data = alert.get_info()
     assert expected_data == actual_data
@@ -227,7 +227,7 @@ def test_smseagle_getinfo():
     ('http://smseagle_url',
         {
             'type': 'smseagle',
-            'smseagle_webhook_url': ['http://smseagle_url']
+            'smseagle_url': 'http://smseagle_url'
         }),
 ])
 def test_smseagle_required_error(smseagle_url, expected_data):

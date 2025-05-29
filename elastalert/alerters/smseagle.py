@@ -14,8 +14,6 @@ class SMSEagleAlerter(Alerter):
     def __init__(self, rule):
         super(SMSEagleAlerter, self).__init__(rule)
         self.smseagle_url = self.rule.get('smseagle_url', None)
-        if isinstance(self.smseagle_url, str):
-            self.smseagle_url = [self.smseagle_url]
             
         self.smseagle_token = self.rule.get('smseagle_token', '')
         self.smseagle_message_type = self.rule.get('smseagle_message_type', '')
@@ -79,24 +77,25 @@ class SMSEagleAlerter(Alerter):
                     
         if self.smseagle_text:
             payload['text'] = self.smseagle_text
+            
+        url = self.smseagle_url + endpoint
 
-        for url in self.smseagle_url:
-            try:
-                response = requests.post(
-                    url+endpoint,
-                    json=payload,
-                    headers=headers
-                )
-                warnings.resetwarnings()
-                response.raise_for_status()
-                
-                elastalert_logger.debug('Response: {0}'.format(response))
-            except RequestException as e:
-                raise EAException("Error posting SMSEagle alert: %s" % e)                               
+        try:
+            response = requests.post(
+                url,
+                json=payload,
+                headers=headers
+            )
+            warnings.resetwarnings()
+            response.raise_for_status()
+            
+            elastalert_logger.debug('Response: {0}'.format(response))
+        except RequestException as e:
+            raise EAException("Error posting SMSEagle alert: %s" % e)
         elastalert_logger.info("Alert '%s' sent to SMSEagle" % self.rule['name'])
 
     def get_info(self):
         return {'type': 'smseagle',
-        'smseagle_webhook_url': self.smseagle_url}
+        'smseagle_url': self.smseagle_url}
             
         return ret

@@ -2239,7 +2239,7 @@ The alerter requires the following option:
 
 ``smseagle_message_type``: Message/call type to send/queue. Available values: sms, ring, tts, tts_adv respectively for SMS, Ring call, TTS call and Advanced TTS call.
 
-Required one of:
+Requires one of:
 
 ``smseagle_to``: Phone number(s) to which you want to send a message
 
