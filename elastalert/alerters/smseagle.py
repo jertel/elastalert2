@@ -23,8 +23,8 @@ class SMSEagleAlerter(Alerter):
         self.smseagle_contacts = self.rule.get('smseagle_contacts', '')
         self.smseagle_groups = self.rule.get('smseagle_groups', '')
         
-        self.smseagle_duration = self.rule.get('smseagle_duration', '')
-        self.smseagle_voice_id = self.rule.get('smseagle_voice_id', '')
+        self.smseagle_duration = self.rule.get('smseagle_duration', 10)
+        self.smseagle_voice_id = self.rule.get('smseagle_voice_id', 1)
     
     def get_message_type_endpoint(self, message_type):
         match message_type:
@@ -64,16 +64,10 @@ class SMSEagleAlerter(Alerter):
             payload['groups'] = self.smseagle_groups
                     
         if self.smseagle_message_type in ['ring', 'tts', 'tts_adv']:
-            if self.smseagle_duration:
-                payload['duration'] = self.smseagle_duration
-            else:
-                payload['duration'] = 10
+            payload['duration'] = self.smseagle_duration
             
         if self.smseagle_message_type == 'tts_adv':
-            if self.smseagle_voice_id:
-                payload['voice_id'] = self.smseagle_voice_id
-            else:
-                payload['voice_id'] = 1
+            payload['voice_id'] = self.smseagle_voice_id
                     
         if self.smseagle_text:
             payload['text'] = self.smseagle_text
