@@ -5,6 +5,7 @@
 
 ## New features
 - [ServiceNow] Include arbitrary fields in ServiceNow tickets by including a `service_now_additional_fields` configuration stanza. - [#1670](https://github.com/jertel/elastalert2/pull/1670) - @mitchell-es
+- [SMSEagle] New SMSEagle alerter - [#1671](https://github.com/jertel/elastalert2/pull/1671) - @marcin-smseagle
 
 ## Other changes
 - [Helm] Fix `--namespace` and `namespaceOverride` value in Helm charts - [#1662](https://github.com/jertel/elastalert2/pull/1662) - @lepouletsuisse
