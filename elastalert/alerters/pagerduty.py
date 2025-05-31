@@ -50,7 +50,7 @@ class PagerDutyAlerter(Alerter):
             if self.pagerduty_v2_payload_custom_details:
                 for match in matches:
                     for custom_details_key, es_key in list(self.pagerduty_v2_payload_custom_details.items()):
-                        custom_details_payload[custom_details_key] = lookup_es_key(match, es_key)
+                        custom_details_payload[custom_details_key] = lookup_es_key(match, es_key) or es_key
 
             payload = {
                 'routing_key': self.pagerduty_service_key,
