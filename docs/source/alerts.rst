@@ -1895,7 +1895,7 @@ See https://developer.pagerduty.com/api-reference/b3A6Mjc0ODI2Nw-send-an-event-t
 
 ``pagerduty_v2_payload_source_args``: If set, and ``pagerduty_v2_payload_source`` is a formattable string, ElastAlert 2 will format the source based on the provided array of fields from the rule or match.
 
-``pagerduty_v2_payload_custom_details``: List of keys:values to use as the content of the custom_details payload. Example - ip:clientip will map the value from the clientip index of Elasticsearch to JSON key named ip.
+``pagerduty_v2_payload_custom_details``: List of keys:values to use as the content of the custom_details payload. For each key:value, it first attempts to map the provided value by checking if it exists as a key in an elastalert match. If a match is found, it assigns the corresponding value from the elastalert match. If no match is found, it then defaults to using the original provided value directly.
 
 ``pagerduty_v2_payload_include_all_info``: If True, this will include the entire Elasticsearch document as a custom detail field called "information" in the PagerDuty alert.
 
