@@ -1,4 +1,3 @@
-import json
 import logging
 import pytest
 
@@ -22,13 +21,13 @@ def test_smseagle_send_sms(caplog):
         'smseagle_to': ['111222333'],
         'alert': []
     }
-    
+
     rule['url'] = rule['smseagle_url'] + '/api/v2/messages/sms'
-    
+
     rules_loader = FileRulesLoader({})
     rules_loader.load_modules(rule)
     alert = SMSEagleAlerter(rule)
-    
+
     match = {
         '@timestamp': '2025-01-30T00:00:00',
         'somefield': 'foobar'
@@ -42,16 +41,17 @@ def test_smseagle_send_sms(caplog):
         'to': ['111222333'],
         'text': 'Test SMSEagle Alerter With SMS Type\n\n@timestamp: 2025-01-30T00:00:00\nsomefield: foobar\n'
     }
-    
+
     mock_post_request.assert_called_once_with(
         rule['url'],
         json=mock.ANY,
         headers={'content-type': 'application/json', 'access-token': rule['smseagle_token']}
     )
-    
+
     assert expected_data == mock_post_request.call_args_list[0][1]['json']
     assert ('elastalert', logging.INFO, "Alert 'Test SMSEagle Alerter With SMS Type' sent to SMSEagle") == caplog.record_tuples[0]
-    
+
+
 def test_smseagle_queue_ring_call(caplog):
     caplog.set_level(logging.INFO)
     rule = {
@@ -63,13 +63,13 @@ def test_smseagle_queue_ring_call(caplog):
         'smseagle_to': ['111222333'],
         'alert': []
     }
-    
+
     rule['url'] = rule['smseagle_url'] + '/api/v2/calls/ring'
-    
+
     rules_loader = FileRulesLoader({})
     rules_loader.load_modules(rule)
     alert = SMSEagleAlerter(rule)
-    
+
     match = {
         '@timestamp': '2025-01-30T00:00:00',
         'somefield': 'foobar'
@@ -84,16 +84,17 @@ def test_smseagle_queue_ring_call(caplog):
         'duration': 10,
         'text': 'Test SMSEagle Alerter With Ring Type\n\n@timestamp: 2025-01-30T00:00:00\nsomefield: foobar\n'
     }
-    
+
     mock_post_request.assert_called_once_with(
         rule['url'],
         json=mock.ANY,
         headers={'content-type': 'application/json', 'access-token': rule['smseagle_token']}
     )
-    
+
     assert expected_data == mock_post_request.call_args_list[0][1]['json']
     assert ('elastalert', logging.INFO, "Alert 'Test SMSEagle Alerter With Ring Type' sent to SMSEagle") == caplog.record_tuples[0]
-    
+
+
 def test_smseagle_queue_tts_call(caplog):
     caplog.set_level(logging.INFO)
     rule = {
@@ -105,13 +106,13 @@ def test_smseagle_queue_tts_call(caplog):
         'smseagle_to': ['111222333'],
         'alert': []
     }
-    
+
     rule['url'] = rule['smseagle_url'] + '/api/v2/calls/tts'
-    
+
     rules_loader = FileRulesLoader({})
     rules_loader.load_modules(rule)
     alert = SMSEagleAlerter(rule)
-    
+
     match = {
         '@timestamp': '2025-01-30T00:00:00',
         'somefield': 'foobar'
@@ -126,16 +127,17 @@ def test_smseagle_queue_tts_call(caplog):
         'text': 'Test SMSEagle Alerter With TTS Type\n\n@timestamp: 2025-01-30T00:00:00\nsomefield: foobar\n',
         'duration': 10
     }
-    
+
     mock_post_request.assert_called_once_with(
         rule['url'],
         json=mock.ANY,
         headers={'content-type': 'application/json', 'access-token': rule['smseagle_token']}
     )
-    
+
     assert expected_data == mock_post_request.call_args_list[0][1]['json']
     assert ('elastalert', logging.INFO, "Alert 'Test SMSEagle Alerter With TTS Type' sent to SMSEagle") == caplog.record_tuples[0]
-    
+
+
 def test_smseagle_queue_tts_advanced_call(caplog):
     caplog.set_level(logging.INFO)
     rule = {
@@ -147,13 +149,13 @@ def test_smseagle_queue_tts_advanced_call(caplog):
         'smseagle_to': ['111222333'],
         'alert': []
     }
-    
+
     rule['url'] = rule['smseagle_url'] + '/api/v2/calls/tts_advanced'
-    
+
     rules_loader = FileRulesLoader({})
     rules_loader.load_modules(rule)
     alert = SMSEagleAlerter(rule)
-    
+
     match = {
         '@timestamp': '2025-01-30T00:00:00',
         'somefield': 'foobar'
@@ -169,15 +171,16 @@ def test_smseagle_queue_tts_advanced_call(caplog):
         'duration': 10,
         'voice_id': 1
     }
-    
+
     mock_post_request.assert_called_once_with(
         rule['url'],
         json=mock.ANY,
         headers={'content-type': 'application/json', 'access-token': rule['smseagle_token']}
     )
-    
+
     assert expected_data == mock_post_request.call_args_list[0][1]['json']
     assert ('elastalert', logging.INFO, "Alert 'Test SMSEagle Alerter With TTS Advanced Type' sent to SMSEagle") == caplog.record_tuples[0]
+
 
 def test_smseagle_alerter_post_ea_exception():
     with pytest.raises(EAException) as ea:
@@ -201,7 +204,7 @@ def test_smseagle_alerter_post_ea_exception():
         with mock.patch('requests.post', mock_run), pytest.raises(RequestException):
             alert.alert([match])
     assert 'Error posting SMSEagle alert: ' in str(ea)
-    
+
 
 def test_smseagle_getinfo():
     rule = {
@@ -220,7 +223,7 @@ def test_smseagle_getinfo():
     }
     actual_data = alert.get_info()
     assert expected_data == actual_data
-    
+
 
 @pytest.mark.parametrize('smseagle_url, expected_data', [
     ('',  'Missing required option(s): smseagle_url'),
