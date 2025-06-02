@@ -2227,8 +2227,10 @@ Example slack_attach_opensearch_discover_url, slack_opensearch_discover_color, s
 
 ``slack_jira_ticket_title``: The title of the Jira Ticket url attachment. Defaults to ``Jira Ticket``.
 
+
 SMSEagle
 ~~~~~~~~
+
 SMSEagle alerter will send API requests to SMSEagle device and then forward it as an SMS or Call, depending on your configuration.
 
 The alerter requires the following option:
@@ -2255,7 +2257,7 @@ Optional:
 
 ``smseagle_text``: Override notification text with a custom one
 
-Example usage:
+Example usage::
 
     alert:
       - "smseagle"
