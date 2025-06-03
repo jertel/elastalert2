@@ -48,6 +48,7 @@ or
       - servicenow
       - ses
       - slack
+      - smseagle
       - sns
       - stomp
       - telegram
@@ -2225,6 +2226,47 @@ Example slack_attach_opensearch_discover_url, slack_opensearch_discover_color, s
 ``slack_jira_ticket_color``: The color of the Jira Ticket url attachment. Defaults to ``#ec4b98``.
 
 ``slack_jira_ticket_title``: The title of the Jira Ticket url attachment. Defaults to ``Jira Ticket``.
+
+
+SMSEagle
+~~~~~~~~
+
+SMSEagle alerter will send API requests to SMSEagle device and then forward it as an SMS or Call, depending on your configuration.
+
+The alerter requires the following option:
+
+``smseagle_url``: Address of your SMSEagle device, e.g. http://192.168.1.101
+
+``smseagle_token``: API access token (per user, can be generated in menu Users > Access to API)
+
+``smseagle_message_type``: Message/call type to send/queue. Available values: sms, ring, tts, tts_adv respectively for SMS, Ring call, TTS call and Advanced TTS call.
+
+Requires one of:
+
+``smseagle_to``: Phone number(s) to which you want to send a message
+
+``smseagle_contacts``: Name(s) of contact(s) from the SMSEagle Phonebook to which you want to send a message
+
+``smseagle_groups``: Name(s) of group(s) from the SMSEagle Phonebook to which you want to send a message
+
+Optional:
+
+``smseagle_duration``: Call duration, required for Ring, TTS and Advanced TTS call. Default value: 10
+
+``smseagle_voice_id``: ID of the voice model, required for Advanced TTS call. Default value: 1
+
+``smseagle_text``: Override notification text with a custom one
+
+Example usage::
+
+    alert:
+      - "smseagle"
+    smseagle_url: "https://192.168.1.101"
+    smseagle_token: "123abc456def789"
+    smseagle_message_type: "sms"
+    smseagle_to: ["+123456789", "987654321"]
+    smseagle_contacts: [2, 7]
+
 
 Splunk On-Call (Formerly VictorOps)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

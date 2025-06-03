@@ -61,6 +61,7 @@ Currently, we have support built in for these alert types:
 - Squadcast
 - ServiceNow
 - Slack
+- SMSEagle
 - Splunk On-Call (Formerly VictorOps)
 - Stomp
 - Telegram
