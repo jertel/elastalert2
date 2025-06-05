@@ -853,6 +853,17 @@ properties:
   slack_author_link: {type: string}
   slack_author_icon: {type: string}
   slack_msg_pretext: {type: string}
+  
+  ### SMSEagle
+  smseagle_url: {type: string}
+  smseagle_token: {type: string}
+  smseagle_message_type: {enum: ['sms', 'ring', 'tts', 'tts_adv']}
+  smseagle_text: {type: string}
+  smseagle_to: *arrayOfString
+  smseagle_contacts: {type: array, items: {type: integer}}
+  smseagle_groups: {type: array, items: {type: integer}}
+  smseagle_duration: {type: integer}
+  smseagle_voice_id: {type: integer}
 
   ### Splunk On-Call (Formerly VictorOps)
   victorops_api_key: {type: string}
