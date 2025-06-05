@@ -9,6 +9,7 @@
 
 ## Other changes
 - [Helm] Fix `--namespace` and `namespaceOverride` value in Helm charts - [#1662](https://github.com/jertel/elastalert2/pull/1662) - @lepouletsuisse
+- [Pager Duty] Expand `pagerduty_v2_payload_custom_details` to allow defaulting to value of provided key:value pair if the value is not found as a key in an elastalert match. - [#1674](https://github.com/jertel/elastalert2/pull/1674) - @mark-trellix
 
 # 2.24.0
 
