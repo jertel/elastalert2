@@ -1,6 +1,17 @@
 # 2.TBD.TBD
 
 ## Breaking changes
+- None
+
+## New features
+- None
+
+## Other changes
+- None
+
+# 2.25.0
+
+## Breaking changes
 - [Helm] An unlikely breaking change could occur if this chart was previously deployed with namespace overrides. Deploy to a pre-prod environment before proceeding with production. - [#1662](https://github.com/jertel/elastalert2/pull/1662) - @lepouletsuisse
 
 ## New features
@@ -22,7 +33,6 @@
 - Support jinja2 templates in `alertmanager_labels` and `alertmanager_annotations` - [#1642](https://github.com/jertel/elastalert2/pull/1642) - @tgxworld
 - [Helm] Add support of update strategy in the deployment [#1646](https://github.com/jertel/elastalert2/pull/1646) - @efazenda
 - Add Flashduty alerter - [#1649](https://github.com/jertel/elastalert2/pull/1649) - @pijiang3
-
 
 ## Other changes
 - Fix `schema.yaml` to support Kibana 8.17 - [#1631](https://github.com/jertel/elastalert2/pull/1631) - @vpiserchia
