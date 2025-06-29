@@ -4,10 +4,10 @@
 - None
 
 ## New features
-- None
+- Now supporting Elasticsearch 9 and OpenSearch 3 - [#1682](https://github.com/jertel/elastalert2/pull/1682) - @jertel
 
 ## Other changes
-- None
+- Removed specific version requirement for Elastic Kibana and OpenSearch Discover - [#1682](https://github.com/jertel/elastalert2/pull/1682) - @jertel
 
 # 2.25.0
 

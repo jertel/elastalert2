@@ -444,10 +444,10 @@ Example 2 - Avoiding escaping altogether by enclosing double quotes within singl
         query_string:
           query: '"Rabbia Al"'
 
-Does ElastAlert 2 support Elasticsearch 8?
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+How do I migrate from Elastic 7 to Elastic 8?
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-ElastAlert 2 supports Elasticsearch 8.
+ElastAlert 2 supports Elasticsearch 8 but requires new indices to be created.
 
 To upgrade an existing ElastAlert 2 installation to Elasticsearch 8 the
 following manual steps are required (note the important WARNING below):
@@ -464,6 +464,11 @@ following manual steps are required (note the important WARNING below):
 * Restart ElastAlert 2.
 
 WARNING: Failure to remove the old ElastAlert indices can result in a non-working Elasticsearch cluster. This is because the ElastAlert indices contain deprecated features and the Elasticsearch 8 upgrade logic is currently flawed and does not correctly handle this situation. The Elasticsearch GitHub repository contains [more information](https://github.com/elastic/elasticsearch/issues/84199) on this problem.
+
+How do I migrate from Elastic 8 to Elastic 9?
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+ElastAlert 2 supports Elasticsearch 9. No manual ElastAlert 2 steps are required, however Elastic does require that the Elasticsearch cluster first be upgraded to 8.18 before proceeding to 9.x.
 
 Support multiple sns_topic_arn in Alert Amazon SNS(Simple Notification Service)?
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

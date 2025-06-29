@@ -18,8 +18,6 @@ A [Helm chart][7] is also included for easy configuration as a Kubernetes deploy
 
 Documentation, including an FAQ, for ElastAlert 2 can be found on [readthedocs.com][3]. This is the place to start if you're not familiar with ElastAlert 2 at all.
 
-Elasticsearch 8 support is documented in the [FAQ][12].
-
 The full list of platforms that ElastAlert 2 can fire alerts into can be found [in the documentation][4].
 
 ## Contributing

@@ -14,11 +14,6 @@ from .util import ts_add
 
 kibana_default_timedelta = datetime.timedelta(minutes=10)
 
-kibana_versions = frozenset([
-        '7.0', '7.1', '7.2', '7.3', '7.4', '7.5', '7.6', '7.7', '7.8', '7.9', '7.10', '7.11', '7.12', '7.13', '7.14', '7.15', '7.16', '7.17', 
-        '8.0', '8.1', '8.2', '8.3', '8.4', '8.5', '8.6', '8.7', '8.8', '8.9', '8.10', '8.11', '8.12', '8.13', '8.14', '8.15', '8.16', '8.17'
-        ])
-
 def generate_kibana_discover_url(rule, match):
     ''' Creates a link for a kibana discover app. '''
 
@@ -26,15 +21,6 @@ def generate_kibana_discover_url(rule, match):
     if not discover_app_url:
         elastalert_logger.warning(
             'Missing kibana_discover_app_url for rule %s' % (
-                rule.get('name', '<MISSING NAME>')
-            )
-        )
-        return None
-
-    kibana_version = rule.get('kibana_discover_version')
-    if not kibana_version:
-        elastalert_logger.warning(
-            'Missing kibana_discover_version for rule %s' % (
                 rule.get('name', '<MISSING NAME>')
             )
         )
@@ -64,18 +50,8 @@ def generate_kibana_discover_url(rule, match):
     to_timedelta = rule.get('kibana_discover_to_timedelta', timeframe)
     to_time = ts_add(timestamp, to_timedelta)
 
-    if kibana_version in kibana_versions:
-        globalState = kibana7_disover_global_state(from_time, to_time)
-        appState = kibana_discover_app_state(index, columns, filters, query_keys, match)
-
-    else:
-        elastalert_logger.warning(
-            'Unknown kibana discover application version %s for rule %s' % (
-                kibana_version,
-                rule.get('name', '<MISSING NAME>')
-            )
-        )
-        return None
+    globalState = kibana7_disover_global_state(from_time, to_time)
+    appState = kibana_discover_app_state(index, columns, filters, query_keys, match)
 
     return "%s?_g=%s&_a=%s" % (
         os.path.expandvars(discover_app_url),
