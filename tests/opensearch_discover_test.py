@@ -6,7 +6,10 @@ from elastalert.opensearch_discover import generate_opensearch_discover_url
 
 
 @pytest.mark.parametrize("opensearch_version", [
-    '2.11'
+    '2.11',
+    '3.0',
+    '0.0',
+    ' '
 ])
 def test_generate_opensearch_discover_url_with_relative_opensearch_discover_app_url(opensearch_version):
     url = generate_opensearch_discover_url(
@@ -20,7 +23,6 @@ def test_generate_opensearch_discover_url_with_relative_opensearch_discover_app_
             'timestamp': '2019-09-01T00:30:00Z'
         }
     )
-    print(url)
     expectedUrl = (
         'http://opensearch:5601/#/discover'
         + '?_g=%28'  # global start
@@ -77,7 +79,7 @@ def test_generate_opensearch_discover_url_with_missing_opensearch_discover_versi
     url = generate_opensearch_discover_url(
         rule={
             'opensearch_discover_app_url': 'http://opensearch:5601/#/discover',
-            'opensearch_discover_index_pattern_id': 'logs',
+            'opensearch_discover_index_pattern_id': 'd6cabfb6-aaef-44ea-89c5-600e9a76991a',
             'timestamp_field': 'timestamp',
             'name': 'test'
         },
@@ -85,7 +87,25 @@ def test_generate_opensearch_discover_url_with_missing_opensearch_discover_versi
             'timestamp': '2019-09-01T00:30:00Z'
         }
     )
-    assert url is None
+    expectedUrl = (
+        'http://opensearch:5601/#/discover'
+        + '?_g=%28'  # global start
+        + 'filters%3A%21%28%29%2C'
+        + 'refreshInterval%3A%28pause%3A%21t%2Cvalue%3A0%29%2C'
+        + 'time%3A%28'  # time start
+        + 'from%3A%272019-09-01T00%3A20%3A00Z%27%2C'
+        + 'to%3A%272019-09-01T00%3A40%3A00Z%27'
+        + '%29'  # time end
+        + '%29'  # global end
+        + '&_a=%28'  # app start
+        + 'discover%3A%28columns%3A%21%28_source%29%2C'
+        + 'isDirty%3A%21f%2Csort%3A%21%28%29%29%2C'
+        + 'metadata%3A%28indexPattern%3Ad6cabfb6-aaef-44ea-89c5-600e9a76991a%2C'
+        + 'view%3Adiscover%29%29'  # app end
+        + '&_q=%28filters%3A%21%28%29%2C'  # query and filter start
+        + 'query%3A%28language%3Alucene%2Cquery%3A%27%27%29%29'  # query and filter start
+    )
+    assert url == expectedUrl
 
 
 def test_generate_opensearch_discover_url_with_missing_opensearch_discover_app_url():
@@ -123,14 +143,32 @@ def test_generate_opensearch_discover_url_with_invalid_opensearch_version():
         rule={
             'opensearch_discover_app_url': 'http://opensearch:5601/#/discover',
             'opensearch_discover_version': '4.5',
-            'opensearch_discover_index_pattern_id': 'logs-*',
+            'opensearch_discover_index_pattern_id': 'd6cabfb6-aaef-44ea-89c5-600e9a76991a',
             'timestamp_field': 'timestamp'
         },
         match={
             'timestamp': '2019-09-01T00:30:00Z'
         }
     )
-    assert url is None
+    expectedUrl = (
+        'http://opensearch:5601/#/discover'
+        + '?_g=%28'  # global start
+        + 'filters%3A%21%28%29%2C'
+        + 'refreshInterval%3A%28pause%3A%21t%2Cvalue%3A0%29%2C'
+        + 'time%3A%28'  # time start
+        + 'from%3A%272019-09-01T00%3A20%3A00Z%27%2C'
+        + 'to%3A%272019-09-01T00%3A40%3A00Z%27'
+        + '%29'  # time end
+        + '%29'  # global end
+        + '&_a=%28'  # app start
+        + 'discover%3A%28columns%3A%21%28_source%29%2C'
+        + 'isDirty%3A%21f%2Csort%3A%21%28%29%29%2C'
+        + 'metadata%3A%28indexPattern%3Ad6cabfb6-aaef-44ea-89c5-600e9a76991a%2C'
+        + 'view%3Adiscover%29%29'  # app end
+        + '&_q=%28filters%3A%21%28%29%2C'  # query and filter start
+        + 'query%3A%28language%3Alucene%2Cquery%3A%27%27%29%29'  # query and filter start
+    )
+    assert url == expectedUrl
 
 
 def test_generate_opensearch_discover_url_with_from_timedelta_and_timeframe():

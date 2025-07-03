@@ -776,22 +776,21 @@ kibana_discover_security_tenant
 kibana_discover_version
 ^^^^^^^^^^^^^^^^^^^^^^^
 
-``kibana_discover_version``: Specifies the version of the Kibana Discover application.
+``kibana_discover_version``: Older version of Kibana use an obsolete URL shortener API. If using a version between 7.0 and 7.15 you must specify that major and minor version here.
 
-The currently supported versions of Kibana Discover are:
+Note that ElastAlert 2 only supports Kibana version 7.0 or newer.
 
-- `7.0`, `7.1`, `7.2`, `7.3`, `7.4`, `7.5`, `7.6`, `7.7`, `7.8`, `7.9`, `7.10`, `7.11`, `7.12`, `7.13`, `7.14`, `7.15`, `7.16`, `7.17`
-- `8.0`, `8.1`, `8.2`, `8.3`, `8.4`, `8.5`, `8.6`, `8.7`, `8.8`, `8.9` , `8.10` , `8.11` , `8.12` , `8.13`, `8.14`, `8.15`, `8.16`, `8.17`
+Example:
 
 ``kibana_discover_version: '7.15'``
 
 kibana_discover_index_pattern_id
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-``kibana_discover_index_pattern_id``: The id of the index pattern to link to in the Kibana Discover application.
-These ids are usually generated and can be found in url of the index pattern management page, or by exporting its saved object.
+``kibana_discover_index_pattern_id``: The id of the data view to link to in the Kibana Discover application.
+These ids are usually generated and can be found in url of the ``Data Views`` page, or by exporting its saved object.
 
-In this documentation all references of "index pattern" refer to the similarly named concept in Kibana 8 called "data view".
+In this documentation all references of "index pattern" refer to the similarly named concept in Kibana 8+ called "data view".
 
 Example export of an index pattern's saved object:
 
@@ -890,11 +889,11 @@ This value should be relative to the base opensearch url defined by ``opensearch
 opensearch_discover_version
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-``opensearch_discover_version``: Specifies the version of the opensearch Discover application.
+``opensearch_discover_version``: Specifies the version of the opensearch Discover application. Currently unused.
 
-The currently supported versions of opensearch Discover are:
+Note that ElastAlert 2 only supports Discover version 2.11 or newer.
 
-- `2.11`
+Example:
 
 ``opensearch_discover_version: '2.11'``
 
