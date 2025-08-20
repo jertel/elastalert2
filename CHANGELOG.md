@@ -8,6 +8,7 @@
 
 ## Other changes
 - Removed specific version requirement for Elastic Kibana and OpenSearch Discover - [#1682](https://github.com/jertel/elastalert2/pull/1682) - @jertel
+- `--end` command line argument now can be used to check rules back in time
 
 # 2.25.0
 
