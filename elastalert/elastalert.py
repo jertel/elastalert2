@@ -1171,7 +1171,7 @@ class ElastAlerter(object):
 
                 next_run_dt = next_run.replace(tzinfo=datetime.timezone.utc)
                 if next_run_dt > endtime:
-                    elastalert_logger.info("End time '%s' falls before the next run time '%s', all rules will be cheked once." % (endtime, next_run_dt))
+                    elastalert_logger.info("End time '%s' falls before the next run time '%s'; allowing a single run cycle to complete before exiting." % (endtime, next_run_dt))
                     self.running = False
 
             if next_run < datetime.datetime.now(tz=datetime.UTC):
