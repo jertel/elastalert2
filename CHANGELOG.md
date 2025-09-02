@@ -9,6 +9,7 @@
 ## Other changes
 - Removed specific version requirement for Elastic Kibana and OpenSearch Discover - [#1682](https://github.com/jertel/elastalert2/pull/1682) - @jertel
 - If `--end` argument falls in the past then at least one full run cycle will now complete before exiting - [#1694](https://github.com/jertel/elastalert2/pull/1694) - @nkormakov
+- Add support for a `ES_VERSION` environment variable to override the Elasticsearch version - [#1690](https://github.com/jertel/elastalert2/pull/1690) - @fabian-heib
 
 # 2.25.0
 

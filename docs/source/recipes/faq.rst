@@ -528,3 +528,10 @@ Yelp, the developer of the original elastalert, has the following article on its
 `ElastAlert: Alerting At Scale With Elasticsearch, Part 1 <https://engineeringblog.yelp.com/2015/10/elastalert-alerting-at-scale-with-elasticsearch.html>`_.
 
 `ElastAlert: Alerting At Scale With Elasticsearch, Part 2 <https://engineeringblog.yelp.com/2016/03/elastalert-part-two.html>`_.
+
+Can I force a specific Elasticsearch version?
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Yes, you can override the detected cluster version by setting the `ES_VERSION` environment variable to your desired version (e.g. `ES_VERSION=8.2.0`).
+
+This is useful when using OpenSearch in “compatible-mode” or when automatic version detection fails.
