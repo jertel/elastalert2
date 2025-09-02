@@ -678,14 +678,15 @@ def test_parse_host():
                                                             "host3:9300"]
 
 
-@pytest.mark.parametrize('version, distro, expectedversion', [
-    ('7.10.0', None, '7.10.0'),
-    ('8.2.0', None, '8.2.0'),
-    ('1.2.0', 'opensearch', '7.10.2'),
-    ('2.0.0', 'opensearch', '8.2.0')
+@pytest.mark.parametrize('version, distro, expectedversion, es_env_version', [
+    ('7.10.0', None, '7.10.0', None),
+    ('7.10.2', None, '8.2.0', '8.2.0'),
+    ('8.2.0', None, '8.2.0', None),
+    ('1.2.0', 'opensearch', '7.10.2', None),
+    ('2.0.0', 'opensearch', '8.2.0', None),
+    ('2.0.0', 'opensearch', '7.10.2', '7.10.2')
 ])
-@mock.patch.dict(os.environ, {'AWS_DEFAULT_REGION': ''})
-def test_get_version(version, distro, expectedversion):
+def test_get_version(version, distro, expectedversion, es_env_version):
     mockInfo = {}
     versionData = {}
     versionData['number'] = version
@@ -694,7 +695,12 @@ def test_get_version(version, distro, expectedversion):
 
     mockInfo['version'] = versionData
 
-    with mock.patch('elasticsearch.client.Elasticsearch.info', new=MagicMock(return_value=mockInfo)):
+    env_patch = {'AWS_DEFAULT_REGION': ''}
+    if es_env_version is not None:
+        env_patch['ES_VERSION'] = es_env_version
+
+    with (mock.patch.dict(os.environ, env_patch),
+          mock.patch('elasticsearch.client.Elasticsearch.info', new=MagicMock(return_value=mockInfo))):
         client = Elasticsearch()
         actualversion = get_version_from_cluster_info(client)
     assert expectedversion == actualversion
