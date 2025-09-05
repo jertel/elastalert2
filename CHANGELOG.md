@@ -4,6 +4,17 @@
 - None
 
 ## New features
+- None
+
+## Other changes
+- None
+
+# 2.26.0
+
+## Breaking changes
+- None
+
+## New features
 - Now supporting Elasticsearch 9 and OpenSearch 3 - [#1682](https://github.com/jertel/elastalert2/pull/1682) - @jertel
 
 ## Other changes
