@@ -5,9 +5,7 @@ import os
 
 from jinja2 import Template
 
-from prettytable import PrettyTable
-from prettytable import TableStyle
-from prettytable import HRuleStyle, VRuleStyle
+from prettytable import PrettyTable, TableStyle, FRAME, HEADER, ALL, NONE
 
 from texttable import Texttable
 
@@ -304,16 +302,13 @@ class Alerter(object):
                 text += '\n'
             
             elif summary_table_type == 'html':
-                # Portions of the following block of HTML formatting code was taken from
-                # an abandoned PR (https://github.com/jertel/elastalert2/pull/1227).
                 text_table = PrettyTable()
                 text_table.field_names = summary_table_fields_with_count
                 text_table.set_style(TableStyle.MSWORD_FRIENDLY)
                 text_table.border = True
                 text_table.header = True
-                text_table.hrules = HRuleStyle.ALL
-                text_table.vrules = VRuleStyle.ALL
-                text_table.header = True
+                text_table.hrules = ALL
+                text_table.vrules = ALL
                 text_table.format = True
                 for keys, count in match_aggregation.items():
                     text_table.add_row([key for key in keys] + [count])
