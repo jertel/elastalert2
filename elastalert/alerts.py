@@ -5,7 +5,7 @@ import os
 
 from jinja2 import Template
 
-from prettytable import PrettyTable, TableStyle, FRAME, HEADER, ALL, NONE
+from prettytable import PrettyTable, MSWORD_FRIENDLY, ALL, NONE
 
 from texttable import Texttable
 
@@ -304,7 +304,7 @@ class Alerter(object):
             elif summary_table_type == 'html':
                 text_table = PrettyTable()
                 text_table.field_names = summary_table_fields_with_count
-                text_table.set_style(TableStyle.MSWORD_FRIENDLY)
+                text_table.set_style(MSWORD_FRIENDLY)
                 text_table.border = True
                 text_table.header = True
                 text_table.hrules = ALL
