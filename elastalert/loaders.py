@@ -498,8 +498,7 @@ class RulesLoader(object):
 
                 self.jinja_environment.filters[filter_name] = filter_func
                 self.jinja_filters.append(filter_name)
-                
-        elastalert_logger.debug('Loaded custom Jinja2 filters are: %s', self.jinja_filters)
+                elastalert_logger.debug('Loaded custom Jinja2 filter: %s.%s', module_path, filter_name)
 
     def load_jinja_template(self, rule):
         if rule.get('alert_text_type') == 'alert_text_jinja':
