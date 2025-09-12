@@ -205,6 +205,19 @@ def test_load_inline_alert_rule_with_jinja():
         assert 'jinja_template' not in test_rule_copy['alert'][1].rule
 
 
+def test_load_jinja_filters():
+    rules_loader = FileRulesLoader(test_config)
+    test_rule_copy = copy.deepcopy(test_rule)
+
+    test_rule_copy['jinja_filters'] = ['jinja.filters.DummyJinjaFilter']
+    test_rule_copy['alert_text_type'] = 'alert_text_jinja'
+    test_rule_copy['alert_text'] = 'WHATS YOUR {{ "NAME" | whisper }}?'
+
+    rules_loader.load_jinja_template(test_rule_copy)
+    output = test_rule_copy['jinja_template'].render()
+    assert output == 'WHATS YOUR name?'
+
+
 def test_file_rules_loader_get_names_recursive():
     conf = {'scan_subdirectories': True, 'rules_folder': empty_folder_test_path}
     rules_loader = FileRulesLoader(conf)

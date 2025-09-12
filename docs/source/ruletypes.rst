@@ -110,6 +110,8 @@ Rule Configuration Cheat Sheet
 +--------------------------------------------------------------+           |
 | ``match_enhancements`` (list of strs, no default)            |           |
 +--------------------------------------------------------------+           |
+| ``jinja_filters`` (list of strs, no default)                 |           |
++--------------------------------------------------------------+           |
 | ``top_count_number`` (int, default 5)                        |           |
 +--------------------------------------------------------------+           |
 | ``top_count_keys`` (list of strs)                            |           |
@@ -958,6 +960,12 @@ that will be given the match dictionary and can modify it before it is passed to
 is calculated and in the case of aggregated alerts, right before the alert is sent. This can be changed by setting ``run_enhancements_first``.
 The enhancements should be specified as
 ``module.file.EnhancementName``. See :ref:`Enhancements` for more information. (Optional, list of strings, no default)
+
+jinja_filters
+^^^^^^^^^^^^^^^^^^
+
+``jinja_filters``: A list of custom `Jinja2 filters <https://jinja.palletsprojects.com/en/stable/api/#writing-filters>`_ to load.
+The filters should be specified as ``module.file.ClassName``. See :ref:`Custom Jinja2 Filters` for more information. (Optional, list of strings, no default)
 
 run_enhancements_first
 ^^^^^^^^^^^^^^^^^^^^^^
