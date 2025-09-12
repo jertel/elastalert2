@@ -209,14 +209,12 @@ def test_load_jinja_filters():
     rules_loader = FileRulesLoader(test_config)
     test_rule_copy = copy.deepcopy(test_rule)
 
-    # Load a custom Jinja2 filter "yell"
     test_rule_copy['jinja_filters'] = ['jinja.filters.DummyJinjaFilter']
     test_rule_copy['alert_text_type'] = 'alert_text_jinja'
     test_rule_copy['alert_text'] = 'WHATS YOUR {{ "NAME" | whisper }}?'
 
     rules_loader.load_jinja_template(test_rule_copy)
     output = test_rule_copy['jinja_template'].render()
-    print(output)
     assert output == 'WHATS YOUR name?'
 
 
