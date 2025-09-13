@@ -1072,8 +1072,9 @@ class MetricAggregationRule(BaseAggregationRule):
 
         self.metric_key = 'metric_' + self.rules['metric_agg_key'] + '_' + self.rules['metric_agg_type']
 
-        if not self.rules['metric_agg_type'] in self.allowed_aggregations.union(self.allowed_percent_aggregations):
-            raise EAException("metric_agg_type must be one of %s" % (str(self.allowed_aggregations)))
+        all_allowed_aggregations = self.allowed_aggregations.union(self.allowed_percent_aggregations)
+        if not self.rules['metric_agg_type'] in all_allowed_aggregations:
+            raise EAException("metric_agg_type must be one of %s" % (str(all_allowed_aggregations)))
         if self.rules['metric_agg_type'] in self.allowed_percent_aggregations and self.rules['percentile_range'] is None:
             raise EAException("percentile_range must be specified for percentiles aggregation")
 
@@ -1137,7 +1138,10 @@ class MetricAggregationRule(BaseAggregationRule):
             if 'interval_aggs' in aggregation_data:
                 metric_val_arr = [term[self.metric_key]['value'] for term in aggregation_data['interval_aggs']['buckets']]
             else:
-                metric_val_arr = [aggregation_data[self.metric_key]['value']]
+                if self.rules['metric_agg_type'] in self.allowed_percent_aggregations:
+                    metric_val_arr = list(aggregation_data[self.metric_key]['values'].values())
+                else:
+                    metric_val_arr = [aggregation_data[self.metric_key]['value']]
             for metric_val in metric_val_arr:
                 if self.crossed_thresholds(metric_val):
                     match_data[self.rules['timestamp_field']] = timestamp
