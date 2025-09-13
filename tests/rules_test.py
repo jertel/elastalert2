@@ -1256,6 +1256,31 @@ def test_metric_aggregation_complex_query_key():
     assert rule.matches[1]['sub_qk'] == 'sub_qk_val2'
 
 
+def test_percentiles_metric_aggregation_complex_query_key():
+    rules = {'buffer_time': datetime.timedelta(minutes=5),
+             'timestamp_field': '@timestamp',
+             'metric_agg_type': 'percentiles',
+             'percentile_range': 95,
+             'metric_agg_key': 'cpu_pct',
+             'compound_query_key': ['qk', 'sub_qk'],
+             'query_key': 'qk,sub_qk',
+             'max_threshold': 0.90}
+
+    query = {"bucket_aggs": {"buckets": [
+        {"metric_cpu_pct_percentiles": {"values": {"95.0": 0.91}}, "key": "sub_qk_val1"},
+        {"metric_cpu_pct_percentiles": {"values": {"95.0": 0.95}}, "key": "sub_qk_val2"},
+        {"metric_cpu_pct_percentiles": {"values": {"95.0": 0.89}}, "key": "sub_qk_val3"}]
+     }, "key": "qk_val"}
+
+    rule = MetricAggregationRule(rules)
+    rule.check_matches(datetime.datetime.now(), 'qk_val', query)
+    assert len(rule.matches) == 2
+    assert rule.matches[0]['qk'] == 'qk_val'
+    assert rule.matches[1]['qk'] == 'qk_val'
+    assert rule.matches[0]['sub_qk'] == 'sub_qk_val1'
+    assert rule.matches[1]['sub_qk'] == 'sub_qk_val2'
+
+
 def test_metric_aggregation_complex_query_key_formatted():
     rules = {'buffer_time': datetime.timedelta(minutes=5),
              'timestamp_field': '@timestamp',
