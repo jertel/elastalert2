@@ -4,7 +4,7 @@
 - None
 
 ## New features
-- None
+- Add support for loading custom Jinja2 filters - [#1700](https://github.com/jertel/elastalert2/pull/1700) - @anroots-by
 
 ## Other changes
 - Fix percentile metric_aggregation rule error for rules with compound query keys - [#1701](https://github.com/jertel/elastalert2/pull/1701) - @jhatcher1

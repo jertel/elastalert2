@@ -10,3 +10,4 @@ ElastAlert 2 offers a variety of ways to extend the functionality. This includes
    recipes/adding_alerts
    recipes/adding_enhancements
    recipes/adding_loaders
+   recipes/adding_jinja_filters
