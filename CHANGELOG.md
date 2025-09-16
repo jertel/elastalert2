@@ -4,7 +4,7 @@
 - None
 
 ## New features
-- Add support for loading custom Jinja2 filters - [#1700](https://github.com/jertel/elastalert2/pull/1682) - @anroots-by
+- Add support for loading custom Jinja2 filters - [#1700](https://github.com/jertel/elastalert2/pull/1700) - @anroots-by
 
 ## Other changes
 - None
