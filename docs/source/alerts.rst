@@ -1377,6 +1377,12 @@ Example usage::
 ``jira_bump_after_inactivity``: If this is set, ElastAlert 2 will only comment on tickets that have been inactive for at least this many days.
 It only applies if ``jira_bump_tickets`` is true. Default is 0 days.
 
+.. note:: 
+   **API Migration Notice**: Starting May 1, 2025, Atlassian deprecated the legacy JQL search endpoints. ElastAlert 2 now 
+   automatically uses the ``enhanced_search_issues`` method from the jira Python library when available, which should use 
+   the new API endpoints internally. If this method is not available, it falls back to the legacy ``search_issues`` method. 
+   No configuration changes are required.
+
 Arbitrary Jira fields:
 
 ElastAlert 2 supports setting any arbitrary Jira field that your Jira issue supports. For example, if you had a custom field, called "Affected User", you can set it by providing that field name in ``snake_case`` prefixed with ``jira_``.  These fields can contain primitive strings or arrays of strings. Note that when you create a custom field in your Jira server, internally, the field is represented as ``customfield_1111``. In ElastAlert 2, you may refer to either the public facing name OR the internal representation.

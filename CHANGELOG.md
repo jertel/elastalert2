@@ -7,6 +7,7 @@
 - Add support for loading custom Jinja2 filters - [#1700](https://github.com/jertel/elastalert2/pull/1700) - @anroots-by
 
 ## Other changes
+- **JIRA Migration**: Updated for Jira Cloud API deprecation notice. The legacy JQL search endpoints (`GET /rest/api/3/search`, `POST /rest/api/3/search`) are deprecated and will be removed after May 1, 2025. ElastAlert 2 now automatically uses the `enhanced_search_issues` method from the jira Python library when available, falling back to the legacy `search_issues` method when not available. No configuration changes required.
 - Fix percentile metric_aggregation rule error for rules with compound query keys - [#1701](https://github.com/jertel/elastalert2/pull/1701) - @jhatcher1
 
 # 2.26.0

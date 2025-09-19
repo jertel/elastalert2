@@ -262,14 +262,26 @@ class JiraAlerter(Alerter):
         if self.bump_not_in_statuses:
             jql = '%s and status not in (%s)' % (jql, ','.join(["\"%s\"" % status if ' ' in status else status
                                                                 for status in self.bump_not_in_statuses]))
+
+        # Use enhanced_search_issues if available (should use new API internally)
+        # Fall back to legacy search_issues if enhanced method is not available
         try:
-            issues = self.client.search_issues(jql)
+            if hasattr(self.client, 'enhanced_search_issues'):
+                issues = self.client.enhanced_search_issues(jql)
+            else:
+                issues = self.client.search_issues(jql)
+                
+            # Ensure issues is a list-like object before checking length
+            if issues and len(issues):
+                return issues[0]
         except JIRAError as e:
             elastalert_logger.exception("Error while searching for Jira ticket using jql '%s': %s" % (jql, e))
             return None
+        except Exception as e:
+            elastalert_logger.exception("Unexpected error while searching for Jira ticket: %s" % e)
+            return None
 
-        if len(issues):
-            return issues[0]
+        return None
 
     def comment_on_ticket(self, ticket, match):
         text = str(JiraFormattedMatchString(self.rule, match))
