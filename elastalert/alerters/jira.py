@@ -263,13 +263,13 @@ class JiraAlerter(Alerter):
             jql = '%s and status not in (%s)' % (jql, ','.join(["\"%s\"" % status if ' ' in status else status
                                                                 for status in self.bump_not_in_statuses]))
 
-        # Use enhanced_search_issues if available (should use new API internally)
-        # Fall back to legacy search_issues if enhanced method is not available
+        # Force use of enhanced_search_issues (new API)
+        # This method should be available in updated jira library versions
+        if not hasattr(self.client, 'enhanced_search_issues'):
+            raise EAException("enhanced_search_issues method not available. Please update your jira library to a version that supports the new Jira API endpoints.")
+        
         try:
-            if hasattr(self.client, 'enhanced_search_issues'):
-                issues = self.client.enhanced_search_issues(jql)
-            else:
-                issues = self.client.search_issues(jql)
+            issues = self.client.enhanced_search_issues(jql)
                 
             # Ensure issues is a list-like object before checking length
             if issues and len(issues):

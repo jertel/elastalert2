@@ -7,7 +7,7 @@ elasticsearch==7.10.1
 envparse>=0.2.0
 exotel==0.1.5
 Jinja2>=3.1.5
-jira>=3.8.0
+jira>=3.10.5
 jsonpointer>=3.0.0
 jsonschema>=4.23.0
 prettytable>=3.12.0
