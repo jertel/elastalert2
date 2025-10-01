@@ -1378,10 +1378,10 @@ Example usage::
 It only applies if ``jira_bump_tickets`` is true. Default is 0 days.
 
 .. note:: 
-   **API Migration Notice**: Starting May 1, 2025, Atlassian deprecated the legacy JQL search endpoints. ElastAlert 2 now 
-   automatically uses the ``enhanced_search_issues`` method from the jira Python library when available, which should use 
-   the new API endpoints internally. If this method is not available, it falls back to the legacy ``search_issues`` method. 
-   No configuration changes are required.
+   **API Migration Notice**: Starting May 1, 2025, Atlassian deprecated the legacy JQL search endpoints. ElastAlert 2 
+   now uses the Jira client's ``enhanced_search_issues`` method for bumping logic, which automatically uses the new 
+   Jira API endpoints internally. This change is transparent for users with compatible Jira library versions (3.10.5+). 
+   No configuration changes required.
 
 Arbitrary Jira fields:
 
