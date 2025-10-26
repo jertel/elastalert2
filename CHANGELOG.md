@@ -8,6 +8,7 @@
 
 ## Other changes
 - Fix percentile metric_aggregation rule error for rules with compound query keys - [#1701](https://github.com/jertel/elastalert2/pull/1701) - @jhatcher1
+- support python 3.14 - [#1706](https://github.com/jertel/elastalert2/pull/1706) - @nsano-rururu
 
 # 2.26.0
 
