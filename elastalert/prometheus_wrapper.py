@@ -29,10 +29,13 @@ class PrometheusWrapper:
 
     def metrics_run_rule(self, rule, endtime, starttime=None):
         """ Increment counter every time rule is run """
+        result = None
         try:
             self.prom_scrapes.labels(rule['name']).inc()
+            result = self.run_rule(rule, endtime, starttime)
         finally:
-            return self.run_rule(rule, endtime, starttime)
+            pass
+        return result
 
     def metrics_writeback(self, doc_type, body, rule=None, match_body=None):
         """ Update various prometheus metrics accoording to the doc_type """
@@ -53,4 +56,5 @@ class PrometheusWrapper:
             elif doc_type == 'silence':
                 self.prom_alerts_silenced.labels(body['rule_name']).inc()
         finally:
-            return res
+            pass
+        return res
