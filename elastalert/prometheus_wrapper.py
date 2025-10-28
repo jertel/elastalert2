@@ -32,9 +32,8 @@ class PrometheusWrapper:
         result = None
         try:
             self.prom_scrapes.labels(rule['name']).inc()
-            result = self.run_rule(rule, endtime, starttime)
         finally:
-            pass
+            result = self.run_rule(rule, endtime, starttime)
         return result
 
     def metrics_writeback(self, doc_type, body, rule=None, match_body=None):
