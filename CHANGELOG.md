@@ -21,7 +21,7 @@
 - Update library: tencentcloud-sdk-python to 3.0.1479 - [#1706](https://github.com/jertel/elastalert2/pull/1706) - @nsano-rururu
 - Update library: twilio to 9.8.4 - [#1706](https://github.com/jertel/elastalert2/pull/1706) - @nsano-rururu
 - Update build libraries: pylint, pytest, pytest-cov, pytest-xdist, sphinx, tox - [#1706](https://github.com/jertel/elastalert2/pull/1706) - @nsano-rururu
-- Update docs build to use Ubuntu 24.40 and Python 13 - [#1708](https://github.com/jertel/elastalert2/pull/1708) - @jertel
+- Update docs build to use Ubuntu 24.40 and Python 3.13 - [#1708](https://github.com/jertel/elastalert2/pull/1708) - @jertel
 - Cleanup unused imports - [#1708](https://github.com/jertel/elastalert2/pull/1708) - @jertel
 
 # 2.26.0
