@@ -8,7 +8,19 @@
 
 ## Other changes
 - Fix percentile metric_aggregation rule error for rules with compound query keys - [#1701](https://github.com/jertel/elastalert2/pull/1701) - @jhatcher1
-- support python 3.14 - [#1706](https://github.com/jertel/elastalert2/pull/1706) - @nsano-rururu
+- Support Python 3.14 - [#1706](https://github.com/jertel/elastalert2/pull/1706) - @nsano-rururu
+- Update library: boto3 to 1.40.59 - [#1706](https://github.com/jertel/elastalert2/pull/1706) - @nsano-rururu
+- Update library: cffi to 2.0.0 - [#1706](https://github.com/jertel/elastalert2/pull/1706) - @nsano-rururu
+- Update library: jinja2 to 3.1.6 - [#1706](https://github.com/jertel/elastalert2/pull/1706) - @nsano-rururu
+- Update library: jira to 3.10.5 - [#1706](https://github.com/jertel/elastalert2/pull/1706) - @nsano-rururu
+- Update library: jsonschema to 4.25.1 - [#1706](https://github.com/jertel/elastalert2/pull/1706) - @nsano-rururu
+- Update library: prettytable to 3.16.0 - [#1706](https://github.com/jertel/elastalert2/pull/1706) - @nsano-rururu
+- Update library: prometheus-client to 0.23.1 - [#1706](https://github.com/jertel/elastalert2/pull/1706) - @nsano-rururu
+- Update library: pyyaml to 6.0.3 - [#1706](https://github.com/jertel/elastalert2/pull/1706) - @nsano-rururu
+- Update library: requests to 2.32.5 - [#1706](https://github.com/jertel/elastalert2/pull/1706) - @nsano-rururu
+- Update library: tencentcloud-sdk-python to 3.0.1479 - [#1706](https://github.com/jertel/elastalert2/pull/1706) - @nsano-rururu
+- Update library: twilio to 9.8.4 - [#1706](https://github.com/jertel/elastalert2/pull/1706) - @nsano-rururu
+- Update build libraries: pylint, pytest, pytest-cov, pytest-xdist, sphinx, tox - [#1706](https://github.com/jertel/elastalert2/pull/1706) - @nsano-rururu
 
 # 2.26.0
 
