@@ -12,6 +12,21 @@
   behavior, which internally uses the new Jira API endpoints. This change is transparent for users with compatible
   Jira library versions (3.10.5+). No configuration changes required.
 - Fix percentile metric_aggregation rule error for rules with compound query keys - [#1701](https://github.com/jertel/elastalert2/pull/1701) - @jhatcher1
+- Support Python 3.14 - [#1706](https://github.com/jertel/elastalert2/pull/1706) - @nsano-rururu
+- Update library: boto3 to 1.40.59 - [#1706](https://github.com/jertel/elastalert2/pull/1706) - @nsano-rururu
+- Update library: cffi to 2.0.0 - [#1706](https://github.com/jertel/elastalert2/pull/1706) - @nsano-rururu
+- Update library: jinja2 to 3.1.6 - [#1706](https://github.com/jertel/elastalert2/pull/1706) - @nsano-rururu
+- Update library: jira to 3.10.5 - [#1706](https://github.com/jertel/elastalert2/pull/1706) - @nsano-rururu
+- Update library: jsonschema to 4.25.1 - [#1706](https://github.com/jertel/elastalert2/pull/1706) - @nsano-rururu
+- Update library: prettytable to 3.16.0 - [#1706](https://github.com/jertel/elastalert2/pull/1706) - @nsano-rururu
+- Update library: prometheus-client to 0.23.1 - [#1706](https://github.com/jertel/elastalert2/pull/1706) - @nsano-rururu
+- Update library: pyyaml to 6.0.3 - [#1706](https://github.com/jertel/elastalert2/pull/1706) - @nsano-rururu
+- Update library: requests to 2.32.5 - [#1706](https://github.com/jertel/elastalert2/pull/1706) - @nsano-rururu
+- Update library: tencentcloud-sdk-python to 3.0.1479 - [#1706](https://github.com/jertel/elastalert2/pull/1706) - @nsano-rururu
+- Update library: twilio to 9.8.4 - [#1706](https://github.com/jertel/elastalert2/pull/1706) - @nsano-rururu
+- Update build libraries: pylint, pytest, pytest-cov, pytest-xdist, sphinx, tox - [#1706](https://github.com/jertel/elastalert2/pull/1706) - @nsano-rururu
+- Update docs build to use Ubuntu 24.40 and Python 3.13 - [#1708](https://github.com/jertel/elastalert2/pull/1708) - @jertel
+- Cleanup unused imports - [#1708](https://github.com/jertel/elastalert2/pull/1708) - @jertel
 
 # 2.26.0
 
