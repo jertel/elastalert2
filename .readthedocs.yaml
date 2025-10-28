@@ -7,10 +7,10 @@ version: 2
 
 # Set the version of Python and other tools you might need
 build:
-  # Must stay at 22.04 until RTD adds support for 24.04
-  os: ubuntu-22.04
+  os: ubuntu-24.04
   tools:
-    python: "3.12"
+    # Python 3.14 dependent upon https://github.com/readthedocs/readthedocs.org/issues/12523
+    python: "3.13"
     
 # Build documentation in the docs/ directory with Sphinx
 sphinx:
