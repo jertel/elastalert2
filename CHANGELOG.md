@@ -7,10 +7,6 @@
 - Add support for loading custom Jinja2 filters - [#1700](https://github.com/jertel/elastalert2/pull/1700) - @anroots-by
 
 ## Other changes
-- **Jira Migration**: Updated for Jira Cloud API deprecation (legacy JQL search endpoints will be removed after
-  May 1, 2025). ElastAlert 2 now uses the Jira client's `enhanced_search_issues()` method for ticket bumping
-  behavior, which internally uses the new Jira API endpoints. This change is transparent for users with compatible
-  Jira library versions (3.10.5+). No configuration changes required.
 - Fix percentile metric_aggregation rule error for rules with compound query keys - [#1701](https://github.com/jertel/elastalert2/pull/1701) - @jhatcher1
 - Support Python 3.14 - [#1706](https://github.com/jertel/elastalert2/pull/1706) - @nsano-rururu
 - Update library: boto3 to 1.40.59 - [#1706](https://github.com/jertel/elastalert2/pull/1706) - @nsano-rururu
@@ -27,6 +23,10 @@
 - Update build libraries: pylint, pytest, pytest-cov, pytest-xdist, sphinx, tox - [#1706](https://github.com/jertel/elastalert2/pull/1706) - @nsano-rururu
 - Update docs build to use Ubuntu 24.40 and Python 3.13 - [#1708](https://github.com/jertel/elastalert2/pull/1708) - @jertel
 - Cleanup unused imports - [#1708](https://github.com/jertel/elastalert2/pull/1708) - @jertel
+- **Jira Migration**: Updated for Jira Cloud API deprecation (legacy JQL search endpoints will be removed after
+  May 1, 2025). ElastAlert 2 now uses the Jira client's `enhanced_search_issues()` method for ticket bumping
+  behavior, which internally uses the new Jira API endpoints. This change is transparent for users with compatible
+  Jira library versions (3.10.5+). No configuration changes required.
 
 # 2.26.0
 
