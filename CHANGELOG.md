@@ -23,7 +23,7 @@
 - Update build libraries: pylint, pytest, pytest-cov, pytest-xdist, sphinx, tox - [#1706](https://github.com/jertel/elastalert2/pull/1706) - @nsano-rururu
 - Update docs build to use Ubuntu 24.40 and Python 3.13 - [#1708](https://github.com/jertel/elastalert2/pull/1708) - @jertel
 - Cleanup unused imports - [#1708](https://github.com/jertel/elastalert2/pull/1708) - @jertel
-- Updated for Jira Cloud API deprecation - [#1709](https://github.com/jertel/elastalert2/pull/1709) - @leesmith110
+- [Jira] Updated for Jira Cloud API deprecation - [#1709](https://github.com/jertel/elastalert2/pull/1709) - @leesmith110
 
 # 2.26.0
 
