@@ -6,7 +6,7 @@ from jira import JIRAError
 from unittest import mock
 
 from elastalert.alerters.jira import JiraFormattedMatchString, JiraAlerter
-from elastalert.util import ts_now
+from elastalert.util import ts_now, EAException
 from tests.alerts_test import mock_rule
 
 
@@ -90,14 +90,15 @@ def test_jira(caplog):
             mock.patch('elastalert.alerters.jira.read_yaml') as mock_open:
         mock_open.return_value = {'user': 'jirauser', 'password': 'jirapassword'}
         mock_jira.return_value = mock.Mock()
-        mock_jira.return_value.search_issues.return_value = []
+        # Mock enhanced_search_issues method
+        mock_jira.return_value.enhanced_search_issues.return_value = []
         mock_jira.return_value.priorities.return_value = [mock_priority]
         mock_jira.return_value.fields.return_value = []
 
         alert = JiraAlerter(rule)
         alert.alert([{'test_term': 'test_value', '@timestamp': '2014-10-31T00:00:00'}])
 
-    expected.insert(3, mock.call().search_issues(mock.ANY))
+    expected.insert(3, mock.call().enhanced_search_issues(mock.ANY))
     assert mock_jira.mock_calls == expected
 
     # Remove a field if jira_ignore_in_title set
@@ -106,21 +107,24 @@ def test_jira(caplog):
             mock.patch('elastalert.alerters.jira.read_yaml') as mock_open:
         mock_open.return_value = {'user': 'jirauser', 'password': 'jirapassword'}
         mock_jira.return_value = mock.Mock()
-        mock_jira.return_value.search_issues.return_value = []
+        # Mock enhanced_search_issues method
+        mock_jira.return_value.enhanced_search_issues.return_value = []
         mock_jira.return_value.priorities.return_value = [mock_priority]
         mock_jira.return_value.fields.return_value = []
 
         alert = JiraAlerter(rule)
         alert.alert([{'test_term': 'test_value', '@timestamp': '2014-10-31T00:00:00'}])
 
+    # Check that 'test_value' was removed from the JQL query when jira_ignore_in_title is set
     assert 'test_value' not in mock_jira.mock_calls[3][1][0]
 
-    # Issue is still created if search_issues throws an exception
+    # Issue is still created if enhanced_search_issues throws an exception
     with mock.patch('elastalert.alerters.jira.JIRA') as mock_jira, \
             mock.patch('elastalert.alerters.jira.read_yaml') as mock_open:
         mock_open.return_value = {'user': 'jirauser', 'password': 'jirapassword'}
         mock_jira.return_value = mock.Mock()
-        mock_jira.return_value.search_issues.side_effect = JIRAError
+        # Mock enhanced_search_issues to raise an exception
+        mock_jira.return_value.enhanced_search_issues.side_effect = JIRAError
         mock_jira.return_value.priorities.return_value = [mock_priority]
         mock_jira.return_value.fields.return_value = []
 
@@ -143,6 +147,8 @@ def test_jira(caplog):
             mock.patch('elastalert.alerters.jira.read_yaml') as mock_open:
         mock_open.return_value = {'user': 'jirauser', 'password': 'jirapassword'}
         mock_jira.return_value = mock.Mock()
+        # Mock both search methods
+        mock_jira.return_value.enhanced_search_issues.return_value = [mock_issue]
         mock_jira.return_value.search_issues.return_value = [mock_issue]
         mock_jira.return_value.priorities.return_value = [mock_priority]
         mock_jira.return_value.fields.return_value = []
@@ -159,6 +165,8 @@ def test_jira(caplog):
             mock.patch('elastalert.alerters.jira.read_yaml') as mock_open:
         mock_open.return_value = {'user': 'jirauser', 'password': 'jirapassword'}
         mock_jira.return_value = mock.Mock()
+        # Mock both search methods
+        mock_jira.return_value.enhanced_search_issues.return_value = [mock_issue]
         mock_jira.return_value.search_issues.return_value = [mock_issue]
         mock_jira.return_value.priorities.return_value = [mock_priority]
         mock_jira.return_value.fields.return_value = []
@@ -194,6 +202,8 @@ def test_jira(caplog):
                 mock.patch('elastalert.alerters.jira.read_yaml') as mock_open:
             mock_open.return_value = {'user': 'jirauser', 'password': 'jirapassword'}
             mock_jira.return_value = mock.Mock()
+            # Mock both search methods
+            mock_jira.return_value.enhanced_search_issues.return_value = [mock_issue]
             mock_jira.return_value.search_issues.return_value = [mock_issue]
             mock_jira.return_value.fields.return_value = mock_fields
             mock_jira.return_value.priorities.return_value = [mock_priority]
@@ -490,3 +500,159 @@ def test_create_subtask(caplog):
     assert 'elastalert' == user
     assert logging.INFO == level
     assert 'pened Jira ticket:' in message
+
+
+def test_jira_enhanced_search_when_available():
+    """Test that enhanced_search_issues is used when available"""
+    rule = {
+        'name': 'test alert',
+        'jira_account_file': 'jirafile',
+        'type': mock_rule(),
+        'jira_project': 'testproject',
+        'jira_priority': 0,
+        'jira_issuetype': 'testtype',
+        'jira_server': 'https://test.atlassian.net',
+        'jira_bump_tickets': True,
+        'jira_max_age': 30,
+        'timestamp_field': '@timestamp',
+        'rule_file': '/tmp/foo.yaml'
+    }
+
+    mock_priority = mock.Mock(id='5')
+    mock_issue = mock.Mock()
+    mock_issue.key = 'TEST-123'
+
+    with mock.patch('elastalert.alerters.jira.JIRA') as mock_jira, \
+            mock.patch('elastalert.alerters.jira.read_yaml') as mock_open:
+
+        mock_open.return_value = {'user': 'jirauser', 'password': 'jirapassword'}
+        mock_jira.return_value.priorities.return_value = [mock_priority]
+        mock_jira.return_value.fields.return_value = []
+
+        # Mock enhanced_search_issues method
+        mock_jira.return_value.enhanced_search_issues = mock.Mock(return_value=[mock_issue])
+
+        alert = JiraAlerter(rule)
+        result = alert.find_existing_ticket([{'test': 'value', '@timestamp': '2014-10-31T00:00:00'}])
+
+        # Verify enhanced_search_issues was called
+        assert mock_jira.return_value.enhanced_search_issues.called
+        call_args = mock_jira.return_value.enhanced_search_issues.call_args
+        assert 'project=testproject' in call_args[0][0]  # First positional argument
+
+        # Verify legacy search was NOT called
+        assert not hasattr(mock_jira.return_value, 'search_issues') or not mock_jira.return_value.search_issues.called
+
+        # Verify the result
+        assert result is not None
+        assert result.key == 'TEST-123'
+
+
+def test_jira_enhanced_search_not_available_error():
+    """Test that Jira alerter raises error when enhanced_search_issues is not available"""
+    rule = {
+        'name': 'test alert',
+        'jira_account_file': 'jirafile',
+        'type': mock_rule(),
+        'jira_project': 'testproject',
+        'jira_priority': 0,
+        'jira_issuetype': 'testtype',
+        'jira_server': 'https://test.atlassian.net',
+        'jira_bump_tickets': True,
+        'jira_max_age': 30,
+        'timestamp_field': '@timestamp',
+        'rule_file': '/tmp/foo.yaml'
+    }
+
+    mock_priority = mock.Mock(id='5')
+
+    with mock.patch('elastalert.alerters.jira.JIRA') as mock_jira, \
+            mock.patch('elastalert.alerters.jira.read_yaml') as mock_open:
+
+        mock_open.return_value = {'user': 'jirauser', 'password': 'jirapassword'}
+        mock_jira.return_value.priorities.return_value = [mock_priority]
+        mock_jira.return_value.fields.return_value = []
+
+        # Simulate enhanced_search_issues not being available
+        if hasattr(mock_jira.return_value, 'enhanced_search_issues'):
+            delattr(mock_jira.return_value, 'enhanced_search_issues')
+
+        alert = JiraAlerter(rule)
+
+        # Should raise EAException when enhanced_search_issues is not available
+        with pytest.raises(EAException, match="enhanced_search_issues method not available"):
+            alert.find_existing_ticket([{'test': 'value', '@timestamp': '2014-10-31T00:00:00'}])
+
+
+def test_jira_error_handling():
+    """Test error handling when search methods throw exceptions"""
+    rule = {
+        'name': 'test alert',
+        'jira_account_file': 'jirafile',
+        'type': mock_rule(),
+        'jira_project': 'testproject',
+        'jira_priority': 0,
+        'jira_issuetype': 'testtype',
+        'jira_server': 'https://test.atlassian.net',
+        'jira_bump_tickets': True,
+        'jira_max_age': 30,
+        'timestamp_field': '@timestamp',
+        'rule_file': '/tmp/foo.yaml'
+    }
+
+    mock_priority = mock.Mock(id='5')
+
+    with mock.patch('elastalert.alerters.jira.JIRA') as mock_jira, \
+            mock.patch('elastalert.alerters.jira.read_yaml') as mock_open:
+
+        mock_open.return_value = {'user': 'jirauser', 'password': 'jirapassword'}
+        mock_jira.return_value.priorities.return_value = [mock_priority]
+        mock_jira.return_value.fields.return_value = []
+
+        # Mock enhanced_search_issues to raise an exception
+        mock_jira.return_value.enhanced_search_issues = mock.Mock(side_effect=JIRAError("API Error"))
+
+        alert = JiraAlerter(rule)
+        result = alert.find_existing_ticket([{'test': 'value', '@timestamp': '2014-10-31T00:00:00'}])
+
+        # Verify enhanced_search_issues was called but returned None due to error
+        assert mock_jira.return_value.enhanced_search_issues.called
+        assert result is None
+
+
+def test_jira_no_results():
+    """Test that search returns None when no tickets are found"""
+    rule = {
+        'name': 'test alert',
+        'jira_account_file': 'jirafile',
+        'type': mock_rule(),
+        'jira_project': 'testproject',
+        'jira_priority': 0,
+        'jira_issuetype': 'testtype',
+        'jira_server': 'https://test.atlassian.net',
+        'jira_bump_tickets': True,
+        'jira_max_age': 30,
+        'timestamp_field': '@timestamp',
+        'rule_file': '/tmp/foo.yaml'
+    }
+
+    mock_priority = mock.Mock(id='5')
+
+    with mock.patch('elastalert.alerters.jira.JIRA') as mock_jira, \
+            mock.patch('elastalert.alerters.jira.read_yaml') as mock_open:
+
+        mock_open.return_value = {'user': 'jirauser', 'password': 'jirapassword'}
+        mock_jira.return_value.priorities.return_value = [mock_priority]
+        mock_jira.return_value.fields.return_value = []
+
+        # Mock enhanced_search_issues to return empty list
+        mock_jira.return_value.enhanced_search_issues = mock.Mock(return_value=[])
+
+        alert = JiraAlerter(rule)
+        result = alert.find_existing_ticket([{'test': 'value', '@timestamp': '2014-10-31T00:00:00'}])
+
+        # Verify enhanced_search_issues was called
+        assert mock_jira.return_value.enhanced_search_issues.called
+
+        # Verify no result was returned
+        assert result is None
