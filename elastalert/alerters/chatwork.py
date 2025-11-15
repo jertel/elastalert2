@@ -46,7 +46,7 @@ class ChatworkAlerter(Alerter):
             response = requests.post(self.url, data=payload, headers=headers, proxies=proxies, auth=auth)
             response.raise_for_status()
         except RequestException as e:
-            raise EAException("Error posting to Chattwork: %s. Details: %s" % (e, "" if e.response is None else e.response.text))
+            raise EAException("Error posting to Chatwork: %s. Details: %s" % (e, "" if e.response is None else e.response.text))
 
         elastalert_logger.info(
             "Alert sent to Chatwork room %s" % self.chatwork_room_id)

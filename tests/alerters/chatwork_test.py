@@ -104,7 +104,7 @@ def test_chatwork_ea_exception():
         mock_run = mock.MagicMock(side_effect=RequestException)
         with mock.patch('requests.post', mock_run), pytest.raises(RequestException):
             alert.alert([match])
-    assert 'Error posting to Chattwork: . Details: ' in str(ea)
+    assert 'Error posting to Chatwork: . Details: ' in str(ea)
 
 
 def test_chatwork_getinfo():
