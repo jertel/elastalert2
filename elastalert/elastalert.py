@@ -927,6 +927,11 @@ class ElastAlerter(object):
                 silence_cache_key += '.' + query_key_value
 
             # Check cache first to reduce unnecessary ES queries
+            # Effectively, this checks query key cache first. Then checks rule cache. Then checks the rule via ES.
+            # Followed by a second (duplicated) query key cache check, and then finally a query key check via ES. 
+            # It could be further improved to eliminate the second query key cache check but this implementation
+            # favors both cache checks up front, before any ES hit, which is an overall performance improvement
+            # compared to the original logic, which required a rule check via ES before checking the query key cache.
             if self.is_silenced(silence_cache_key, check_cache_only=True) or \
                self.is_silenced(rule['name'] + "._silence") or self.is_silenced(silence_cache_key):
                 elastalert_logger.info('Ignoring match for silenced rule %s' % (silence_cache_key,))
