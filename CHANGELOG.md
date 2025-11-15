@@ -25,6 +25,7 @@
 - Cleanup unused imports - [#1708](https://github.com/jertel/elastalert2/pull/1708) - @jertel
 - [Jira] Updated for Jira Cloud API deprecation - [#1709](https://github.com/jertel/elastalert2/pull/1709) - @leesmith110
 - Reduce unnecessary ES queries when checking for silenced rules - [#1715](https://github.com/jertel/elastalert2/pull/1715) - @zpcc
+- [Chatwork] Fix Chatwork - [#1716](https://github.com/jertel/elastalert2/pull/1716) - @nsano-rururu
 
 # 2.26.0
 

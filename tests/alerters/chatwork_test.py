@@ -30,18 +30,18 @@ def test_chatwork(caplog):
     with mock.patch('requests.post') as mock_post_request:
         alert.alert([match])
     expected_data = {
-        'body': 'Test Chatwork Rule\n\n@timestamp: 2021-01-01T00:00:00\nsomefield: foobarbaz\n',
+        'body': 'Test Chatwork Rule\n\n@timestamp: 2021-01-01T00:00:00\nsomefield: foobarbaz\n', 'self_unread': 0
     }
 
     mock_post_request.assert_called_once_with(
         'https://api.chatwork.com/v2/rooms/xxxx2/messages',
-        params=mock.ANY,
-        headers={'X-ChatWorkToken': 'xxxx1'},
+        data=mock.ANY,
+        headers={'accept': 'application/json', 'content-type': 'application/x-www-form-urlencoded', 'x-chatworktoken': 'xxxx1'},
         proxies=None,
         auth=None
     )
 
-    actual_data = mock_post_request.call_args_list[0][1]['params']
+    actual_data = mock_post_request.call_args_list[0][1]['data']
     assert expected_data == actual_data
     assert ('elastalert', logging.INFO, 'Alert sent to Chatwork room xxxx2') == caplog.record_tuples[0]
 
@@ -67,18 +67,18 @@ def test_chatwork_proxy():
     with mock.patch('requests.post') as mock_post_request:
         alert.alert([match])
     expected_data = {
-        'body': 'Test Chatwork Rule\n\n@timestamp: 2021-01-01T00:00:00\nsomefield: foobarbaz\n',
+        'body': 'Test Chatwork Rule\n\n@timestamp: 2021-01-01T00:00:00\nsomefield: foobarbaz\n', 'self_unread': 0
     }
 
     mock_post_request.assert_called_once_with(
         'https://api.chatwork.com/v2/rooms/xxxx2/messages',
-        params=mock.ANY,
-        headers={'X-ChatWorkToken': 'xxxx1'},
+        data=mock.ANY,
+        headers={'accept': 'application/json', 'content-type': 'application/x-www-form-urlencoded', 'x-chatworktoken': 'xxxx1'},
         proxies={'https': 'http://proxy.url'},
         auth=HTTPProxyAuth('admin', 'password')
     )
 
-    actual_data = mock_post_request.call_args_list[0][1]['params']
+    actual_data = mock_post_request.call_args_list[0][1]['data']
     assert expected_data == actual_data
 
 
@@ -104,7 +104,7 @@ def test_chatwork_ea_exception():
         mock_run = mock.MagicMock(side_effect=RequestException)
         with mock.patch('requests.post', mock_run), pytest.raises(RequestException):
             alert.alert([match])
-    assert 'Error posting to Chattwork: . Details: ' in str(ea)
+    assert 'Error posting to Chatwork: . Details: ' in str(ea)
 
 
 def test_chatwork_getinfo():
@@ -180,18 +180,19 @@ def test_chatwork_maxlength():
         alert.alert([match])
     expected_data = {
         'body': 'Test Chatwork Rule' + ('a' * 1932) +
-        '\n *message was cropped according to chatwork embed description limits!*'
+        '\n *message was cropped according to chatwork embed description limits!*',
+        'self_unread': 0
     }
 
     mock_post_request.assert_called_once_with(
         'https://api.chatwork.com/v2/rooms/xxxx2/messages',
-        params=mock.ANY,
-        headers={'X-ChatWorkToken': 'xxxx1'},
+        data=mock.ANY,
+        headers={'accept': 'application/json', 'content-type': 'application/x-www-form-urlencoded', 'x-chatworktoken': 'xxxx1'},
         proxies=None,
         auth=None
     )
 
-    actual_data = mock_post_request.call_args_list[0][1]['params']
+    actual_data = mock_post_request.call_args_list[0][1]['data']
     assert expected_data == actual_data
 
 
@@ -225,15 +226,16 @@ def test_chatwork_matchs():
                 'somefield: foobarbaz\n' +
                 '\n' +
                 '----------------------------------------\n',
+        'self_unread': 0
     }
 
     mock_post_request.assert_called_once_with(
         'https://api.chatwork.com/v2/rooms/xxxx2/messages',
-        params=mock.ANY,
-        headers={'X-ChatWorkToken': 'xxxx1'},
+        data=mock.ANY,
+        headers={'accept': 'application/json', 'content-type': 'application/x-www-form-urlencoded', 'x-chatworktoken': 'xxxx1'},
         proxies=None,
         auth=None
     )
 
-    actual_data = mock_post_request.call_args_list[0][1]['params']
+    actual_data = mock_post_request.call_args_list[0][1]['data']
     assert expected_data == actual_data
