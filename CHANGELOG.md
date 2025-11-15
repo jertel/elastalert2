@@ -24,6 +24,7 @@
 - Update docs build to use Ubuntu 24.40 and Python 3.13 - [#1708](https://github.com/jertel/elastalert2/pull/1708) - @jertel
 - Cleanup unused imports - [#1708](https://github.com/jertel/elastalert2/pull/1708) - @jertel
 - [Jira] Updated for Jira Cloud API deprecation - [#1709](https://github.com/jertel/elastalert2/pull/1709) - @leesmith110
+- Reduce unnecessary ES queries when checking for silenced rules - [#1715](https://github.com/jertel/elastalert2/pull/1715) - @zpcc
 
 # 2.26.0
 
