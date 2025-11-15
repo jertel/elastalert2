@@ -19,7 +19,6 @@ from elastalert.loaders import (
 
 from elastalert.util import EAException
 
-
 loaders_test_cases_path = os.path.join(os.path.dirname(__file__), 'loaders_test_cases')
 empty_folder_test_path = os.path.join(loaders_test_cases_path, 'empty')
 
@@ -66,21 +65,19 @@ def test_import_rules():
         mock_open.return_value = test_rule_copy
 
         # Test that type is imported
-        with mock.patch('builtins.__import__') as mock_import:
-            mock_import.return_value = elastalert.ruletypes
+        with mock.patch('elastalert.loaders.get_module') as mock_get_module:
+            mock_get_module.return_value = elastalert.ruletypes.RuleType
             rules_loader.load_configuration('test_config', test_config)
-        assert mock_import.call_args_list[0][0][0] == 'testing.test'
-        assert mock_import.call_args_list[0][0][3] == ['RuleType']
+        assert mock_get_module.call_args_list[0][0][0] == 'testing.test.RuleType'
 
         # Test that alerts are imported
         test_rule_copy = copy.deepcopy(test_rule)
         mock_open.return_value = test_rule_copy
         test_rule_copy['alert'] = 'testing2.test2.Alerter'
-        with mock.patch('builtins.__import__') as mock_import:
-            mock_import.return_value = elastalert.alerts
+        with mock.patch('elastalert.loaders.get_module') as mock_get_module:
+            mock_get_module.return_value = elastalert.alerts.Alerter
             rules_loader.load_configuration('test_config', test_config)
-        assert mock_import.call_args_list[0][0][0] == 'testing2.test2'
-        assert mock_import.call_args_list[0][0][3] == ['Alerter']
+        assert mock_get_module.call_args_list[0][0][0] == 'testing2.test2.Alerter'
 
 
 def test_import_import():
