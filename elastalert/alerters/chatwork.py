@@ -29,14 +29,21 @@ class ChatworkAlerter(Alerter):
                 body += '\n----------------------------------------\n'
         if len(body) > 2047:
             body = body[0:1950] + '\n *message was cropped according to chatwork embed description limits!*'
-        headers = {'X-ChatWorkToken': self.chatwork_apikey}
+        headers = {
+            'accept': 'application/json',
+            'content-type': 'application/x-www-form-urlencoded',
+            'x-chatworktoken': self.chatwork_apikey
+        }
         # set https proxy, if it was provided
         proxies = {'https': self.chatwork_proxy} if self.chatwork_proxy else None
         auth = HTTPProxyAuth(self.chatwork_proxy_login, self.chatwork_proxy_pass) if self.chatwork_proxy_login else None
-        params = {'body': body}
+        payload = {
+            'self_unread': 0,
+            'body': body
+        }
 
         try:
-            response = requests.post(self.url, params=params, headers=headers, proxies=proxies, auth=auth)
+            response = requests.post(self.url, data=payload, headers=headers, proxies=proxies, auth=auth)
             response.raise_for_status()
         except RequestException as e:
             raise EAException("Error posting to Chattwork: %s. Details: %s" % (e, "" if e.response is None else e.response.text))
