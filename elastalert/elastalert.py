@@ -926,7 +926,9 @@ class ElastAlerter(object):
             if query_key_value is not None:
                 silence_cache_key += '.' + query_key_value
 
-            if self.is_silenced(rule['name'] + "._silence") or self.is_silenced(silence_cache_key):
+            # Check cache first to reduce unnecessary ES queries
+            if self.is_silenced(silence_cache_key, check_cache_only=True) or \
+               self.is_silenced(rule['name'] + "._silence") or self.is_silenced(silence_cache_key):
                 elastalert_logger.info('Ignoring match for silenced rule %s' % (silence_cache_key,))
                 continue
 
@@ -1785,13 +1787,13 @@ class ElastAlerter(object):
         self.silence_cache[silence_cache_key] = (timestamp, exponent)
         return self.writeback('silence', body)
 
-    def is_silenced(self, rule_name):
+    def is_silenced(self, rule_name, check_cache_only=False):
         """ Checks if rule_name is currently silenced. Returns false on exception. """
         if rule_name in self.silence_cache:
             if ts_now() < self.silence_cache[rule_name][0]:
                 return True
 
-        if self.debug:
+        if self.debug or check_cache_only:
             return False
         query = {'term': {'rule_name': rule_name}}
         sort = {'sort': {'until': {'order': 'desc'}}}
