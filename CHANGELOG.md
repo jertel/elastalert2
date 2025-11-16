@@ -4,6 +4,17 @@
 - None
 
 ## New features
+- None
+
+## Other changes
+- None
+
+# 2.27.0
+
+## Breaking changes
+- None
+
+## New features
 - Add support for loading custom Jinja2 filters - [#1700](https://github.com/jertel/elastalert2/pull/1700) - @anroots-by
 
 ## Other changes
