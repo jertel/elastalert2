@@ -52,7 +52,7 @@ setup(
         'prometheus_client>=0.23.1',
         'python-dateutil>=2.9.0.post0',
         'PyYAML>=6.0.3',
-        'py-zabbix>=1.1.7',
+        'zabbix-utils>=2.0.3',
         'requests>=2.31.0',
         'sortedcontainers>=2.4.0',
         'statsd-tags==3.2.1.post1',

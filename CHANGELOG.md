@@ -7,7 +7,7 @@
 - None
 
 ## Other changes
-- None
+- [Zabbix] Migrating from py-zabbix to python-zabbix-utils - [#1722](https://github.com/jertel/elastalert2/pull/1722) - @nsano-rururu
 
 # 2.27.0
 
