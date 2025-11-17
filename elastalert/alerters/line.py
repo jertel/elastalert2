@@ -7,7 +7,7 @@ from elastalert.util import EAException, elastalert_logger
 
 
 class LineMessageAPIAlerter(Alerter):
-    """ Created a  LINE Messaging API for each alert """
+    """Creates a LINE Messaging API for each alert"""
     required_option = frozenset(['line_channel_access_token', 'line_to'])
 
     def __init__(self, rule):
