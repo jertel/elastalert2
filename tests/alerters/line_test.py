@@ -81,7 +81,7 @@ def test_line_message_ea_exception():
         }
 
         mock_run = mock.MagicMock(side_effect=RequestException)
-        with mock.patch('requests.post', mock_run), pytest.raises(RequestException):
+        with mock.patch('requests.post', mock_run):
             alert.alert([match])
 
     assert 'Error posting to LINE Messaging API: ' in str(ea)
