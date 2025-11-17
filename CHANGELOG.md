@@ -4,7 +4,7 @@
 - None
 
 ## New features
-- None
+- [LINE Message API] Add LINE Messaging API Alerter - [#1724](https://github.com/jertel/elastalert2/pull/1724) - @nsano-rururu
 
 ## Other changes
 - [Zabbix] Migrating from py-zabbix to python-zabbix-utils - [#1722](https://github.com/jertel/elastalert2/pull/1722) - @nsano-rururu
