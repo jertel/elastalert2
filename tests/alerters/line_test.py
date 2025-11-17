@@ -53,7 +53,7 @@ def test_line_message(caplog):
         "Authorization": "Bearer xxxxx"
     }
 
-    # JSON の比較
+    # JSON comparison
     import json
     assert json.loads(call["data"]) == expected_payload
 
