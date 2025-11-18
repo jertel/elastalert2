@@ -27,6 +27,7 @@ import elastalert.alerters.httppost
 import elastalert.alerters.httppost2
 import elastalert.alerters.iris
 import elastalert.alerters.lark
+import elastalert.alerters.line
 import elastalert.alerters.pagertree
 import elastalert.alerters.rocketchat
 import elastalert.alerters.servicenow
@@ -135,6 +136,7 @@ class RulesLoader(object):
         'discord': elastalert.alerters.discord.DiscordAlerter,
         'dingtalk': elastalert.alerters.dingtalk.DingTalkAlerter,
         'lark': elastalert.alerters.lark.LarkAlerter,
+        'line': elastalert.alerters.line.LineMessageAPIAlerter,
         'webex_webhook': elastalert.alerters.webex_webhook.WebexWebhookAlerter,
         'workwechat': elastalert.alerters.workwechat.WorkWechatAlerter,
         'chatwork': elastalert.alerters.chatwork.ChatworkAlerter,

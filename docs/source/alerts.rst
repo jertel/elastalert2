@@ -35,6 +35,7 @@ or
       - iris
       - jira
       - lark
+      - line
       - matrixhookshot
       - mattermost
       - ms_teams
@@ -1423,6 +1424,24 @@ Example usage::
       - "lark"
     lark_bot_id: "your lark bot id"
     lark_msgtype: "text"
+
+LINE Messaging API
+~~~~~~~~~~~~~~~~~~
+
+LINE Messaging API will send notification to a Line application. The body of the notification is formatted the same as with other alerters.
+
+Required:
+
+``line_channel_access_token``: channel access token
+
+``line_to``: user id
+
+Example usage::
+
+    alert:
+      - "line"
+    line_channel_access_token: "Your channel access token"
+    line_to: "Your user id"
 
 Matrix Hookshot
 ~~~~~~~~~~~~~~~

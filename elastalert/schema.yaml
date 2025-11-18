@@ -660,6 +660,10 @@ properties:
   lark_bot_id: { type: string }
   lark_msgtype: { type: string, enum: [ 'text' ] }
 
+  ### LINE Messaging API
+  line_channel_access_token: {type: string}
+  line_to: {type: string}
+
   ### Matrix Hookshot
   matrixhookshot_ca_certs: {type: [boolean, string]}
   matrixhookshot_webhook_url: *arrayOfString
