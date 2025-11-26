@@ -2611,7 +2611,7 @@ Example usage::
       - webex_webhook
     alert_text_type: alert_text_only
     webex_webhook_id: "your webex incoming webhook id"
-    webex_webhook: "markdown"
+    webex_webhook_msgtype: "markdown"
 
 WorkWechat
 ~~~~~~~~~~

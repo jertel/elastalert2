@@ -8,6 +8,7 @@
 
 ## Other changes
 - [Zabbix] Migrating from py-zabbix to python-zabbix-utils - [#1722](https://github.com/jertel/elastalert2/pull/1722) - @nsano-rururu
+- [Docs] Correct webex webhook alerter example - @jertel
 
 # 2.27.0
 
