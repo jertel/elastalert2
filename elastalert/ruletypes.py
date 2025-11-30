@@ -1096,7 +1096,7 @@ class MetricAggregationRule(BaseAggregationRule):
             agg_data = self.rules['metric_agg_script']
             if isinstance(agg_data, dict):
                 agg_data = agg_data.copy()
-            elif self.rules['metric_agg_type'] in self.allowed_percent_aggregations:
+            else:
                 agg_data = {'script': agg_data}
             query = {self.metric_key: {self.rules['metric_agg_type']: agg_data}}
         else:
@@ -1202,7 +1202,7 @@ class SpikeMetricAggregationRule(BaseAggregationRule, SpikeRule):
             agg_data = self.rules['metric_agg_script']
             if isinstance(agg_data, dict):
                 agg_data = agg_data.copy()
-            elif self.rules['metric_agg_type'] in self.allowed_percent_aggregations:
+            else:
                 agg_data = {'script': agg_data}
             query = {self.metric_key: {self.rules['metric_agg_type']: agg_data}}
         else:
