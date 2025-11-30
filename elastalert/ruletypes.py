@@ -1093,8 +1093,14 @@ class MetricAggregationRule(BaseAggregationRule):
 
     def generate_aggregation_query(self):
         if self.rules.get('metric_agg_script'):
-            return {self.metric_key: {self.rules['metric_agg_type']: self.rules['metric_agg_script']}}
-        query = {self.metric_key: {self.rules['metric_agg_type']: {'field': self.rules['metric_agg_key']}}}
+            agg_data = self.rules['metric_agg_script']
+            if isinstance(agg_data, dict):
+                agg_data = agg_data.copy()
+            elif self.rules['metric_agg_type'] in self.allowed_percent_aggregations:
+                agg_data = {'script': agg_data}
+            query = {self.metric_key: {self.rules['metric_agg_type']: agg_data}}
+        else:
+            query = {self.metric_key: {self.rules['metric_agg_type']: {'field': self.rules['metric_agg_key']}}}
         if self.rules['metric_agg_type'] in self.allowed_percent_aggregations:
             query[self.metric_key][self.rules['metric_agg_type']]['percents'] = [self.rules['percentile_range']]
         return query
@@ -1193,8 +1199,14 @@ class SpikeMetricAggregationRule(BaseAggregationRule, SpikeRule):
     def generate_aggregation_query(self):
         """Lifted from MetricAggregationRule"""
         if self.rules.get('metric_agg_script'):
-            return {self.metric_key: {self.rules['metric_agg_type']: self.rules['metric_agg_script']}}
-        query = {self.metric_key: {self.rules['metric_agg_type']: {'field': self.rules['metric_agg_key']}}}
+            agg_data = self.rules['metric_agg_script']
+            if isinstance(agg_data, dict):
+                agg_data = agg_data.copy()
+            elif self.rules['metric_agg_type'] in self.allowed_percent_aggregations:
+                agg_data = {'script': agg_data}
+            query = {self.metric_key: {self.rules['metric_agg_type']: agg_data}}
+        else:
+            query = {self.metric_key: {self.rules['metric_agg_type']: {'field': self.rules['metric_agg_key']}}}
         if self.rules['metric_agg_type'] in self.allowed_percent_aggregations:
             query[self.metric_key][self.rules['metric_agg_type']]['percents'] = [self.rules['percentile_range']]
         return query
