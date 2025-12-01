@@ -184,6 +184,7 @@ oneOf:
       threshold_cur: {type: number}
       min_doc_count: {type: integer}
       percentile_range: {type: integer}
+      metric_agg_script: {type: [string, object]}
 
   - title: Flatline
     required: [threshold, timeframe]
@@ -231,6 +232,7 @@ oneOf:
       bucket_interval: *timeframe
       sync_bucket_interval: {type: boolean}
       metric_format_string: {type: string}
+      metric_agg_script: {type: [string, object]}
 
   - title: Percentage Match
     required: [match_bucket_filter]

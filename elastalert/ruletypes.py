@@ -1030,8 +1030,22 @@ class BaseAggregationRule(RuleType):
                 if total_seconds(self.rules['buffer_time']) % total_seconds(self.rules['bucket_interval_timedelta']) != 0:
                     raise EAException("Buffer_time must be evenly divisible by bucket_interval if specified")
 
+    allowed_percent_aggregations = frozenset(['percentiles'])
+
     def generate_aggregation_query(self):
-        raise NotImplementedError()
+        if self.rules.get('metric_agg_script'):
+            agg_data = self.rules['metric_agg_script']
+            if isinstance(agg_data, dict):
+                agg_data = agg_data.copy()
+            else:
+                agg_data = {'script': agg_data}
+            query = {self.metric_key: {self.rules['metric_agg_type']: agg_data}}
+        else:
+            query = {self.metric_key: {self.rules['metric_agg_type']: {'field': self.rules['metric_agg_key']}}}
+        if self.rules['metric_agg_type'] in self.allowed_percent_aggregations:
+            if 'percents' not in query[self.metric_key][self.rules['metric_agg_type']]:
+                query[self.metric_key][self.rules['metric_agg_type']]['percents'] = [self.rules['percentile_range']]
+        return query
 
     def add_aggregation_data(self, payload):
         for timestamp, payload_data in payload.items():
@@ -1091,13 +1105,7 @@ class MetricAggregationRule(BaseAggregationRule):
         )
         return message
 
-    def generate_aggregation_query(self):
-        if self.rules.get('metric_agg_script'):
-            return {self.metric_key: {self.rules['metric_agg_type']: self.rules['metric_agg_script']}}
-        query = {self.metric_key: {self.rules['metric_agg_type']: {'field': self.rules['metric_agg_key']}}}
-        if self.rules['metric_agg_type'] in self.allowed_percent_aggregations:
-            query[self.metric_key][self.rules['metric_agg_type']]['percents'] = [self.rules['percentile_range']]
-        return query
+
 
     def check_matches(self, timestamp, query_key, aggregation_data):
         if "compound_query_key" in self.rules:
@@ -1190,14 +1198,7 @@ class SpikeMetricAggregationRule(BaseAggregationRule, SpikeRule):
 
         self.rules['aggregation_query_element'] = self.generate_aggregation_query()
 
-    def generate_aggregation_query(self):
-        """Lifted from MetricAggregationRule"""
-        if self.rules.get('metric_agg_script'):
-            return {self.metric_key: {self.rules['metric_agg_type']: self.rules['metric_agg_script']}}
-        query = {self.metric_key: {self.rules['metric_agg_type']: {'field': self.rules['metric_agg_key']}}}
-        if self.rules['metric_agg_type'] in self.allowed_percent_aggregations:
-            query[self.metric_key][self.rules['metric_agg_type']]['percents'] = [self.rules['percentile_range']]
-        return query
+
 
     def add_aggregation_data(self, payload):
         """

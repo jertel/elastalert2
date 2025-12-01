@@ -1510,3 +1510,59 @@ def test_spike_percentiles():
     data2 = {timestamp2: payload2}
     rule.add_aggregation_data(data2)
     assert len(rule.matches) == 1
+
+
+@pytest.mark.parametrize(
+    ["metric_agg_script", "expected_percents"],
+    [
+        pytest.param("doc['my_field'].value * 2", 95, id="script"),
+        pytest.param({"script": "doc['my_field'].value * 2"}, 95, id="script_object"),
+        pytest.param({"script": "doc['my_field'].value * 2", "percents": [99]}, 99, id="script_object_with_percents"),
+    ]
+)
+def test_metric_aggregation_with_script_and_percentiles(metric_agg_script, expected_percents):
+    rules = {
+        'buffer_time': datetime.timedelta(minutes=5),
+        'timestamp_field': '@timestamp',
+        'metric_agg_type': 'percentiles',
+        'metric_agg_key': 'my_field',
+        'percentile_range': 95,
+        'metric_agg_script': metric_agg_script,
+        'min_threshold': 100
+    }
+
+    rule = MetricAggregationRule(rules)
+    query = rule.generate_aggregation_query()
+
+    agg_body = query['metric_my_field_percentiles']['percentiles']
+    assert agg_body['script'] == "doc['my_field'].value * 2"
+    assert agg_body['percents'] == [expected_percents]
+
+
+@pytest.mark.parametrize(
+    ["metric_agg_script", "expected_percents"],
+    [
+        pytest.param("doc['my_field'].value * 2", 99, id="script"),
+        pytest.param({"script": "doc['my_field'].value * 2"}, 99, id="script_object"),
+        pytest.param({"script": "doc['my_field'].value * 2", "percents": [95]}, 95, id="script_object_with_percents"),
+    ]
+)
+def test_spike_metric_aggregation_with_script_and_percentiles(metric_agg_script, expected_percents):
+    rules = {
+        'timeframe': datetime.timedelta(minutes=5),
+        'timestamp_field': '@timestamp',
+        'metric_agg_type': 'percentiles',
+        'metric_agg_key': 'my_field',
+        'percentile_range': 99,
+        'metric_agg_script': metric_agg_script,
+        'spike_height': 2,
+        'spike_type': 'up',
+        'threshold_ref': 10
+    }
+
+    rule = SpikeMetricAggregationRule(rules)
+    query = rule.generate_aggregation_query()
+
+    agg_body = query['metric_my_field_percentiles']['percentiles']
+    assert agg_body['script'] == "doc['my_field'].value * 2"
+    assert agg_body['percents'] == [expected_percents]
