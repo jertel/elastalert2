@@ -1597,7 +1597,12 @@ Optional:
 ``query_key``: Group metric calculations by this field. For each unique value of the ``query_key`` field, the metric will be calculated and
 evaluated separately against the threshold(s).
 
-``metric_agg_script``: A `Painless` formatted script describing how to calculate your metric on-the-fly::
+``metric_agg_script``: A `Painless` formatted script describing how to calculate your metric on-the-fly. This can be either a string or a dictionary::
+
+    metric_agg_key: myScriptedMetric
+    metric_agg_script: "doc['field1'].value * doc['field2'].value"
+
+Or::
 
     metric_agg_key: myScriptedMetric
     metric_agg_script:
