@@ -309,7 +309,7 @@ Alertmanager
 ~~~~~~~~~~~~
 
 This alert type will send alerts to Alertmanager postAlerts. ``alert_subject`` and ``alert_text`` are passed as the annotations labeled ``summary`` and ``description`` accordingly. The labels can be changed.
-See https://prometheus.io/docs/alerting/clients/ for more details about the Alertmanager alert format.
+See https://prometheus.io/docs/alerting/latest/alerts_api/ for more details about the Alertmanager alert format.
 
 Required:
 
@@ -966,10 +966,10 @@ Optional:
 
 ``gelf_timeout``: Custom timeout.
 
-Grafana OnCall
-~~~~~~~~~~~~~~
+Grafana IRM
+~~~~~~~~~~~~
 
-https://grafana.com/docs/oncall/latest/integrations/elastalert/
+https://grafana.com/docs/grafana-cloud/alerting-and-irm/irm/configure/integrations/integration-reference/oncall/elastalert/
 
 HTTP POST
 ~~~~~~~~~
