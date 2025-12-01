@@ -42,14 +42,15 @@ Currently, we have support built in for these alert types:
 - Flashduty
 - Gitter
 - GoogleChat
+- Grafana IRM
 - Graylog GELF
 - HTTP POST
 - HTTP POST 2
+- IRIS
 - Indexer
-- Iris
 - Jira
 - Lark
-- Line Notify
+- LINE Messaging API
 - Matrix Hookshot
 - Mattermost
 - Microsoft Teams
@@ -68,8 +69,9 @@ Currently, we have support built in for these alert types:
 - Tencent SMS
 - TheHive
 - Twilio
-- Webex Incoming Webhook
-- WorkWechat  
+- Webex Webhook
+- WorkWechat
+- YZJ
 - Zabbix
 
 Additional rule types and alerts can be easily imported or written. (See :ref:`Writing rule types <writingrules>` and :ref:`Writing alerts <writingalerts>`)
