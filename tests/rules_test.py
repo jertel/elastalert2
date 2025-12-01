@@ -1513,13 +1513,14 @@ def test_spike_percentiles():
 
 
 @pytest.mark.parametrize(
-    ["metric_agg_script"],
+    ["metric_agg_script", "expected_percents"],
     [
-        pytest.param("doc['my_field'].value * 2", id="script"),
-        pytest.param({"script": "doc['my_field'].value * 2"}, id="script_object"),
+        pytest.param("doc['my_field'].value * 2", 95, id="script"),
+        pytest.param({"script": "doc['my_field'].value * 2"}, 95, id="script_object"),
+        pytest.param({"script": "doc['my_field'].value * 2", "percents": [99]}, 99, id="script_object_with_percents"),
     ]
 )
-def test_metric_aggregation_with_script_and_percentiles(metric_agg_script):
+def test_metric_aggregation_with_script_and_percentiles(metric_agg_script, expected_percents):
     rules = {
         'buffer_time': datetime.timedelta(minutes=5),
         'timestamp_field': '@timestamp',
@@ -1535,17 +1536,18 @@ def test_metric_aggregation_with_script_and_percentiles(metric_agg_script):
 
     agg_body = query['metric_my_field_percentiles']['percentiles']
     assert agg_body['script'] == "doc['my_field'].value * 2"
-    assert agg_body['percents'] == [95]
+    assert agg_body['percents'] == [expected_percents]
 
 
 @pytest.mark.parametrize(
-    ["metric_agg_script"],
+    ["metric_agg_script", "expected_percents"],
     [
-        pytest.param("doc['my_field'].value * 2", id="script"),
-        pytest.param({"script": "doc['my_field'].value * 2"}, id="script_object"),
+        pytest.param("doc['my_field'].value * 2", 99, id="script"),
+        pytest.param({"script": "doc['my_field'].value * 2"}, 99, id="script_object"),
+        pytest.param({"script": "doc['my_field'].value * 2", "percents": [95]}, 95, id="script_object_with_percents"),
     ]
 )
-def test_spike_metric_aggregation_with_script_and_percentiles(metric_agg_script):
+def test_spike_metric_aggregation_with_script_and_percentiles(metric_agg_script, expected_percents):
     rules = {
         'timeframe': datetime.timedelta(minutes=5),
         'timestamp_field': '@timestamp',
@@ -1563,4 +1565,4 @@ def test_spike_metric_aggregation_with_script_and_percentiles(metric_agg_script)
 
     agg_body = query['metric_my_field_percentiles']['percentiles']
     assert agg_body['script'] == "doc['my_field'].value * 2"
-    assert agg_body['percents'] == [99]
+    assert agg_body['percents'] == [expected_percents]

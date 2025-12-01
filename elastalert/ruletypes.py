@@ -1043,7 +1043,8 @@ class BaseAggregationRule(RuleType):
         else:
             query = {self.metric_key: {self.rules['metric_agg_type']: {'field': self.rules['metric_agg_key']}}}
         if self.rules['metric_agg_type'] in self.allowed_percent_aggregations:
-            query[self.metric_key][self.rules['metric_agg_type']]['percents'] = [self.rules['percentile_range']]
+            if 'percents' not in query[self.metric_key][self.rules['metric_agg_type']]:
+                query[self.metric_key][self.rules['metric_agg_type']]['percents'] = [self.rules['percentile_range']]
         return query
 
     def add_aggregation_data(self, payload):
