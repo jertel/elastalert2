@@ -289,7 +289,7 @@ def test_pagerduty_alerter_v2_payload_custom_details():
         'pagerduty_v2_payload_group': 'app-stack',
         'pagerduty_v2_payload_severity': 'error',
         'pagerduty_v2_payload_source': 'mysql.host.name',
-        'pagerduty_v2_payload_custom_details': {'a': 'somefield', 'c': 'f'},
+        'pagerduty_v2_payload_custom_details': {'timestamp': '@timestamp', 'key-match': 'somefield', 'static': 'generic-string'},
         'alert': []
     }
     rules_loader = FileRulesLoader({})
@@ -311,8 +311,9 @@ def test_pagerduty_alerter_v2_payload_custom_details():
             'source': 'mysql.host.name',
             'summary': 'Test PD Rule',
             'custom_details': {
-                'a': 'foobarbaz',
-                'c': None,
+                'timestamp': '2017-01-01T00:00:00',
+                'key-match': 'foobarbaz',
+                'static': 'generic-string',
                 'information': 'Test PD Rule\n\n@timestamp: 2017-01-01T00:00:00\nsomefield: foobarbaz\n'
             },
             'timestamp': '2017-01-01T00:00:00'

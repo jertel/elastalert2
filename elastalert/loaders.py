@@ -11,7 +11,6 @@ import yaml.scanner
 from elastalert.alerters.flashduty import FlashdutyAlerter
 from jinja2 import Environment
 from jinja2 import FileSystemLoader
-from jinja2 import Template
 
 import elastalert.alerters.alerta
 import elastalert.alerters.chatwork
@@ -28,6 +27,7 @@ import elastalert.alerters.httppost
 import elastalert.alerters.httppost2
 import elastalert.alerters.iris
 import elastalert.alerters.lark
+import elastalert.alerters.line
 import elastalert.alerters.pagertree
 import elastalert.alerters.rocketchat
 import elastalert.alerters.servicenow
@@ -50,6 +50,7 @@ from elastalert.alerters.mattermost import MattermostAlerter
 from elastalert.alerters.opsgenie import OpsGenieAlerter
 from elastalert.alerters.pagerduty import PagerDutyAlerter
 from elastalert.alerters.slack import SlackAlerter
+from elastalert.alerters.smseagle import SMSEagleAlerter
 from elastalert.alerters.sns import SnsAlerter
 from elastalert.alerters.sqs import SqsAlerter
 from elastalert.alerters.teams import MsTeamsAlerter
@@ -137,6 +138,7 @@ class RulesLoader(object):
         'discord': elastalert.alerters.discord.DiscordAlerter,
         'dingtalk': elastalert.alerters.dingtalk.DingTalkAlerter,
         'lark': elastalert.alerters.lark.LarkAlerter,
+        'line': elastalert.alerters.line.LineMessageAPIAlerter,
         'webex_webhook': elastalert.alerters.webex_webhook.WebexWebhookAlerter,
         'workwechat': elastalert.alerters.workwechat.WorkWechatAlerter,
         'chatwork': elastalert.alerters.chatwork.ChatworkAlerter,
@@ -149,6 +151,7 @@ class RulesLoader(object):
         'matrixhookshot': MatrixHookshotAlerter,
         'yzj': YzjAlerter,
         'flashduty': FlashdutyAlerter,
+        'smseagle': SMSEagleAlerter
     }
 
     # A partial ordering of alert types. Relative order will be preserved in the resulting alerts list
@@ -161,6 +164,7 @@ class RulesLoader(object):
     base_config = {}
 
     jinja_environment = Environment(loader=FileSystemLoader(""))
+    jinja_filters = []
 
     def __init__(self, conf):
         self.rule_schema = load_rule_schema()
@@ -479,13 +483,38 @@ class RulesLoader(object):
 
         self.load_jinja_template(rule)
 
+    def load_jinja_filters(self, filters = []):
+        """ Load custom Jinja2 filters into the Environment
+        :param list filters: List of filter paths to load, format should be path to a module, ie 'jinja2.filters.MyFilterClass'
+        """
+        for module_path in filters:
+   
+            filter_class = get_module(module_path)
+            for method in dir(filter_class):
+                if not method.startswith('filter_'):
+                    continue
+                filter_func = getattr(filter_class, method)
+                filter_name = method.removeprefix('filter_')
+
+                # Skip if filter already loaded
+                if filter_name in self.jinja_filters:
+                    continue
+
+                self.jinja_environment.filters[filter_name] = filter_func
+                self.jinja_filters.append(filter_name)
+                elastalert_logger.debug('Loaded custom Jinja2 filter: %s.%s', module_path, filter_name)
+
     def load_jinja_template(self, rule):
         if rule.get('alert_text_type') == 'alert_text_jinja':
             jinja_template_path = rule.get('jinja_template_path')
+
+            if rule.get('jinja_filters'):
+                self.load_jinja_filters(rule.get('jinja_filters'))
+
             if jinja_template_path:
                 rule["jinja_template"] = self.jinja_environment.get_or_select_template(jinja_template_path)
             else:
-                rule["jinja_template"] = Template(str(rule.get('alert_text', '')))
+                rule["jinja_template"] = self.jinja_environment.from_string(str(rule.get('alert_text', '')))
 
     def load_modules(self, rule, args=None):
         """ Loads things that could be modules. Enhancements, alerts and rule type. """

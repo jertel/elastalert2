@@ -1256,6 +1256,31 @@ def test_metric_aggregation_complex_query_key():
     assert rule.matches[1]['sub_qk'] == 'sub_qk_val2'
 
 
+def test_percentiles_metric_aggregation_complex_query_key():
+    rules = {'buffer_time': datetime.timedelta(minutes=5),
+             'timestamp_field': '@timestamp',
+             'metric_agg_type': 'percentiles',
+             'percentile_range': 95,
+             'metric_agg_key': 'cpu_pct',
+             'compound_query_key': ['qk', 'sub_qk'],
+             'query_key': 'qk,sub_qk',
+             'max_threshold': 0.90}
+
+    query = {"bucket_aggs": {"buckets": [
+        {"metric_cpu_pct_percentiles": {"values": {"95.0": 0.91}}, "key": "sub_qk_val1"},
+        {"metric_cpu_pct_percentiles": {"values": {"95.0": 0.95}}, "key": "sub_qk_val2"},
+        {"metric_cpu_pct_percentiles": {"values": {"95.0": 0.89}}, "key": "sub_qk_val3"}]
+     }, "key": "qk_val"}
+
+    rule = MetricAggregationRule(rules)
+    rule.check_matches(datetime.datetime.now(), 'qk_val', query)
+    assert len(rule.matches) == 2
+    assert rule.matches[0]['qk'] == 'qk_val'
+    assert rule.matches[1]['qk'] == 'qk_val'
+    assert rule.matches[0]['sub_qk'] == 'sub_qk_val1'
+    assert rule.matches[1]['sub_qk'] == 'sub_qk_val2'
+
+
 def test_metric_aggregation_complex_query_key_formatted():
     rules = {'buffer_time': datetime.timedelta(minutes=5),
              'timestamp_field': '@timestamp',
@@ -1485,3 +1510,59 @@ def test_spike_percentiles():
     data2 = {timestamp2: payload2}
     rule.add_aggregation_data(data2)
     assert len(rule.matches) == 1
+
+
+@pytest.mark.parametrize(
+    ["metric_agg_script", "expected_percents"],
+    [
+        pytest.param("doc['my_field'].value * 2", 95, id="script"),
+        pytest.param({"script": "doc['my_field'].value * 2"}, 95, id="script_object"),
+        pytest.param({"script": "doc['my_field'].value * 2", "percents": [99]}, 99, id="script_object_with_percents"),
+    ]
+)
+def test_metric_aggregation_with_script_and_percentiles(metric_agg_script, expected_percents):
+    rules = {
+        'buffer_time': datetime.timedelta(minutes=5),
+        'timestamp_field': '@timestamp',
+        'metric_agg_type': 'percentiles',
+        'metric_agg_key': 'my_field',
+        'percentile_range': 95,
+        'metric_agg_script': metric_agg_script,
+        'min_threshold': 100
+    }
+
+    rule = MetricAggregationRule(rules)
+    query = rule.generate_aggregation_query()
+
+    agg_body = query['metric_my_field_percentiles']['percentiles']
+    assert agg_body['script'] == "doc['my_field'].value * 2"
+    assert agg_body['percents'] == [expected_percents]
+
+
+@pytest.mark.parametrize(
+    ["metric_agg_script", "expected_percents"],
+    [
+        pytest.param("doc['my_field'].value * 2", 99, id="script"),
+        pytest.param({"script": "doc['my_field'].value * 2"}, 99, id="script_object"),
+        pytest.param({"script": "doc['my_field'].value * 2", "percents": [95]}, 95, id="script_object_with_percents"),
+    ]
+)
+def test_spike_metric_aggregation_with_script_and_percentiles(metric_agg_script, expected_percents):
+    rules = {
+        'timeframe': datetime.timedelta(minutes=5),
+        'timestamp_field': '@timestamp',
+        'metric_agg_type': 'percentiles',
+        'metric_agg_key': 'my_field',
+        'percentile_range': 99,
+        'metric_agg_script': metric_agg_script,
+        'spike_height': 2,
+        'spike_type': 'up',
+        'threshold_ref': 10
+    }
+
+    rule = SpikeMetricAggregationRule(rules)
+    query = rule.generate_aggregation_query()
+
+    agg_body = query['metric_my_field_percentiles']['percentiles']
+    assert agg_body['script'] == "doc['my_field'].value * 2"
+    assert agg_body['percents'] == [expected_percents]

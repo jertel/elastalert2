@@ -26,14 +26,15 @@ def test_zabbix_basic(caplog):
         '@timestamp': '2021-01-01T00:00:00Z',
         'somefield': 'foobarbaz'
     }
-    with mock.patch('pyzabbix.ZabbixSender.send') as mock_zbx_send:
+    with mock.patch('zabbix_utils.Sender.send') as mock_zbx_send:
         alert.alert([match])
 
         zabbix_metrics = {
             "host": "example.com",
             "key": "example-key",
             "value": "1",
-            "clock": 1609459200
+            "clock": 1609459200,
+            "ns": None
         }
         alerter_args = mock_zbx_send.call_args.args
         assert vars(alerter_args[0][0]) == zabbix_metrics
@@ -71,7 +72,7 @@ def test_zabbix_enhanced(caplog, zbx_host_from_field, zbx_host, zbx_key, log_mes
         'somefield': 'foobarbaz',
         'hostname': 'example.com'
     }
-    with mock.patch('pyzabbix.ZabbixSender.send') as mock_zbx_send:
+    with mock.patch('zabbix_utils.Sender.send') as mock_zbx_send:
         alert.alert([match])
 
         hosts = {
@@ -85,7 +86,8 @@ def test_zabbix_enhanced(caplog, zbx_host_from_field, zbx_host, zbx_key, log_mes
             'host': hosts[(zbx_host_from_field, zbx_host)],
             'key': 'example-key',
             'value': '1',
-            'clock': 1609459200
+            'clock': 1609459200,
+            'ns': None
         }
         alerter_args = mock_zbx_send.call_args.args
         assert vars(alerter_args[0][0]) == zabbix_metrics

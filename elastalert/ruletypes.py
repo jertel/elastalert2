@@ -1030,8 +1030,22 @@ class BaseAggregationRule(RuleType):
                 if total_seconds(self.rules['buffer_time']) % total_seconds(self.rules['bucket_interval_timedelta']) != 0:
                     raise EAException("Buffer_time must be evenly divisible by bucket_interval if specified")
 
+    allowed_percent_aggregations = frozenset(['percentiles'])
+
     def generate_aggregation_query(self):
-        raise NotImplementedError()
+        if self.rules.get('metric_agg_script'):
+            agg_data = self.rules['metric_agg_script']
+            if isinstance(agg_data, dict):
+                agg_data = agg_data.copy()
+            else:
+                agg_data = {'script': agg_data}
+            query = {self.metric_key: {self.rules['metric_agg_type']: agg_data}}
+        else:
+            query = {self.metric_key: {self.rules['metric_agg_type']: {'field': self.rules['metric_agg_key']}}}
+        if self.rules['metric_agg_type'] in self.allowed_percent_aggregations:
+            if 'percents' not in query[self.metric_key][self.rules['metric_agg_type']]:
+                query[self.metric_key][self.rules['metric_agg_type']]['percents'] = [self.rules['percentile_range']]
+        return query
 
     def add_aggregation_data(self, payload):
         for timestamp, payload_data in payload.items():
@@ -1072,8 +1086,9 @@ class MetricAggregationRule(BaseAggregationRule):
 
         self.metric_key = 'metric_' + self.rules['metric_agg_key'] + '_' + self.rules['metric_agg_type']
 
-        if not self.rules['metric_agg_type'] in self.allowed_aggregations.union(self.allowed_percent_aggregations):
-            raise EAException("metric_agg_type must be one of %s" % (str(self.allowed_aggregations)))
+        all_allowed_aggregations = self.allowed_aggregations.union(self.allowed_percent_aggregations)
+        if not self.rules['metric_agg_type'] in all_allowed_aggregations:
+            raise EAException("metric_agg_type must be one of %s" % (str(all_allowed_aggregations)))
         if self.rules['metric_agg_type'] in self.allowed_percent_aggregations and self.rules['percentile_range'] is None:
             raise EAException("percentile_range must be specified for percentiles aggregation")
 
@@ -1090,13 +1105,7 @@ class MetricAggregationRule(BaseAggregationRule):
         )
         return message
 
-    def generate_aggregation_query(self):
-        if self.rules.get('metric_agg_script'):
-            return {self.metric_key: {self.rules['metric_agg_type']: self.rules['metric_agg_script']}}
-        query = {self.metric_key: {self.rules['metric_agg_type']: {'field': self.rules['metric_agg_key']}}}
-        if self.rules['metric_agg_type'] in self.allowed_percent_aggregations:
-            query[self.metric_key][self.rules['metric_agg_type']]['percents'] = [self.rules['percentile_range']]
-        return query
+
 
     def check_matches(self, timestamp, query_key, aggregation_data):
         if "compound_query_key" in self.rules:
@@ -1137,7 +1146,10 @@ class MetricAggregationRule(BaseAggregationRule):
             if 'interval_aggs' in aggregation_data:
                 metric_val_arr = [term[self.metric_key]['value'] for term in aggregation_data['interval_aggs']['buckets']]
             else:
-                metric_val_arr = [aggregation_data[self.metric_key]['value']]
+                if self.rules['metric_agg_type'] in self.allowed_percent_aggregations:
+                    metric_val_arr = list(aggregation_data[self.metric_key]['values'].values())
+                else:
+                    metric_val_arr = [aggregation_data[self.metric_key]['value']]
             for metric_val in metric_val_arr:
                 if self.crossed_thresholds(metric_val):
                     match_data[self.rules['timestamp_field']] = timestamp
@@ -1186,14 +1198,7 @@ class SpikeMetricAggregationRule(BaseAggregationRule, SpikeRule):
 
         self.rules['aggregation_query_element'] = self.generate_aggregation_query()
 
-    def generate_aggregation_query(self):
-        """Lifted from MetricAggregationRule"""
-        if self.rules.get('metric_agg_script'):
-            return {self.metric_key: {self.rules['metric_agg_type']: self.rules['metric_agg_script']}}
-        query = {self.metric_key: {self.rules['metric_agg_type']: {'field': self.rules['metric_agg_key']}}}
-        if self.rules['metric_agg_type'] in self.allowed_percent_aggregations:
-            query[self.metric_key][self.rules['metric_agg_type']]['percents'] = [self.rules['percentile_range']]
-        return query
+
 
     def add_aggregation_data(self, payload):
         """

@@ -564,6 +564,11 @@ def parse_hosts(host, port=9200):
 
 
 def get_version_from_cluster_info(client):
+    override_version = os.environ.get('ES_VERSION', None)
+    if override_version:
+        elastalert_logger.info('Using ES_VERSION environment variable: %s' % override_version)
+        return override_version
+
     esversion = None
     for retry in range(3):
         try:

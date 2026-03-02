@@ -136,8 +136,12 @@ def create_kibana_auth(kibana_url, rule) -> AuthBase:
 
 def is_kibana_atleastsevensixteen(version: str):
     """
-    Returns True when the Kibana server version >= 7.16
+    Returns True when the Kibana server version >= 7.16 or is unspecified
     """
+    version = version.strip() if version else '0.0'
+    if not version or version == '0.0':
+        return True
+
     major, minor = list(map(int, version.split(".")[:2]))
     return major > 7 or (major == 7 and minor >= 16)
 

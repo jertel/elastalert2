@@ -14,10 +14,6 @@ from .util import ts_add
 
 opensearch_default_timedelta = datetime.timedelta(minutes=10)
 
-opensearch_versions = frozenset([
-        '2.11'
-        ])
-
 def generate_opensearch_discover_url(rule, match):
     ''' Creates a link for a opensearch discover app. '''
 
@@ -25,15 +21,6 @@ def generate_opensearch_discover_url(rule, match):
     if not discover_app_url:
         elastalert_logger.warning(
             'Missing opensearch_discover_app_url for rule %s' % (
-                rule.get('name', '<MISSING NAME>')
-            )
-        )
-        return None
-
-    opensearch_version = rule.get('opensearch_discover_version')
-    if not opensearch_version:
-        elastalert_logger.warning(
-            'Missing opensearch_discover_version for rule %s' % (
                 rule.get('name', '<MISSING NAME>')
             )
         )
@@ -63,19 +50,9 @@ def generate_opensearch_discover_url(rule, match):
     to_timedelta = rule.get('opensearch_discover_to_timedelta', timeframe)
     to_time = ts_add(timestamp, to_timedelta)
 
-    if opensearch_version in opensearch_versions:
-        globalState = opensearch_disover_global_state(from_time, to_time)
-        appState = opensearch_discover_app_state(index, columns, filters, query_keys, match)
-        appFilter = opensearch_discover_app_filter(index, columns, filters, query_keys, match)
-
-    else:
-        elastalert_logger.warning(
-            'Unknown opensearch discover application version %s for rule %s' % (
-                opensearch_version,
-                rule.get('name', '<MISSING NAME>')
-            )
-        )
-        return None
+    globalState = opensearch_disover_global_state(from_time, to_time)
+    appState = opensearch_discover_app_state(index, columns, filters, query_keys, match)
+    appFilter = opensearch_discover_app_filter(index, columns, filters, query_keys, match)
 
     urlqueryOriginal = "%s?_g=%s&_a=%s&_q=%s" % (
         os.path.expandvars(discover_app_url),

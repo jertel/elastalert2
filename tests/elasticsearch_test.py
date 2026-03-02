@@ -87,6 +87,9 @@ class TestElasticsearch(object):
         ea.silence_cache = {}
         # Now lets check if our rule is reported as silenced
         assert ea.is_silenced(ea.rules[0]['name'])
+        # Check if check_cache_only works
+        ea.silence_cache = {}
+        assert not ea.is_silenced(ea.rules[0]['name'], check_cache_only=True)
 
     @pytest.mark.usefixtures("ea")
     def test_get_hits(self, ea, es_client):  # noqa: F811

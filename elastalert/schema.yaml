@@ -184,6 +184,7 @@ oneOf:
       threshold_cur: {type: number}
       min_doc_count: {type: integer}
       percentile_range: {type: integer}
+      metric_agg_script: {type: [string, object]}
 
   - title: Flatline
     required: [threshold, timeframe]
@@ -231,6 +232,7 @@ oneOf:
       bucket_interval: *timeframe
       sync_bucket_interval: {type: boolean}
       metric_format_string: {type: string}
+      metric_agg_script: {type: [string, object]}
 
   - title: Percentage Match
     required: [match_bucket_filter]
@@ -307,6 +309,7 @@ properties:
   use_local_time: {type: boolean}
   custom_pretty_ts_format: {type: string}
   match_enhancements: {type: array, items: {type: string}}
+  jinja_filters: {type: array, items: {type: string}}
   query_key: *arrayOfString
   replace_dots_in_field_names: {type: boolean}
   scan_entire_timeframe: {type: boolean}
@@ -326,7 +329,7 @@ properties:
   generate_kibana_discover_url: {type: boolean}
   shorten_kibana_discover_url: {type: boolean}
   kibana_discover_app_url: {type: string}
-  kibana_discover_version: {type: string, enum: ['8.17','8.16','8.15','8.14','8.13','8.12','8.11', '8.10', '8.9', '8.8', '8.7', '8.6', '8.5', '8.4', '8.3', '8.2', '8.1', '8.0', '7.17', '7.16', '7.15', '7.14', '7.13', '7.12', '7.11', '7.10', '7.9', '7.8', '7.7', '7.6', '7.5', '7.4', '7.3', '7.2', '7.1', '7.0']}
+  kibana_discover_version: {type: string}
   kibana_discover_index_pattern_id: {type: string, minLength: 1}
   kibana_discover_columns: {type: array, items: {type: string, minLength: 1}, minItems: 1}
   kibana_discover_from_timedelta: *timedelta
@@ -337,7 +340,7 @@ properties:
   generate_opensearch_discover_url: {type: boolean}
   opensearch_url: {type: string, format: uri}
   opensearch_discover_app_url: {type: string}
-  opensearch_discover_version: {type: string, enum: ['2.11']}
+  opensearch_discover_version: {type: string}
   opensearch_discover_index_pattern_id: {type: string, minLength: 1}
   opensearch_discover_columns: {type: array, items: {type: string, minLength: 1}, minItems: 1}
   opensearch_discover_from_timedelta: *timedelta
@@ -666,6 +669,10 @@ properties:
   lark_bot_id: { type: string }
   lark_msgtype: { type: string, enum: [ 'text' ] }
 
+  ### LINE Messaging API
+  line_channel_access_token: {type: string}
+  line_to: {type: string}
+
   ### Matrix Hookshot
   matrixhookshot_ca_certs: {type: [boolean, string]}
   matrixhookshot_webhook_url: *arrayOfString
@@ -825,6 +832,7 @@ properties:
   servicenow_proxy: {type: string}
   servicenow_impact: {type: integer, minimum: 1, maximum: 3}
   servicenow_urgency: {type: integer, minimum: 1, maximum: 3}
+  service_now_additional_fields: {type: object}
 
   ### Slack
   slack_webhook_url: *arrayOfString
@@ -859,6 +867,17 @@ properties:
   slack_author_link: {type: string}
   slack_author_icon: {type: string}
   slack_msg_pretext: {type: string}
+  
+  ### SMSEagle
+  smseagle_url: {type: string}
+  smseagle_token: {type: string}
+  smseagle_message_type: {enum: ['sms', 'ring', 'tts', 'tts_adv']}
+  smseagle_text: {type: string}
+  smseagle_to: *arrayOfString
+  smseagle_contacts: {type: array, items: {type: integer}}
+  smseagle_groups: {type: array, items: {type: integer}}
+  smseagle_duration: {type: integer}
+  smseagle_voice_id: {type: integer}
 
   ### Splunk On-Call (Formerly VictorOps)
   victorops_api_key: {type: string}
