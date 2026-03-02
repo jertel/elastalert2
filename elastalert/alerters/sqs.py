@@ -25,17 +25,17 @@ class SqsAlerter(Alerter):
             "matches": matches,
         }
         alert_text = self.create_alert_body(matches)
-        # SQS message body limit is 256000 KB, set to 128KB to be safe
+        # SQS message body limit is 256 KB; crop text at 128 KB to be safe
         if len(alert_text) > 128000:
             alert_text = alert_text[:128000]
             alert_text += "\n*message was cropped according to SQS limits!*"
         alert_data["text"] = alert_text
-        body = json.dumps(alert_data)  # Convert the alert data to JSON
+        body = json.dumps(alert_data, default=str)
 
         # If the body is still too long, remove the text field
         if len(body) > 256000:
             alert_data["text"] = "Text message omitted due to SQS size limit."
-            body = json.dumps(alert_data)
+            body = json.dumps(alert_data, default=str)
         try:
             if self.profile is None:
                 session = boto3.Session(
