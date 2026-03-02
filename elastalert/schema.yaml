@@ -442,6 +442,13 @@ properties:
   sns_aws_region: {type: string}
   sns_aws_profile: {type: string}
 
+  ### AWS SQS
+  sqs_queue_url: {type: string}
+  sqs_aws_access_key_id: {type: string}
+  sqs_aws_secret_access_key: {type: string}
+  sqs_aws_region: {type: string}
+  sqs_aws_profile: {type: string}
+
   ### Chatwork
   chatwork_apikey: {type: string}
   chatwork_room_id: {type: string}
