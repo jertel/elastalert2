@@ -4,7 +4,7 @@
 - None
 
 ## New features
-- None
+- Add AWS SQS alerter for sending alerts to Amazon Simple Queue Service queues - @AnthraX1
 
 ## Other changes
 - None

@@ -85,22 +85,23 @@ def test_sqs_message_size_limit():
         "@timestamp": "2021-01-10T00:00:00",
         "sender_ip": "1.1.1.1",
         "hostname": "aProbe",
-        "large_field": "x" * 200000,  # Create a field larger than the 128KB limit
+        "large_field": "x" * 200000,  # Create a field contributing to a large body
     }
 
     rules_loader = FileRulesLoader({})
     rules_loader.load_modules(rule)
     alert = SqsAlerter(rule)
 
-    # Mock the create_alert_body method to return a large string
+    # Mock the create_alert_body method to return a large string that exceeds
+    # the 800 KB truncation threshold so we hit the truncation path.
     original_method = alert.create_alert_body
-    alert.create_alert_body = lambda matches: "x" * 150000
+    alert.create_alert_body = lambda matches: "x" * 900000
 
     # Mock boto3 session and SQS client to avoid actual AWS calls
     class MockSQSClient:
         def send_message(self, QueueUrl, MessageBody):
             # Verify message body contains truncation message
-            assert len(MessageBody) <= 256000
+            assert len(MessageBody) <= 1048576
             assert (
                 "message was cropped according to SQS limits" in MessageBody
                 or "Text message omitted due to SQS size limit" in MessageBody
@@ -148,7 +149,7 @@ def test_sqs_aws_profile():
     rules_loader.load_modules(rule)
     alert = SqsAlerter(rule)
 
-    # Mock boto3 session to verify profile is used
+    # Mock boto3 session to verify profile and region are used
     session_args = {}
 
     class MockSession:
@@ -173,5 +174,51 @@ def test_sqs_aws_profile():
         alert.alert([match])
         assert "profile_name" in session_args
         assert session_args["profile_name"] == "test-profile"
+        # Region should be inferred from the queue URL (us-east-1)
+        assert "region_name" in session_args
+        assert session_args["region_name"] == "us-east-1"
+    finally:
+        boto3.Session = original_session
+
+
+def test_sqs_region_inferred_from_url_when_not_set():
+    # If sqs_aws_region is not provided, the region should be inferred from
+    # the SQS queue URL host.
+    rule = {
+        "name": "Test Rule",
+        "type": "any",
+        "sqs_queue_url": "https://sqs.eu-west-1.amazonaws.com/123456789012/my-queue",
+        "sqs_aws_profile": "test-profile",
+        "alert": [],
+    }
+
+    rules_loader = FileRulesLoader({})
+    rules_loader.load_modules(rule)
+    alert = SqsAlerter(rule)
+
+    session_args = {}
+
+    class MockSession:
+        def __init__(self, **kwargs):
+            nonlocal session_args
+            session_args = kwargs
+
+        def client(self, service_name):
+            class MockClient:
+                def send_message(self, QueueUrl, MessageBody):
+                    return {}
+
+            return MockClient()
+
+    import boto3
+
+    original_session = boto3.Session
+    boto3.Session = MockSession
+
+    try:
+        match = {"@timestamp": "2021-01-10T00:00:00"}
+        alert.alert([match])
+        assert session_args.get("profile_name") == "test-profile"
+        assert session_args.get("region_name") == "eu-west-1"
     finally:
         boto3.Session = original_session

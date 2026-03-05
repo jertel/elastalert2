@@ -544,6 +544,47 @@ Example When to use aws_profile usage::
     sns_topic_arn: 'arn:aws:sns:us-east-1:123456789:somesnstopic'
     sns_aws_profile: 'default'
 
+AWS SQS (Amazon Simple Queue Service)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The AWS SQS alerter will send an alert message to an AWS SQS queue as a JSON object containing the rule name, matches, and alert text.
+The AWS SQS alerter uses boto3 and can use credentials in the rule yaml, in a standard AWS credential and config files, or
+via environment variables. See http://docs.aws.amazon.com/cli/latest/userguide/cli-chap-getting-started.html for details.
+
+Messages that exceed the SQS 1 MB size limit will be automatically truncated.
+
+If ``sqs_aws_region`` is not set in the rule, the region will be automatically inferred from the SQS queue URL (for example, ``https://sqs.eu-west-1.amazonaws.com/...`` will use ``eu-west-1``).
+
+AWS SQS requires one option:
+
+``sqs_queue_url``: The URL of the SQS queue. For example, ``https://sqs.us-east-1.amazonaws.com/123456789012/my-queue``
+
+Optional:
+
+``sqs_aws_access_key_id``: An access key to connect to SQS with.
+
+``sqs_aws_secret_access_key``: The secret key associated with the access key.
+
+``sqs_aws_region``: The AWS region in which the SQS resource is located. Default is us-east-1
+
+``sqs_aws_profile``: The AWS profile to use. If none specified, the default will be used.
+
+Example when not using aws_profile::
+
+    alert:
+      - sqs
+    sqs_queue_url: 'https://sqs.us-east-1.amazonaws.com/123456789012/my-queue'
+    sqs_aws_access_key_id: 'XXXXXXXXXXXXXXXXXX'
+    sqs_aws_secret_access_key: 'YYYYYYYYYYYYYYYYYYYY'
+    sqs_aws_region: 'us-east-1'
+
+Example when using aws_profile::
+
+    alert:
+      - sqs
+    sqs_queue_url: 'https://sqs.us-east-1.amazonaws.com/123456789012/my-queue'
+    sqs_aws_profile: 'default'
+
 Chatwork
 ~~~~~~~~
 
