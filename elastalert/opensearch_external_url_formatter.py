@@ -1,13 +1,4 @@
-import boto3
-import os
-from urllib.parse import parse_qsl, urlencode, urljoin, urlparse, urlsplit, urlunsplit
-
-import requests
-from requests import RequestException
-from requests.auth import AuthBase, HTTPBasicAuth
-
-from elastalert.auth import RefeshableAWSRequestsAuth
-from elastalert.util import EAException
+from urllib.parse import urljoin
 
 class OpensearchExternalUrlFormatter:
     '''Interface for formatting external Opensearch urls'''

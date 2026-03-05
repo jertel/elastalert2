@@ -11,6 +11,7 @@ from elastalert.kibana_external_url_formatter import ShortKibanaExternalUrlForma
 from elastalert.kibana_external_url_formatter import append_security_tenant
 from elastalert.kibana_external_url_formatter import create_kibana_auth
 from elastalert.kibana_external_url_formatter import create_kibana_external_url_formatter
+from elastalert.kibana_external_url_formatter import is_kibana_atleastsevensixteen
 
 from elastalert.auth import RefeshableAWSRequestsAuth
 from elastalert.util import EAException
@@ -390,7 +391,7 @@ def test_create_kibana_external_url_formatter_with_shortening():
     assert formatter.auth == HTTPBasicAuth('john', 'doe')
     assert formatter.security_tenant == 'foo'
     assert formatter.goto_url == 'http://kibana.test.org/goto/'
-    assert formatter.shorten_url == 'http://kibana.test.org/api/shorten_url?security_tenant=foo'
+    assert formatter.shorten_url == 'http://kibana.test.org/api/short_url?security_tenant=foo'
 
 
 @pytest.mark.parametrize("test_case", [
@@ -498,3 +499,13 @@ def test_kibana_external_url_formatter_not_implemented():
     formatter = KibanaExternalUrlFormatter()
     with pytest.raises(NotImplementedError):
         formatter.format('test')
+
+
+def test_is_kibana_atleastsevensixteen():
+    assert is_kibana_atleastsevensixteen('7.16.0') is True
+    assert is_kibana_atleastsevensixteen('7.15.9') is False
+    assert is_kibana_atleastsevensixteen('8.0.0') is True
+    assert is_kibana_atleastsevensixteen('6.8.0') is False
+    assert is_kibana_atleastsevensixteen('') is True
+    assert is_kibana_atleastsevensixteen(None) is True
+    assert is_kibana_atleastsevensixteen('0.0') is True

@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from pyzabbix import ZabbixSender, ZabbixMetric, ZabbixAPI
+from zabbix_utils import Sender, ItemValue, ZabbixAPI
 
 from elastalert.alerts import Alerter
 from elastalert.util import elastalert_logger, lookup_es_key, EAException
@@ -23,20 +23,20 @@ class ZabbixClient(ZabbixAPI):
                                            password=password)
 
     def send_metric(self, hostname, key, data):
-        zm = ZabbixMetric(hostname, key, data)
+        zm = ItemValue(hostname, key, data)
         if self.send_aggregated_metrics:
             self.aggregated_metrics.append(zm)
             if len(self.aggregated_metrics) > self.metrics_chunk_size:
                 elastalert_logger.info("Sending: %s metrics" % (len(self.aggregated_metrics)))
                 try:
-                    ZabbixSender(zabbix_server=self.sender_host, zabbix_port=self.sender_port) \
+                    Sender(server=self.sender_host, port=self.sender_port) \
                         .send(self.aggregated_metrics)
                     self.aggregated_metrics = []
                 except Exception as e:
                     elastalert_logger.exception(e)
         else:
             try:
-                ZabbixSender(zabbix_server=self.sender_host, zabbix_port=self.sender_port).send([zm])
+                Sender(server=self.sender_host, port=self.sender_port).send([zm])
             except Exception as e:
                 elastalert_logger.exception(e)
 
@@ -81,10 +81,10 @@ class ZabbixAlerter(Alerter):
                 zbx_host = lookup_es_key(match, self.rule["zbx_host"])
             else:
                 zbx_host = self.zbx_host
-            zm.append(ZabbixMetric(host=zbx_host, key=self.zbx_key, value='1', clock=ts_epoch))
+            zm.append(ItemValue(host=zbx_host, key=self.zbx_key, value='1', clock=ts_epoch))
 
         try:
-            response = ZabbixSender(zabbix_server=self.zbx_sender_host, zabbix_port=self.zbx_sender_port).send(zm)
+            response = Sender(server=self.zbx_sender_host, port=self.zbx_sender_port).send(zm)
             if response.failed:
                 if self.zbx_host_from_field and not zbx_host:
                     elastalert_logger.warning("Missing term '%s' or host's item '%s', alert will be discarded"

@@ -35,6 +35,7 @@ or
       - iris
       - jira
       - lark
+      - line
       - matrixhookshot
       - mattermost
       - ms_teams
@@ -48,6 +49,7 @@ or
       - servicenow
       - ses
       - slack
+      - smseagle
       - sns
       - stomp
       - telegram
@@ -307,7 +309,7 @@ Alertmanager
 ~~~~~~~~~~~~
 
 This alert type will send alerts to Alertmanager postAlerts. ``alert_subject`` and ``alert_text`` are passed as the annotations labeled ``summary`` and ``description`` accordingly. The labels can be changed.
-See https://prometheus.io/docs/alerting/clients/ for more details about the Alertmanager alert format.
+See https://prometheus.io/docs/alerting/latest/alerts_api/ for more details about the Alertmanager alert format.
 
 Required:
 
@@ -1005,10 +1007,10 @@ Optional:
 
 ``gelf_timeout``: Custom timeout.
 
-Grafana OnCall
-~~~~~~~~~~~~~~
+Grafana IRM
+~~~~~~~~~~~~
 
-https://grafana.com/docs/oncall/latest/integrations/elastalert/
+https://grafana.com/docs/grafana-cloud/alerting-and-irm/irm/configure/integrations/integration-reference/oncall/elastalert/
 
 HTTP POST
 ~~~~~~~~~
@@ -1417,6 +1419,12 @@ Example usage::
 ``jira_bump_after_inactivity``: If this is set, ElastAlert 2 will only comment on tickets that have been inactive for at least this many days.
 It only applies if ``jira_bump_tickets`` is true. Default is 0 days.
 
+.. note:: 
+   **API Migration Notice**: Starting May 1, 2025, Atlassian deprecated the legacy JQL search endpoints. ElastAlert 2 
+   now uses the Jira client's ``enhanced_search_issues`` method for bumping logic, which automatically uses the new 
+   Jira API endpoints internally. This change is transparent for users with compatible Jira library versions (3.10.5+). 
+   No configuration changes required.
+
 Arbitrary Jira fields:
 
 ElastAlert 2 supports setting any arbitrary Jira field that your Jira issue supports. For example, if you had a custom field, called "Affected User", you can set it by providing that field name in ``snake_case`` prefixed with ``jira_``.  These fields can contain primitive strings or arrays of strings. Note that when you create a custom field in your Jira server, internally, the field is represented as ``customfield_1111``. In ElastAlert 2, you may refer to either the public facing name OR the internal representation.
@@ -1457,6 +1465,24 @@ Example usage::
       - "lark"
     lark_bot_id: "your lark bot id"
     lark_msgtype: "text"
+
+LINE Messaging API
+~~~~~~~~~~~~~~~~~~
+
+LINE Messaging API will send notification to a Line application. The body of the notification is formatted the same as with other alerters.
+
+Required:
+
+``line_channel_access_token``: channel access token
+
+``line_to``: user id
+
+Example usage::
+
+    alert:
+      - "line"
+    line_channel_access_token: "Your channel access token"
+    line_to: "Your user id"
 
 Matrix Hookshot
 ~~~~~~~~~~~~~~~
@@ -1936,7 +1962,7 @@ See https://developer.pagerduty.com/api-reference/b3A6Mjc0ODI2Nw-send-an-event-t
 
 ``pagerduty_v2_payload_source_args``: If set, and ``pagerduty_v2_payload_source`` is a formattable string, ElastAlert 2 will format the source based on the provided array of fields from the rule or match.
 
-``pagerduty_v2_payload_custom_details``: List of keys:values to use as the content of the custom_details payload. Example - ip:clientip will map the value from the clientip index of Elasticsearch to JSON key named ip.
+``pagerduty_v2_payload_custom_details``: List of keys:values to use as the content of the custom_details payload. For each key:value, it first attempts to map the provided value by checking if it exists as a key in an elastalert match. If a match is found, it assigns the corresponding value from the elastalert match. If no match is found, it then defaults to using the original provided value directly.
 
 ``pagerduty_v2_payload_include_all_info``: If True, this will include the entire Elasticsearch document as a custom detail field called "information" in the PagerDuty alert.
 
@@ -2075,7 +2101,7 @@ For more details, you can refer the `Squadcast documentation <https://support.sq
 ServiceNow
 ~~~~~~~~~~
 
-The ServiceNow alerter will create a ne Incident in ServiceNow. The body of the notification is formatted the same as with other alerters.
+The ServiceNow alerter will create a new Incident in ServiceNow. The body of the notification is formatted the same as with other alerters.
 
 The alerter requires the following options:
 
@@ -2123,7 +2149,17 @@ Example usage::
     cmdb_ci: "xxxxxx"
     caller_id: "xxxxxx"
     servicenow_impact: 1
-    servicenow_urgenc: 3
+    servicenow_urgency: 3
+
+Arbitrary ServiceNow fields:
+
+ElastAlert 2 supports setting any arbitrary ServiceNow field that your ServiceNow instance supports. Additional fields must be specified in a `service_now_additional_fields` stanza. For example, if you had a custom field, called "Affected User", you can set it by providing that field name and value. The field needs to be specified using the Column Name not the Display Name. Custom fields in ServiceNow usually have the prefix ``u_`` to distinguish them from out of the box fields. 
+
+Example usage::
+
+    service_now_additional_fields:
+        u_affected_user: 'Sample User'
+        u_affected_site: 'Sample Location'
 
 Slack
 ~~~~~
@@ -2132,8 +2168,14 @@ Slack alerter will send a notification to a predefined Slack channel. The body o
 
 The alerter requires the following option:
 
+``slack_webhook_url``: The webhook URL generated by your Slack App. Follow the quickstart guide at https://docs.slack.dev/messaging/sending-messages-using-incoming-webhooks to create a new webhook. Note that the advanced, interactive Slack formatting options, using the Block Kit components, are not supported.
+
+Legacy Incoming Webhooks:
+
+If you need to use the deprecated, legacy incoming webhooks in Slack then you can follow this next set of instructions to obtain the webhook URL.
+
 ``slack_webhook_url``: The webhook URL that includes your auth data and the ID of the channel (room) you want to post to. Go to the Incoming Webhooks
-section in your Slack account https://XXXXX.slack.com/services/new/incoming-webhook , choose the channel, click 'Add Incoming Webhooks Integration'
+section in your Slack account https://XXXXX.slack.com/services/new/incoming-webhook, choose the channel, click 'Add Incoming Webhooks Integration'
 and copy the resulting URL. You can use a list of URLs to send to multiple channels.
 
 Optional:
@@ -2256,6 +2298,47 @@ Example slack_attach_opensearch_discover_url, slack_opensearch_discover_color, s
 ``slack_jira_ticket_color``: The color of the Jira Ticket url attachment. Defaults to ``#ec4b98``.
 
 ``slack_jira_ticket_title``: The title of the Jira Ticket url attachment. Defaults to ``Jira Ticket``.
+
+
+SMSEagle
+~~~~~~~~
+
+SMSEagle alerter will send API requests to SMSEagle device and then forward it as an SMS or Call, depending on your configuration.
+
+The alerter requires the following option:
+
+``smseagle_url``: Address of your SMSEagle device, e.g. http://192.168.1.101
+
+``smseagle_token``: API access token (per user, can be generated in menu Users > Access to API)
+
+``smseagle_message_type``: Message/call type to send/queue. Available values: sms, ring, tts, tts_adv respectively for SMS, Ring call, TTS call and Advanced TTS call.
+
+Requires one of:
+
+``smseagle_to``: Phone number(s) to which you want to send a message
+
+``smseagle_contacts``: Name(s) of contact(s) from the SMSEagle Phonebook to which you want to send a message
+
+``smseagle_groups``: Name(s) of group(s) from the SMSEagle Phonebook to which you want to send a message
+
+Optional:
+
+``smseagle_duration``: Call duration, required for Ring, TTS and Advanced TTS call. Default value: 10
+
+``smseagle_voice_id``: ID of the voice model, required for Advanced TTS call. Default value: 1
+
+``smseagle_text``: Override notification text with a custom one
+
+Example usage::
+
+    alert:
+      - "smseagle"
+    smseagle_url: "https://192.168.1.101"
+    smseagle_token: "123abc456def789"
+    smseagle_message_type: "sms"
+    smseagle_to: ["+123456789", "987654321"]
+    smseagle_contacts: [2, 7]
+
 
 Splunk On-Call (Formerly VictorOps)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -2575,7 +2658,7 @@ Example usage::
       - webex_webhook
     alert_text_type: alert_text_only
     webex_webhook_id: "your webex incoming webhook id"
-    webex_webhook: "markdown"
+    webex_webhook_msgtype: "markdown"
 
 WorkWechat
 ~~~~~~~~~~

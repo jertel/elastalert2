@@ -19,7 +19,6 @@ from elastalert.loaders import (
 
 from elastalert.util import EAException
 
-
 loaders_test_cases_path = os.path.join(os.path.dirname(__file__), 'loaders_test_cases')
 empty_folder_test_path = os.path.join(loaders_test_cases_path, 'empty')
 
@@ -66,21 +65,19 @@ def test_import_rules():
         mock_open.return_value = test_rule_copy
 
         # Test that type is imported
-        with mock.patch('builtins.__import__') as mock_import:
-            mock_import.return_value = elastalert.ruletypes
+        with mock.patch('elastalert.loaders.get_module') as mock_get_module:
+            mock_get_module.return_value = elastalert.ruletypes.RuleType
             rules_loader.load_configuration('test_config', test_config)
-        assert mock_import.call_args_list[0][0][0] == 'testing.test'
-        assert mock_import.call_args_list[0][0][3] == ['RuleType']
+        assert mock_get_module.call_args_list[0][0][0] == 'testing.test.RuleType'
 
         # Test that alerts are imported
         test_rule_copy = copy.deepcopy(test_rule)
         mock_open.return_value = test_rule_copy
         test_rule_copy['alert'] = 'testing2.test2.Alerter'
-        with mock.patch('builtins.__import__') as mock_import:
-            mock_import.return_value = elastalert.alerts
+        with mock.patch('elastalert.loaders.get_module') as mock_get_module:
+            mock_get_module.return_value = elastalert.alerts.Alerter
             rules_loader.load_configuration('test_config', test_config)
-        assert mock_import.call_args_list[0][0][0] == 'testing2.test2'
-        assert mock_import.call_args_list[0][0][3] == ['Alerter']
+        assert mock_get_module.call_args_list[0][0][0] == 'testing2.test2.Alerter'
 
 
 def test_import_import():
@@ -203,6 +200,19 @@ def test_load_inline_alert_rule_with_jinja():
         assert isinstance(test_rule_copy['alert'][1], EmailAlerter)
         assert 'jinja_template' in test_rule_copy['alert'][0].rule
         assert 'jinja_template' not in test_rule_copy['alert'][1].rule
+
+
+def test_load_jinja_filters():
+    rules_loader = FileRulesLoader(test_config)
+    test_rule_copy = copy.deepcopy(test_rule)
+
+    test_rule_copy['jinja_filters'] = ['jinja.filters.DummyJinjaFilter']
+    test_rule_copy['alert_text_type'] = 'alert_text_jinja'
+    test_rule_copy['alert_text'] = 'WHATS YOUR {{ "NAME" | whisper }}?'
+
+    rules_loader.load_jinja_template(test_rule_copy)
+    output = test_rule_copy['jinja_template'].render()
+    assert output == 'WHATS YOUR name?'
 
 
 def test_file_rules_loader_get_names_recursive():

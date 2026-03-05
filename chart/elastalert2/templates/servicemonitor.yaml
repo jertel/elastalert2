@@ -3,7 +3,7 @@ apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
   name: {{ include "common.names.servicename" . | quote  }}
-  namespace: {{ default .Release.Namespace .Values.metrics.serviceMonitor.namespace | quote }}
+  namespace: {{ .Values.metrics.serviceMonitor.namespace | default (include "common.names.namespace" .) | quote }}
   labels: {{- include "common.labels.standard" . | nindent 4 }}
     app.kubernetes.io/component: {{ .Values.appKubernetesIoComponent}}
     {{- if .Values.commonLabels }}
