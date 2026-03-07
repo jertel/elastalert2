@@ -11,13 +11,10 @@ def _get_region_from_sqs_url(queue_url, default_region="us-east-1"):
     https://sqs.us-east-1.amazonaws.com/123456789012/my-queue.
     Falls back to default_region if it cannot be determined.
     """
-    try:
-        host = urlparse(queue_url).hostname or ""
-        parts = host.split(".")
-        if len(parts) >= 3 and parts[0] == "sqs":
-            return parts[1]
-    except Exception:
-        pass
+    host = urlparse(queue_url).hostname or ""
+    parts = host.split(".")
+    if len(parts) >= 3 and parts[0] == "sqs":
+        return parts[1]
     return default_region
 
 

@@ -4,7 +4,7 @@
 - None
 
 ## New features
-- Add AWS SQS alerter for sending alerts to Amazon Simple Queue Service queues - @AnthraX1
+- Add AWS SQS alerter for sending alerts to Amazon Simple Queue Service queues - [#1750]https://github.com/jertel/elastalert2/pull/1750 - @AnthraX1
 
 ## Other changes
 - [Docs] Clarified Slack webhook URL documentation as it related to legacy vs app webhooks - [#1745](https://github.com/jertel/elastalert2/pull/1745) - @jertel
