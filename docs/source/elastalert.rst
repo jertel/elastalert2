@@ -31,6 +31,7 @@ Currently, we have support built in for these alert types:
 - Alertmanager
 - AWS SES (Amazon Simple Email Service)
 - AWS SNS (Amazon Simple Notification Service)
+- AWS SQS (Amazon Simple Queue Service)
 - Chatwork
 - Command
 - Datadog

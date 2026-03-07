@@ -52,6 +52,7 @@ from elastalert.alerters.pagerduty import PagerDutyAlerter
 from elastalert.alerters.slack import SlackAlerter
 from elastalert.alerters.smseagle import SMSEagleAlerter
 from elastalert.alerters.sns import SnsAlerter
+from elastalert.alerters.sqs import SqsAlerter
 from elastalert.alerters.teams import MsTeamsAlerter
 from elastalert.alerters.powerautomate import MsPowerAutomateAlerter
 from elastalert.alerters.yzj import YzjAlerter
@@ -115,6 +116,7 @@ class RulesLoader(object):
         'debug': elastalert.alerters.debug.DebugAlerter,
         'command': elastalert.alerters.command.CommandAlerter,
         'sns': SnsAlerter,
+        'sqs': SqsAlerter,
         'ms_teams': MsTeamsAlerter,
         'ms_power_automate': MsPowerAutomateAlerter,
         'slack': SlackAlerter,
