@@ -9,6 +9,7 @@
 ## Other changes
 - [Docs] Clarified Slack webhook URL documentation as it related to legacy vs app webhooks - [#1745](https://github.com/jertel/elastalert2/pull/1745) - @jertel
 - [README] Update ElastAlert GitHub repository link in README - [#1747](https://github.com/jertel/elastalert2/pull/1747) - @nsano-rururu
+- Fix missing `pytz` dependency - [#1752](https://github.com/jertel/elastalert2/pull/1752) - @m4dh4t
 
 # 2.28.0
 
