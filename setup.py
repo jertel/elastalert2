@@ -51,6 +51,7 @@ setup(
         'prison>=0.2.1',
         'prometheus_client>=0.23.1',
         'python-dateutil>=2.9.0.post0',
+        'pytz>=2026.1',
         'PyYAML>=6.0.3',
         'zabbix-utils>=2.0.3',
         'requests>=2.31.0',
