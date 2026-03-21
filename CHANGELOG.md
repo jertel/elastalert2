@@ -4,6 +4,17 @@
 - None
 
 ## New features
+- None
+
+## Other changes
+- None
+
+# 2.29.0
+
+## Breaking changes
+- None
+
+## New features
 - Add AWS SQS alerter for sending alerts to Amazon Simple Queue Service queues - [#1750](https://github.com/jertel/elastalert2/pull/1750) - @AnthraX1
 
 ## Other changes
