@@ -1,8 +1,6 @@
 import json
-
 import requests
 from requests import RequestException
-
 from elastalert.alerts import Alerter, DateTimeEncoder
 from elastalert.util import EAException, elastalert_logger
 
@@ -15,9 +13,9 @@ class DatadogAlerter(Alerter):
         super(DatadogAlerter, self).__init__(rule)
         self.dd_api_key = self.rule.get('datadog_api_key', None)
         self.dd_app_key = self.rule.get('datadog_app_key', None)
+        self.dd_api_url = self.rule.get('datadog_api_url', 'https://api.datadoghq.com/api/v1/events')
 
     def alert(self, matches):
-        url = 'https://api.datadoghq.com/api/v1/events'
         headers = {
             'Content-Type': 'application/json',
             'DD-API-KEY': self.dd_api_key,
@@ -28,7 +26,7 @@ class DatadogAlerter(Alerter):
             'text': self.create_alert_body(matches)
         }
         try:
-            response = requests.post(url, data=json.dumps(payload, cls=DateTimeEncoder), headers=headers)
+            response = requests.post(self.dd_api_url, data=json.dumps(payload, cls=DateTimeEncoder), headers=headers)
             response.raise_for_status()
         except RequestException as e:
             raise EAException('Error posting event to Datadog: %s' % e)

@@ -468,6 +468,7 @@ properties:
   ### Datadog
   datadog_api_key: {type: string}
   datadog_app_key: {type: string}
+  datadog_api_url: {type: string}
 
   ### Dingtalk
   dingtalk_access_token: {type: string}

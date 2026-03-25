@@ -668,12 +668,18 @@ This alert requires two additional options:
 
 ``datadog_app_key``: `Datadog application key`_
 
+Optional:
+
+``datadog_api_url``: The Datadog Events API endpoint URL. Defaults to ``https://api.datadoghq.com/api/v1/events``.
+Override this to target a regional Datadog site, for example ``https://api.us5.datadoghq.com/api/v1/events`` for US5.
+
 Example usage::
 
     alert:
       - "datadog"
     datadog_api_key: "Datadog API Key"
     datadog_app_key: "Datadog APP Key"
+    datadog_api_url: "https://api.us5.datadoghq.com/api/v1/events"
 
 .. _`Datadog Event`: https://docs.datadoghq.com/events/
 .. _`Datadog API key`: https://docs.datadoghq.com/account_management/api-app-keys/#api-keys
