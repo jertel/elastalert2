@@ -49,6 +49,73 @@ def test_datadog_alerter(caplog):
     assert ('elastalert', logging.INFO, 'Alert sent to Datadog') == caplog.record_tuples[0]
 
 
+def test_datadog_alerter_custom_api_url(caplog):
+    """datadog_api_url overrides the default endpoint when provided."""
+    caplog.set_level(logging.INFO)
+    rule = {
+        'name': 'Test Datadog Event Alerter',
+        'type': 'any',
+        'datadog_api_key': 'test-api-key',
+        'datadog_app_key': 'test-app-key',
+        'datadog_api_url': 'https://api.us5.datadoghq.com/api/v1/events',
+        'alert': [],
+        'alert_subject': 'Test Datadog Event Alert'
+    }
+    rules_loader = FileRulesLoader({})
+    rules_loader.load_modules(rule)
+    alert = DatadogAlerter(rule)
+    match = {
+        '@timestamp': '2021-01-01T00:00:00',
+        'name': 'datadog-test-name'
+    }
+    with mock.patch('requests.post') as mock_post_request:
+        alert.alert([match])
+
+    mock_post_request.assert_called_once_with(
+        'https://api.us5.datadoghq.com/api/v1/events',
+        data=mock.ANY,
+        headers={
+            'Content-Type': 'application/json',
+            'DD-API-KEY': rule['datadog_api_key'],
+            'DD-APPLICATION-KEY': rule['datadog_app_key']
+        }
+    )
+    assert ('elastalert', logging.INFO, 'Alert sent to Datadog') == caplog.record_tuples[0]
+
+
+def test_datadog_alerter_default_api_url(caplog):
+    """datadog_api_url defaults to the US1 endpoint when not provided."""
+    caplog.set_level(logging.INFO)
+    rule = {
+        'name': 'Test Datadog Event Alerter',
+        'type': 'any',
+        'datadog_api_key': 'test-api-key',
+        'datadog_app_key': 'test-app-key',
+        'alert': [],
+        'alert_subject': 'Test Datadog Event Alert'
+    }
+    rules_loader = FileRulesLoader({})
+    rules_loader.load_modules(rule)
+    alert = DatadogAlerter(rule)
+    match = {
+        '@timestamp': '2021-01-01T00:00:00',
+        'name': 'datadog-test-name'
+    }
+    with mock.patch('requests.post') as mock_post_request:
+        alert.alert([match])
+
+    mock_post_request.assert_called_once_with(
+        'https://api.datadoghq.com/api/v1/events',
+        data=mock.ANY,
+        headers={
+            'Content-Type': 'application/json',
+            'DD-API-KEY': rule['datadog_api_key'],
+            'DD-APPLICATION-KEY': rule['datadog_app_key']
+        }
+    )
+    assert ('elastalert', logging.INFO, 'Alert sent to Datadog') == caplog.record_tuples[0]
+
+
 def test_datadog_ea_exception():
     with pytest.raises(EAException) as ea:
         rule = {
