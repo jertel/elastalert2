@@ -4,7 +4,7 @@
 - None
 
 ## New features
-- [Datadog] Add optional `datadog_api_url` parameter to support regional Datadog sites (US3, US5, EU1, AP1, etc.) - @BillyWeans
+- [Datadog] Add optional `datadog_api_url` parameter to support regional Datadog sites (US3, US5, EU1, AP1, etc.) - [#1754](https://github.com/jertel/elastalert2/pull/1754) - @BillyWeans
 
 ## Other changes
 - None
