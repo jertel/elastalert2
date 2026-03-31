@@ -8,7 +8,10 @@ on:
 jobs:
   publish:
     if: github.repository_owner == 'jertel'
-    
+
+    permissions:
+      contents: write # Required to create releases and push to the gh-pages branch
+      pages: write   # Required to write to the gh-pages branch
     environment: Main
     runs-on: ubuntu-latest
     steps:
@@ -17,14 +20,17 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Configure Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
       - name: Install Helm
         uses: azure/setup-helm@v4.3.1
-        with:
-          version: v3.4.0
 
       - name: Run chart-releaser
-        uses: J12934/helm-gh-pages-action@master
+        uses: helm/chart-releaser-action@v1.6.0
+        env:
+          CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
         with:
-          charts-folder: chart
-          access-token: "${{ secrets.GH_PERSONAL_ACCESS_TOKEN }}"
-          deploy-branch: gh-pages
+          charts_dir: chart
