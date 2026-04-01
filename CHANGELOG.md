@@ -7,7 +7,7 @@
 - [Datadog] Add optional `datadog_api_url` parameter to support regional Datadog sites (US3, US5, EU1, AP1, etc.) - [#1754](https://github.com/jertel/elastalert2/pull/1754) - @BillyWeans
 
 ## Other changes
-- None
+- Replace `es.delete()` with `delete_by_query()` in aggregation cleanup to support Elasticsearch data streams as the writeback index - @peterlehot
 
 # 2.29.0
 
