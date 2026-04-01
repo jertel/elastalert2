@@ -66,6 +66,7 @@ class mock_es_client(object):
         self.create = mock.Mock()
         self.index = mock.Mock()
         self.delete = mock.Mock()
+        self.delete_by_query = mock.Mock()
         self.info = mock.Mock(return_value={'status': 200, 'name': 'foo', 'version': {'number': '2.0'}})
         self.ping = mock.Mock(return_value=True)
         self.indices = mock_es_indices_client()
