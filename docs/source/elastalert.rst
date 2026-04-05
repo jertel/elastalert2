@@ -54,7 +54,6 @@ Currently, we have support built in for these alert types:
 - LINE Messaging API
 - Matrix Hookshot
 - Mattermost
-- Microsoft Teams
 - Microsoft Power Automate
 - OpsGenie
 - PagerDuty
