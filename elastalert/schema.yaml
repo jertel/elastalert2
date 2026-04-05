@@ -51,23 +51,12 @@ definitions:
     type: array
     items: *slackField
 
-  msTeamsFact: &msTeamsFact
-    type: object
-    additionalProperties: false
-    properties:
-      name: {type: string}
-      value: {type: string}
-
   msPowerAutomateFact: &msPowerAutomateFact
     type: object
     additionalProperties: false
     properties:
       name: {type: string}
       value: {type: string}
-
-  arrayOfMsTeamsFacts: &arrayOfMsTeamsFacts
-    type: array
-    items: *msTeamsFact
 
   arrayOfMsPowerAutomateFacts: &arrayOfMsPowerAutomateFacts
     type: array
@@ -710,22 +699,6 @@ properties:
   mattermost_attach_opensearch_discover_url: {type: boolean}
   mattermost_opensearch_discover_color: {type: string}
   mattermost_opensearch_discover_title: {type: string}
-
-
-  ### Microsoft Teams
-  ms_teams_webhook_url: *arrayOfString
-  ms_teams_alert_summary: {type: string}
-  ms_teams_theme_color: {type: string}
-  ms_teams_proxy: {type: string}
-  ms_teams_alert_fixed_width: {type: boolean}
-  ms_teams_alert_facts: *arrayOfMsTeamsFacts
-  ms_teams_attach_kibana_discover_url: {type: boolean}
-  ms_teams_kibana_discover_title: {type: string}
-  ms_teams_ca_certs: {type: [boolean, string]}
-  ms_teams_ignore_ssl_errors: {type: boolean}
-  ms_teams_attach_opensearch_discover_url: {type: boolean}
-  ms_teams_opensearch_discover_title: {type: string}
-
 
   ### Microsoft Power Automate
   ms_power_automate_webhook_url: *arrayOfString
