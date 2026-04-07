@@ -7,6 +7,7 @@
 - [Datadog] Add optional `datadog_api_url` parameter to support regional Datadog sites (US3, US5, EU1, AP1, etc.) - [#1754](https://github.com/jertel/elastalert2/pull/1754) - @BillyWeans
 
 ## Other changes
+- Replace `es.delete()` with `delete_by_query()` in aggregation cleanup to support Elasticsearch data streams as the writeback index - [#1755](https://github.com/jertel/elastalert2/pull/1755) - @peterlehot
 - Remove MS Teams Alerter - [#1757](https://github.com/jertel/elastalert2/pull/1757) - @nsano-rururu
 
 # 2.29.0

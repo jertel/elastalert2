@@ -1606,7 +1606,7 @@ class ElastAlerter(object):
 
                     # Delete it from the index
                     try:
-                        self.writeback_es.delete(index=self.writeback_index, id=_id)
+                        self.writeback_es.delete_by_query(index=self.writeback_index, body={'query': {'term': {'_id': _id}}})
                     except ElasticsearchException:  # TODO: Give this a more relevant exception, try:except: is evil.
                         self.handle_error("Failed to delete alert %s at %s" % (_id, alert_time))
 
@@ -1640,7 +1640,7 @@ class ElastAlerter(object):
                                            size=self.max_aggregation)
             for match in res['hits']['hits']:
                 matches.append(match['_source'])
-                self.writeback_es.delete(index=self.writeback_index, id=match['_id'])
+                self.writeback_es.delete_by_query(index=self.writeback_index, body={'query': {'term': {'_id': match['_id']}}})
         except (KeyError, ElasticsearchException) as e:
             self.handle_error("Error fetching aggregated matches: %s" % (e), {'id': _id})
         return matches
