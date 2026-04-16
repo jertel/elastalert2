@@ -9,6 +9,24 @@
 ## Other changes
 - Replace `es.delete()` with `delete_by_query()` in aggregation cleanup to support Elasticsearch data streams as the writeback index - [#1755](https://github.com/jertel/elastalert2/pull/1755) - @peterlehot
 - Remove MS Teams Alerter - [#1757](https://github.com/jertel/elastalert2/pull/1757) - @nsano-rururu
+- Upgrade dependency library pylint to 4.0.5 - [#1760](https://github.com/jertel/elastalert2/pull/1760) - @jertel
+- Upgrade dependency library pytest-cov to 7.1.0 - [#1760](https://github.com/jertel/elastalert2/pull/1760) - @jertel
+- Upgrade dependency library sphinx to 9.1.0 - [#1760](https://github.com/jertel/elastalert2/pull/1760) - @jertel
+- Upgrade dependency library sphinx_rtd_theme to 3.1.0 - [#1760](https://github.com/jertel/elastalert2/pull/1760) - @jertel
+- Upgrade dependency library tox to 4.53.0 - [#1760](https://github.com/jertel/elastalert2/pull/1760) - @jertel
+- Upgrade dependency library apscheduler to 3.11.2 - [#1760](https://github.com/jertel/elastalert2/pull/1760) - @jertel
+- Upgrade dependency library boto3 to 1.42.89 - [#1760](https://github.com/jertel/elastalert2/pull/1760) - @jertel
+- Upgrade dependency library croniter to 6.2.2 - [#1760](https://github.com/jertel/elastalert2/pull/1760) - @jertel
+- Upgrade dependency library jsonpointer to 3.1.1 - [#1760](https://github.com/jertel/elastalert2/pull/1760) - @jertel
+- Upgrade dependency library jsonschema to 4.26.0 - [#1760](https://github.com/jertel/elastalert2/pull/1760) - @jertel
+- Upgrade dependency library prettytable to 3.17.0 - [#1760](https://github.com/jertel/elastalert2/pull/1760) - @jertel
+- Upgrade dependency library prometheus-client to 0.25.0 - [#1760](https://github.com/jertel/elastalert2/pull/1760) - @jertel
+- Upgrade dependency library pytz to 2026.1.post1 - [#1760](https://github.com/jertel/elastalert2/pull/1760) - @jertel
+- Upgrade dependency library zabbix-utils to 2.0.4 - [#1760](https://github.com/jertel/elastalert2/pull/1760) - @jertel
+- Upgrade dependency library requests to 2.33.1 - [#1760](https://github.com/jertel/elastalert2/pull/1760) - @jertel
+- Upgrade dependency library tencentcloud-sdk-python to 3.1.79 - [#1760](https://github.com/jertel/elastalert2/pull/1760) - @jertel
+- Upgrade dependency library twilio to 9.10.5 - [#1760](https://github.com/jertel/elastalert2/pull/1760) - @jertel
+- Upgrade base Docker image to python:3.14.4-slim - [#1760](https://github.com/jertel/elastalert2/pull/1760) - @jertel
 
 # 2.29.0
 
