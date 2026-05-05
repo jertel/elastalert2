@@ -511,6 +511,16 @@ Then, for the same sample data shown above listing alice and bob's events, Elast
     |      alice       |   something else   |
     +------------------+--------------------+
 
+Each entry may instead be a dict with a ``path`` (the field to look up) and an optional ``header`` (the column heading to display). If ``header`` is omitted, ``path`` is used as the heading. String and dict entries can be mixed in the same list. For example::
+
+    summary_table_fields:
+        - path: my_data.username
+          header: User
+        - path: my_data.event_type
+          header: Event
+
+would render with ``User`` and ``Event`` as column headings while still looking up values from ``my_data.username`` and ``my_data.event_type``.
+
 
 .. note::
    By default, aggregation time is relative to the current system time, not the time of the match. This means that running ElastAlert 2 over
@@ -993,7 +1003,7 @@ aggregation_key
 summary_table_fields
 ^^^^^^^^^^^^^^^^^^^^
 
-``summary_table_fields``: Specifying the summmary_table_fields in conjunction with an aggregation will make it so that each aggregated alert will contain a table summarizing the values for the specified fields in all the matches that were aggregated together.
+``summary_table_fields``: Specifying the summmary_table_fields in conjunction with an aggregation will make it so that each aggregated alert will contain a table summarizing the values for the specified fields in all the matches that were aggregated together. Each entry may be a string field path, or a dict of the form ``{path: <field>, header: <column label>}`` to override the rendered column heading; ``header`` defaults to ``path`` when omitted. See the prose section above for an example.
 
 summary_table_type
 ^^^^^^^^^^^^^^^^^^^^

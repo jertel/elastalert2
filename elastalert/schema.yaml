@@ -308,7 +308,17 @@ properties:
   notify_all_errors: {type: boolean}
 
   ### summary table
-  summary_table_fields: {type: array, items: {type: string}}
+  summary_table_fields:
+    type: array
+    items:
+      oneOf:
+        - type: string
+        - type: object
+          additionalProperties: false
+          required: [path]
+          properties:
+            path: {type: string, minLength: 1}
+            header: {type: string}
   summary_table_type: {type: string, enum: ['ascii', 'html', 'markdown']}
   summary_table_max_rows: {type: integer, minimum: 0}
   summary_prefix: {type: string}
