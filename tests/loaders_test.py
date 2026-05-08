@@ -728,3 +728,26 @@ def test_load_yaml_imports_modified():
 def test_load_rule_schema():
     validator = load_rule_schema()
     validator.check_schema(validator.schema)
+
+
+def test_summary_table_fields_schema():
+    validator = load_rule_schema()
+    base_rule = {'type': 'any', 'index': 'test', 'alert': 'debug'}
+
+    def errors_for(value):
+        rule = dict(base_rule, summary_table_fields=value)
+        return [e for e in validator.iter_errors(rule)
+                if 'summary_table_fields' in list(e.absolute_path)]
+
+    # Valid: original string-form list
+    assert errors_for(['host.hostname', 'metric_agg_value_formatted']) == []
+    # Valid: dict-form with both path and header
+    assert errors_for([{'path': 'host.hostname', 'header': 'Hostname'}]) == []
+    # Valid: dict-form with header omitted
+    assert errors_for([{'path': 'host.hostname'}]) == []
+    # Valid: mixed string and dict entries
+    assert errors_for(['host.hostname', {'path': 'metric_agg_value_formatted', 'header': 'Avg'}]) == []
+    # Invalid: dict missing required 'path'
+    assert errors_for([{'header': 'Hostname'}]) != []
+    # Invalid: dict with unknown property
+    assert errors_for([{'path': 'host.hostname', 'foo': 'bar'}]) != []

@@ -354,6 +354,91 @@ def test_alert_aggregation_summary_table_suffix_prefix():
     assert "This is the suffix" in summary_table
 
 
+def test_alert_aggregation_summary_dict_form_with_headers():
+    rule = {
+        'name': 'test_rule',
+        'type': mock_rule(),
+        'owner': 'the_owner',
+        'priority': 2,
+        'alert_subject': 'A very long subject',
+        'aggregation': 1,
+        'summary_table_fields': [
+            {'path': 'field', 'header': 'Hostname'},
+            {'path': 'abc', 'header': 'Avg shard size (GB)'},
+        ],
+        'summary_table_type': 'markdown'
+    }
+    matches = [
+        {'@timestamp': '2016-01-01', 'field': 'field_value', 'abc': 'abc from match', },
+        {'@timestamp': '2016-01-01', 'field': 'field_value', 'abc': 'abc from match', },
+        {'@timestamp': '2016-01-01', 'field': 'field_value', 'abc': 'abc from match', },
+        {'@timestamp': '2016-01-01', 'field': 'field_value', 'abc': 'cde from match', },
+        {'@timestamp': '2016-01-01', 'field': 'field_value', 'abc': 'cde from match', },
+    ]
+    alert = Alerter(rule)
+    summary_table = str(alert.get_aggregation_summary_text(matches))
+    # Custom headers are used in the rendered header row
+    assert "| Hostname | Avg shard size (GB) | count |" in summary_table
+    # Paths still drive value lookup, so the data rows contain the looked-up values
+    assert "| field_value | abc from match | 3 |" in summary_table
+    assert "| field_value | cde from match | 2 |" in summary_table
+    # Field paths should not appear as column headings when headers are provided
+    assert "| field | abc | count |" not in summary_table
+
+
+def test_alert_aggregation_summary_dict_form_header_omitted():
+    rule = {
+        'name': 'test_rule',
+        'type': mock_rule(),
+        'owner': 'the_owner',
+        'priority': 2,
+        'alert_subject': 'A very long subject',
+        'aggregation': 1,
+        'summary_table_fields': [
+            {'path': 'field'},
+            {'path': 'abc'},
+        ],
+        'summary_table_type': 'markdown'
+    }
+    matches = [
+        {'@timestamp': '2016-01-01', 'field': 'field_value', 'abc': 'abc from match', },
+        {'@timestamp': '2016-01-01', 'field': 'field_value', 'abc': 'cde from match', },
+    ]
+    alert = Alerter(rule)
+    summary_table = str(alert.get_aggregation_summary_text(matches))
+    # Header defaults to path when omitted
+    assert "| field | abc | count |" in summary_table
+    assert "| field_value | abc from match | 1 |" in summary_table
+    assert "| field_value | cde from match | 1 |" in summary_table
+
+
+def test_alert_aggregation_summary_mixed_string_and_dict_forms():
+    rule = {
+        'name': 'test_rule',
+        'type': mock_rule(),
+        'owner': 'the_owner',
+        'priority': 2,
+        'alert_subject': 'A very long subject',
+        'aggregation': 1,
+        'summary_table_fields': [
+            'field',
+            {'path': 'abc', 'header': 'Custom abc'},
+        ],
+        'summary_table_type': 'markdown'
+    }
+    matches = [
+        {'@timestamp': '2016-01-01', 'field': 'field_value', 'abc': 'abc from match', },
+        {'@timestamp': '2016-01-01', 'field': 'field_value', 'abc': 'abc from match', },
+        {'@timestamp': '2016-01-01', 'field': 'field_value', 'abc': 'cde from match', },
+    ]
+    alert = Alerter(rule)
+    summary_table = str(alert.get_aggregation_summary_text(matches))
+    # String entry keeps its path as header; dict entry uses its custom header
+    assert "| field | Custom abc | count |" in summary_table
+    assert "| field_value | abc from match | 2 |" in summary_table
+    assert "| field_value | cde from match | 1 |" in summary_table
+
+
 def test_alert_subject_size_limit_with_args(ea):
     rule = {
         'name': 'test_rule',
