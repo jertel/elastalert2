@@ -14,20 +14,20 @@
 - Upgrade dependency library pytest-cov to 7.1.0 - [#1760](https://github.com/jertel/elastalert2/pull/1760) - @jertel
 - Upgrade dependency library sphinx to 9.1.0 - [#1760](https://github.com/jertel/elastalert2/pull/1760) - @jertel
 - Upgrade dependency library sphinx_rtd_theme to 3.1.0 - [#1760](https://github.com/jertel/elastalert2/pull/1760) - @jertel
-- Upgrade dependency library tox to 4.53.0 - [#1760](https://github.com/jertel/elastalert2/pull/1760) - @jertel
+- Upgrade dependency library tox to 4.54.0 - [#1763](https://github.com/jertel/elastalert2/pull/1763) - @jertel
 - Upgrade dependency library apscheduler to 3.11.2 - [#1760](https://github.com/jertel/elastalert2/pull/1760) - @jertel
-- Upgrade dependency library boto3 to 1.42.89 - [#1760](https://github.com/jertel/elastalert2/pull/1760) - @jertel
+- Upgrade dependency library boto3 to 1.43.14 - [#1763](https://github.com/jertel/elastalert2/pull/1763) - @jertel
 - Upgrade dependency library croniter to 6.2.2 - [#1760](https://github.com/jertel/elastalert2/pull/1760) - @jertel
 - Upgrade dependency library jsonpointer to 3.1.1 - [#1760](https://github.com/jertel/elastalert2/pull/1760) - @jertel
 - Upgrade dependency library jsonschema to 4.26.0 - [#1760](https://github.com/jertel/elastalert2/pull/1760) - @jertel
 - Upgrade dependency library prettytable to 3.17.0 - [#1760](https://github.com/jertel/elastalert2/pull/1760) - @jertel
 - Upgrade dependency library prometheus-client to 0.25.0 - [#1760](https://github.com/jertel/elastalert2/pull/1760) - @jertel
-- Upgrade dependency library pytz to 2026.1.post1 - [#1760](https://github.com/jertel/elastalert2/pull/1760) - @jertel
+- Upgrade dependency library pytz to 2026.2 - [#1763](https://github.com/jertel/elastalert2/pull/1763) - @jertel
 - Upgrade dependency library zabbix-utils to 2.0.4 - [#1760](https://github.com/jertel/elastalert2/pull/1760) - @jertel
-- Upgrade dependency library requests to 2.33.1 - [#1760](https://github.com/jertel/elastalert2/pull/1760) - @jertel
-- Upgrade dependency library tencentcloud-sdk-python to 3.1.79 - [#1760](https://github.com/jertel/elastalert2/pull/1760) - @jertel
-- Upgrade dependency library twilio to 9.10.5 - [#1760](https://github.com/jertel/elastalert2/pull/1760) - @jertel
-- Upgrade base Docker image to python:3.14.4-slim - [#1760](https://github.com/jertel/elastalert2/pull/1760) - @jertel
+- Upgrade dependency library requests to 2.34.2 - [#1763](https://github.com/jertel/elastalert2/pull/1763) - @jertel
+- Upgrade dependency library tencentcloud-sdk-python to 3.1.101 - [#1763](https://github.com/jertel/elastalert2/pull/1763) - @jertel
+- Upgrade dependency library twilio to 9.10.9 - [#1763](https://github.com/jertel/elastalert2/pull/1763) - @jertel
+- Upgrade base Docker image to python:3.14.5-slim - [#1763](https://github.com/jertel/elastalert2/pull/1763) - @jertel
 
 # 2.29.0
 
