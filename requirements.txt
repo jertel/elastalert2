@@ -1,6 +1,6 @@
 apscheduler>=3.11.2,<4.0
 aws-requests-auth>=0.4.3
-boto3>=1.42.89
+boto3>=1.43.14
 cffi>=2.0.0
 croniter>=6.2.2
 elasticsearch==7.10.1
@@ -14,13 +14,13 @@ prettytable>=3.17.0
 prison>=0.2.1
 prometheus-client>=0.25.0
 python-dateutil>=2.9.0.post0
-pytz>=2026.1.post1
+pytz>=2026.2
 PyYAML>=6.0.3
 zabbix-utils>=2.0.4
-requests>=2.33.1
+requests>=2.34.2
 sortedcontainers>=2.4.0
 statsd-tags==3.2.1.post1
 stomp.py>=8.2.0
-tencentcloud-sdk-python>=3.1.79
+tencentcloud-sdk-python>=3.1.101
 texttable>=1.7.0
-twilio>=9.10.5
+twilio>=9.10.9
