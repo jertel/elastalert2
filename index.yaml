@@ -2,6 +2,20 @@ apiVersion: v1
 entries:
   elastalert2:
   - apiVersion: v1
+    appVersion: 2.30.0
+    created: "2026-05-27T22:13:16.525471349Z"
+    description: Automated rule-based alerting for Elasticsearch
+    digest: fb62db0ddf07f29eb415c539bda23f20be280bde7db008f97d1cbb863e742d2d
+    home: https://github.com/jertel/elastalert2
+    maintainers:
+    - name: jertel
+    name: elastalert2
+    sources:
+    - https://github.com/jertel/elastalert2
+    urls:
+    - https://github.com/jertel/elastalert2/releases/download/elastalert2-2.30.0/elastalert2-2.30.0.tgz
+    version: 2.30.0
+  - apiVersion: v1
     appVersion: 2.29.0
     created: "2026-03-21T14:39:58.55251809Z"
     description: Automated rule-based alerting for Elasticsearch
@@ -449,4 +463,4 @@ entries:
     urls:
     - elastalert2-2.2.3.tgz
     version: 2.2.3
-generated: "2026-03-21T14:39:58.529377731Z"
+generated: "2026-05-27T22:13:16.525722458Z"
