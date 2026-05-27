@@ -4,6 +4,17 @@
 - None
 
 ## New features
+- None
+
+## Other changes
+- None
+
+# 2.30.0
+
+## Breaking changes
+- None
+
+## New features
 - [Datadog] Add optional `datadog_api_url` parameter to support regional Datadog sites (US3, US5, EU1, AP1, etc.) - [#1754](https://github.com/jertel/elastalert2/pull/1754) - @BillyWeans
 - `summary_table_fields` now accepts a dict form with `path` and optional `header` keys for custom column labels - [#1763](https://github.com/jertel/elastalert2/pull/1763) - @dennis-trapp
 
