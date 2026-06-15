@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import copy
 import elastalert.eql as eql
+import elastalert.esql as esql
 
 from elasticsearch import Elasticsearch
 from elasticsearch import RequestsHttpConnection
@@ -134,6 +135,7 @@ class ElasticSearchClient(Elasticsearch):
 
         path = _make_path(index, doc_type, "_search")
         eql_body = eql.format_request(body)
+        esql_body = esql.format_request(body)
         if eql_body is not None:
             path = path.replace('/_search', '/_eql/search')
             body = eql_body
@@ -143,6 +145,10 @@ class ElasticSearchClient(Elasticsearch):
                 params.pop('scroll')
             if '_source_includes' in params:
                 params.pop('_source_includes')
+        elif esql_body is not None:
+            path = "/_query"
+            body = esql_body
+            params = {'format': 'json'}
 
         results = self.transport.perform_request(
             "POST",
@@ -152,6 +158,9 @@ class ElasticSearchClient(Elasticsearch):
             body=body,
         )
 
-        eql.format_results(results);
+        if esql_body is not None:
+            esql.format_results(results, default_index=index)
+        else:
+            eql.format_results(results)
 
         return results

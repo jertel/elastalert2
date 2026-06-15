@@ -211,7 +211,7 @@ class MockElastAlerter(object):
 
         terms = res['hits']['hits'][0]['_source']
 
-        is_eql = res.get('eql') == True
+        is_eql = res.get('eql') == True or res.get('esql') == True
 
         if not is_eql:
             # Get a count of all docs
