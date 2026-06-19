@@ -337,9 +337,10 @@ class ElastAlerter(object):
 
             # Convert the timestamp to a datetime
             ts = lookup_es_key(hit['_source'], rule['timestamp_field'])
-            if not ts and not rule["_source_enabled"]:
+            if ts is None:
                 raise EAException(
-                    "Error: No timestamp was found for hit. '_source_enabled' is set to false, check your mappings for stored fields"
+                    f"Error: The configured timestamp_field '{rule['timestamp_field']}' was not found in the query results. "
+                    f"Available fields: {list(hit['_source'].keys())}"
                 )
 
             set_es_key(hit['_source'], rule['timestamp_field'], rule['ts_to_dt'](ts))

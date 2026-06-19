@@ -4,7 +4,7 @@
 - None
 
 ## New features
-- None
+- Add ES|QL (Elasticsearch Piped Query Language) support - [#1767](https://github.com/jertel/elastalert2/pull/1767) - @jertel
 
 ## Other changes
 - None

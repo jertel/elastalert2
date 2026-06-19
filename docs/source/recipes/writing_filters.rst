@@ -152,3 +152,30 @@ EQL is only partially supported due to the following limitations:
 - Cannot be used with ``use_count_query`` property.
 - Does not support scrolling, so large result sets may have unexpected results. Be sure to filter your queries thoroughly to avoid returning excessive numbers of events.
 - Not supported with OpenSearch
+
+ES|QL (Elasticsearch Piped Query Language)
+******************************************
+
+ES|QL is supported. To use ES|QL, include a filter item as follows::
+
+    filter:
+    - esql: "FROM logs-* | WHERE status == 500"
+
+Note that only one ``esql`` filter can be defined in a filter.
+
+It is also possible to use standard query filters in combination with ES|QL filters::
+
+    filter:
+    - esql: "FROM logs-* | WHERE status == 500"
+    - query:
+        query_string:
+            query: "test.field: 123"
+
+ES|QL is only partially supported due to the following limitations:
+
+- Cannot be used with aggregation rule types.
+- Cannot be used with blacklist/whitelist rule types.
+- Cannot be used with percentage match rule types.
+- Cannot be used with ``use_count_query`` property.
+- Does not support scrolling, so large result sets may have unexpected results. Be sure to use the ``LIMIT`` command in your ES|QL query to control result size.
+- Not supported with OpenSearch
