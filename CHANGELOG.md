@@ -7,7 +7,7 @@
 - Add ES|QL (Elasticsearch Piped Query Language) support - [#1767](https://github.com/jertel/elastalert2/pull/1767) - @jertel
 
 ## Other changes
-- None
+- [Kibana] Fix discover URLs when query_key values are empty - [#1769](https://github.com/jertel/elastalert2/pull/1769) - @thejohnrichard
 
 # 2.30.0
 
