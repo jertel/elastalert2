@@ -7,7 +7,7 @@
 - Add ES|QL (Elasticsearch Piped Query Language) support - [#1767](https://github.com/jertel/elastalert2/pull/1767) - @jertel
 
 ## Other changes
-- Kibana Discover URLs no longer emit `phrase = ''` filters when a `query_key` field's value is empty or an array of empty strings; render as a negate-exists filter (matching the existing behaviour for missing values), and unwrap single-element lists to the underlying scalar - @thejohnrichard
+- [Kibana] Fix discover URLs when query_key values are empty - [#1769](https://github.com/jertel/elastalert2/pull/1769) - @thejohnrichard
 
 # 2.30.0
 
