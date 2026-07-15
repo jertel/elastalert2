@@ -228,6 +228,8 @@ Rule Configuration Cheat Sheet
 +-------------------------------------------------------+--------+-----------+-----------+--------+-----------+-------+----------+--------+-----------+------------------+-----------------+----------------+
 |``alert_on_missing_field`` (boolean, default False)    |        |           |           |        |           |       |          | Opt    |           |                  |                 |                |
 +-------------------------------------------------------+--------+-----------+-----------+--------+-----------+-------+----------+--------+-----------+------------------+-----------------+----------------+
+|``persist_new_terms`` (boolean, default False)         |        |           |           |        |           |       |          | Opt    |           |                  |                 |                |
++-------------------------------------------------------+--------+-----------+-----------+--------+-----------+-------+----------+--------+-----------+------------------+-----------------+----------------+
 |``cardinality_field`` (string, no default)             |        |           |           |        |           |       |          |        |  Req      |                  |                 |                |
 +-------------------------------------------------------+--------+-----------+-----------+--------+-----------+-------+----------+--------+-----------+------------------+-----------------+----------------+
 |``max_cardinality`` (boolean, default False)           |        |           |           |        |           |       |          |        |  Opt      |                  |                 |                |
@@ -1553,6 +1555,14 @@ that if a new term appears but there are at least 50 terms which appear more fre
 ``use_keyword_postfix``: If true, ElastAlert 2 will automatically try to add .keyword to the fields when making an
 initial query. These are non-analyzed fields added by Logstash. If the field used is analyzed, the initial query will return
 only the tokenized values, potentially causing false positives. Defaults to true.
+
+``persist_new_terms``: If true, every newly seen term is also written into the ``<writeback_index>_past`` index with a
+deterministic document id, and merged back into the baseline when the rule starts. This makes the rule restart-safe: terms
+that were alerted on longer ago than ``terms_window_size``, or whose source documents have since been deleted by index
+lifecycle policies, will not alert again after a restart. The ``*_past`` index is created by ``elastalert-create-index`` for
+new installations; for existing installations create it manually with the ``past_elastalert`` mapping (see
+``elastalert/es_mappings/``), otherwise a warning is logged and persistence stays disabled. Persistence failures never stop
+the rule; it continues with its in-memory baseline. Defaults to false.
 
 Cardinality
 ~~~~~~~~~~~

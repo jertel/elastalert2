@@ -5,6 +5,7 @@
 
 ## New features
 - Add ES|QL (Elasticsearch Piped Query Language) support - [#1767](https://github.com/jertel/elastalert2/pull/1767) - @jertel
+- [New Term] Add `persist_new_terms` option to persist and restore seen terms across restarts via the `_past` writeback index
 
 ## Other changes
 - [Kibana] Fix discover URLs when query_key values are empty - [#1769](https://github.com/jertel/elastalert2/pull/1769) - @thejohnrichard
