@@ -664,6 +664,9 @@ class FlatlineRule(FrequencyRule):
 class NewTermsRule(RuleType):
     """ Alerts on a new value in a list of fields. """
 
+    # Identifies this rule type's documents in the shared persistence index
+    persistence_type = 'new_terms'
+
     def __init__(self, rule, args=None):
         super(NewTermsRule, self).__init__(rule, args)
         self.seen_values = {}
@@ -917,19 +920,24 @@ class NewTermsRule(RuleType):
             return
         field = list(field) if type(field) is tuple else field
         value = list(value) if type(value) is tuple else value
-        doc_id = hashlib.sha1(json.dumps([self.rules['name'], field, value], default=str).encode('utf-8')).hexdigest()
-        body = {'rule_name': self.rules['name'],
+        term_hash = hashlib.sha1(json.dumps([self.rules['name'], field, value], default=str).encode('utf-8')).hexdigest()
+        body = {'persistence_type': self.persistence_type,
+                'rule_name': self.rules['name'],
                 '@timestamp': dt_to_ts(ts_now()),
                 'match_body': {'field': field, 'value': value}}
         try:
-            self.es.index(index=self.persist_index, id=doc_id, body=body)
+            self.es.index(index=self.persist_index, id='%s:%s' % (self.persistence_type, term_hash), body=body)
         except Exception as e:
             elastalert_logger.warning('Failed to persist new term for rule %s: %s' % (self.rules['name'], repr(e)))
 
     def load_persisted_terms(self):
         """ Merges terms persisted by persist_term into the baseline built by get_all_terms.
         On failure the in-memory baseline is used as-is. """
-        query = {'query': {'term': {'rule_name': self.rules['name']}}, 'size': 10000}
+        # constant_score keeps this in filter context; a bool query at the top level of
+        # 'query' would be misparsed by the eql/esql request formatters in the ES client.
+        query = {'query': {'constant_score': {'filter': {'bool': {'must': [
+            {'term': {'persistence_type': self.persistence_type}},
+            {'term': {'rule_name': self.rules['name']}}]}}}}, 'size': 10000}
         try:
             hits = self.es.search(index=self.persist_index, body=query, ignore_unavailable=True)['hits']['hits']
         except Exception as e:

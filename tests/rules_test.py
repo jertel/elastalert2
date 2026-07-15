@@ -839,7 +839,8 @@ def new_term_persist_mock_es(mock_es, persisted_hits=None, index_exists=True):
 
 
 def new_term_persist_hit(field, value):
-    return {'_source': {'rule_name': 'test-persist', 'match_body': {'field': field, 'value': value}}}
+    return {'_source': {'persistence_type': 'new_terms', 'rule_name': 'test-persist',
+                        'match_body': {'field': field, 'value': value}}}
 
 
 def test_new_term_persist_init():
@@ -881,10 +882,12 @@ def test_new_term_persist_writes_new_term():
     assert instance.index.call_count == 1
     call = instance.index.call_args
     assert call[1]['index'] == 'wb_past'
+    assert call[1]['body']['persistence_type'] == 'new_terms'
     assert call[1]['body']['rule_name'] == 'test-persist'
     assert call[1]['body']['match_body'] == {'field': 'a', 'value': 'key2'}
-    # Deterministic id: same term yields the same document id
+    # The id is namespaced by persistence type so other rule types cannot collide
     doc_id = call[1]['id']
+    assert doc_id.startswith('new_terms:')
     with mock.patch('elastalert.ruletypes.elasticsearch_client') as mock_es:
         instance2 = new_term_persist_mock_es(mock_es)
         rule2 = NewTermsRule(new_term_persist_rules())
@@ -906,10 +909,26 @@ def test_new_term_persist_load_merges_terms():
     assert rule.matches == []
     # Terms of fields no longer configured are ignored
     assert 'stale_field' not in rule.seen_values
-    # The load query targets the persist index, filtered by rule name
+    # The load query targets the persist index, scoped to this rule type and rule name,
+    # in filter context and without a bool at the top level of 'query' (see load_persisted_terms)
     load_call = [c for c in instance.search.call_args_list if c[1].get('index') == 'wb_past']
     assert len(load_call) == 1
-    assert load_call[0][1]['body']['query'] == {'term': {'rule_name': 'test-persist'}}
+    assert load_call[0][1]['body']['query'] == {'constant_score': {'filter': {'bool': {'must': [
+        {'term': {'persistence_type': 'new_terms'}},
+        {'term': {'rule_name': 'test-persist'}}]}}}}
+
+
+def test_new_term_persist_query_survives_request_formatters():
+    # ElasticSearchClient.search runs every body through the eql/esql request formatters,
+    # which assume query.bool.filter is a dict. A bool at the top level of 'query' would
+    # raise there and silently disable term loading, so guard the query shape here.
+    from elastalert import eql, esql
+    with mock.patch('elastalert.ruletypes.elasticsearch_client') as mock_es:
+        instance = new_term_persist_mock_es(mock_es)
+        NewTermsRule(new_term_persist_rules())
+    body = [c for c in instance.search.call_args_list if c[1].get('index') == 'wb_past'][0][1]['body']
+    assert eql.format_request(body) is None
+    assert esql.format_request(body) is None
 
 
 def test_new_term_persist_composite_roundtrip():
