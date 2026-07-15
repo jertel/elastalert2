@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 import copy
 import datetime
+import hashlib
+import json
 import sys
 
 from sortedcontainers import SortedKeyList as sortedlist
@@ -662,6 +664,9 @@ class FlatlineRule(FrequencyRule):
 class NewTermsRule(RuleType):
     """ Alerts on a new value in a list of fields. """
 
+    # Identifies this rule type's documents in the shared persistence index
+    persistence_type = 'new_terms'
+
     def __init__(self, rule, args=None):
         super(NewTermsRule, self).__init__(rule, args)
         self.seen_values = {}
@@ -691,6 +696,9 @@ class NewTermsRule(RuleType):
         except Exception as e:
             # Refuse to start if we cannot get existing terms
             raise EAException('Error searching for existing terms: %s' % (repr(e))).with_traceback(sys.exc_info()[2])
+        self.persist_index = self.get_persist_index()
+        if self.persist_index:
+            self.load_persisted_terms()
 
     def get_all_terms(self, args):
         """ Performs a terms aggregation for each field to get every existing term. """
@@ -890,6 +898,67 @@ class NewTermsRule(RuleType):
                     results.append(hierarchy_tuple + (node['key'],))
         return results
 
+    def get_persist_index(self):
+        """ Returns the index used to persist newly seen terms across restarts,
+        or None if persist_new_terms is disabled or the index is unavailable. """
+        if not self.rules.get('persist_new_terms'):
+            return None
+        try:
+            index = self.rules['writeback_index'] + '_past'
+            if self.es.indices.exists(index=index):
+                return index
+            reason = 'index %s does not exist' % (index)
+        except Exception as e:
+            reason = repr(e)
+        elastalert_logger.warning('persist_new_terms disabled for rule %s: %s' % (self.rules['name'], reason))
+        return None
+
+    def persist_term(self, field, value):
+        """ Writes a newly seen term into the persist index with a deterministic id,
+        so that it survives restarts. Failures are logged and never interrupt matching. """
+        if not self.persist_index:
+            return
+        field = list(field) if type(field) is tuple else field
+        value = list(value) if type(value) is tuple else value
+        term_hash = hashlib.sha1(json.dumps([self.rules['name'], field, value], default=str).encode('utf-8')).hexdigest()
+        body = {'persistence_type': self.persistence_type,
+                'rule_name': self.rules['name'],
+                '@timestamp': dt_to_ts(ts_now()),
+                'match_body': {'field': field, 'value': value}}
+        try:
+            self.es.index(index=self.persist_index, id='%s:%s' % (self.persistence_type, term_hash), body=body)
+        except Exception as e:
+            elastalert_logger.warning('Failed to persist new term for rule %s: %s' % (self.rules['name'], repr(e)))
+
+    def load_persisted_terms(self):
+        """ Merges terms persisted by persist_term into the baseline built by get_all_terms.
+        On failure the in-memory baseline is used as-is. """
+        # constant_score keeps this in filter context; a bool query at the top level of
+        # 'query' would be misparsed by the eql/esql request formatters in the ES client.
+        query = {'query': {'constant_score': {'filter': {'bool': {'must': [
+            {'term': {'persistence_type': self.persistence_type}},
+            {'term': {'rule_name': self.rules['name']}}]}}}}, 'size': 10000}
+        try:
+            hits = self.es.search(index=self.persist_index, body=query, ignore_unavailable=True)['hits']['hits']
+        except Exception as e:
+            elastalert_logger.warning('Failed to load persisted terms for rule %s: %s' % (self.rules['name'], repr(e)))
+            return
+        if len(hits) >= 10000:
+            elastalert_logger.warning('More than 10000 persisted terms for rule %s, '
+                                      'restored baseline may be incomplete' % (self.rules['name']))
+        loaded = 0
+        for hit in hits:
+            match_body = hit['_source'].get('match_body') or {}
+            field, value = match_body.get('field'), match_body.get('value')
+            if not field or not value:
+                continue
+            if type(field) is list:
+                field, value = tuple(field), tuple(value)
+            if field in self.seen_values and value not in self.seen_values[field]:
+                self.seen_values[field].append(value)
+                loaded += 1
+        elastalert_logger.info('Loaded %d persisted terms for rule %s' % (loaded, self.rules['name']))
+
     def add_data(self, data):
         for document in data:
             for field in self.fields:
@@ -915,6 +984,7 @@ class NewTermsRule(RuleType):
                         document['new_field'] = lookup_field
                         self.add_match(copy.deepcopy(document))
                         self.seen_values[lookup_field].append(value)
+                        self.persist_term(lookup_field, value)
 
     def add_terms_data(self, terms):
         # With terms query, len(self.fields) is always 1 and the 0'th entry is always a string
@@ -928,6 +998,7 @@ class NewTermsRule(RuleType):
                                  'new_field': field}
                         self.add_match(match)
                         self.seen_values[field].append(bucket['key'])
+                        self.persist_term(field, bucket['key'])
 
 
 class CardinalityRule(RuleType):

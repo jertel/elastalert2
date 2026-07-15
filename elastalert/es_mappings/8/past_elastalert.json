@@ -1,5 +1,8 @@
 {
   "properties": {
+    "persistence_type": {
+      "type": "keyword"
+    },
     "rule_name": {
       "type": "keyword"
     },
