@@ -810,6 +810,151 @@ def test_new_term_with_composite_fields():
     assert rule.matches[1]['missing_field'] == ('d', 'e.f')
 
 
+def new_term_persist_rules(**extra):
+    rules = {'fields': ['a'],
+             'name': 'test-persist',
+             'timestamp_field': '@timestamp',
+             'es_host': 'example.com', 'es_port': 10, 'index': 'logstash',
+             'writeback_index': 'wb',
+             'persist_new_terms': True,
+             'ts_to_dt': ts_to_dt, 'dt_to_ts': dt_to_ts}
+    rules.update(extra)
+    return rules
+
+
+def new_term_persist_mock_es(mock_es, persisted_hits=None, index_exists=True):
+    """ Mock ES that answers aggregation queries with a key1 baseline and the
+    persisted-terms query with the given hits. """
+    def search(*args, **kwargs):
+        if 'aggs' in kwargs.get('body', {}):
+            return {'aggregations': {'filtered': {'values': {'buckets': [{'key': 'key1', 'doc_count': 1}]}}}}
+        return {'hits': {'hits': persisted_hits or []}}
+
+    instance = mock.Mock()
+    instance.search.side_effect = search
+    instance.info.return_value = {'version': {'number': '8.0.0'}}
+    instance.indices.exists.return_value = index_exists
+    mock_es.return_value = instance
+    return instance
+
+
+def new_term_persist_hit(field, value):
+    return {'_source': {'rule_name': 'test-persist', 'match_body': {'field': field, 'value': value}}}
+
+
+def test_new_term_persist_init():
+    with mock.patch('elastalert.ruletypes.elasticsearch_client') as mock_es:
+        instance = new_term_persist_mock_es(mock_es)
+        rule = NewTermsRule(new_term_persist_rules())
+    assert rule.persist_index == 'wb_past'
+    instance.indices.exists.assert_called_once_with(index='wb_past')
+
+
+def test_new_term_persist_off_by_default():
+    rules = new_term_persist_rules()
+    del rules['persist_new_terms']
+    with mock.patch('elastalert.ruletypes.elasticsearch_client') as mock_es:
+        instance = new_term_persist_mock_es(mock_es)
+        rule = NewTermsRule(rules)
+    assert rule.persist_index is None
+    assert instance.indices.exists.call_count == 0
+    rule.add_data([{'@timestamp': ts_now(), 'a': 'key2'}])
+    assert instance.index.call_count == 0
+
+
+def test_new_term_persist_missing_index_disables():
+    with mock.patch('elastalert.ruletypes.elasticsearch_client') as mock_es:
+        instance = new_term_persist_mock_es(mock_es, index_exists=False)
+        rule = NewTermsRule(new_term_persist_rules())
+    assert rule.persist_index is None
+    rule.add_data([{'@timestamp': ts_now(), 'a': 'key2'}])
+    assert len(rule.matches) == 1
+    assert instance.index.call_count == 0
+
+
+def test_new_term_persist_writes_new_term():
+    with mock.patch('elastalert.ruletypes.elasticsearch_client') as mock_es:
+        instance = new_term_persist_mock_es(mock_es)
+        rule = NewTermsRule(new_term_persist_rules())
+    rule.add_data([{'@timestamp': ts_now(), 'a': 'key2'}])
+    assert len(rule.matches) == 1
+    assert instance.index.call_count == 1
+    call = instance.index.call_args
+    assert call[1]['index'] == 'wb_past'
+    assert call[1]['body']['rule_name'] == 'test-persist'
+    assert call[1]['body']['match_body'] == {'field': 'a', 'value': 'key2'}
+    # Deterministic id: same term yields the same document id
+    doc_id = call[1]['id']
+    with mock.patch('elastalert.ruletypes.elasticsearch_client') as mock_es:
+        instance2 = new_term_persist_mock_es(mock_es)
+        rule2 = NewTermsRule(new_term_persist_rules())
+    rule2.add_data([{'@timestamp': ts_now(), 'a': 'key2'}])
+    assert instance2.index.call_args[1]['id'] == doc_id
+    # Already known terms are not persisted again
+    rule.add_data([{'@timestamp': ts_now(), 'a': 'key1'}])
+    assert instance.index.call_count == 1
+
+
+def test_new_term_persist_load_merges_terms():
+    hits = [new_term_persist_hit('a', 'key9'), new_term_persist_hit('stale_field', 'x')]
+    with mock.patch('elastalert.ruletypes.elasticsearch_client') as mock_es:
+        instance = new_term_persist_mock_es(mock_es, persisted_hits=hits)
+        rule = NewTermsRule(new_term_persist_rules())
+    # The persisted term is part of the baseline and does not re-alert
+    assert 'key9' in rule.seen_values['a']
+    rule.add_data([{'@timestamp': ts_now(), 'a': 'key9'}])
+    assert rule.matches == []
+    # Terms of fields no longer configured are ignored
+    assert 'stale_field' not in rule.seen_values
+    # The load query targets the persist index, filtered by rule name
+    load_call = [c for c in instance.search.call_args_list if c[1].get('index') == 'wb_past']
+    assert len(load_call) == 1
+    assert load_call[0][1]['body']['query']['bool']['filter'] == [{'term': {'rule_name': 'test-persist'}}]
+
+
+def test_new_term_persist_composite_roundtrip():
+    hits = [new_term_persist_hit(['a', 'b'], ['key3', 'key4'])]
+    rules = new_term_persist_rules(fields=[['a', 'b']])
+    with mock.patch('elastalert.ruletypes.elasticsearch_client') as mock_es:
+        instance = new_term_persist_mock_es(mock_es, persisted_hits=hits)
+
+        def search(*args, **kwargs):
+            if 'aggs' in kwargs.get('body', {}):
+                return {'aggregations': {'filtered': {'values': {'buckets': [
+                    {'key': 'key1', 'doc_count': 1,
+                     'values': {'buckets': [{'key': 'key2', 'doc_count': 1}]}}]}}}}
+            return {'hits': {'hits': hits}}
+        instance.search.side_effect = search
+        rule = NewTermsRule(rules)
+    # Loaded composite term is reconstructed as a tuple and does not re-alert
+    assert ('key3', 'key4') in rule.seen_values[('a', 'b')]
+    rule.add_data([{'@timestamp': ts_now(), 'a': 'key3', 'b': 'key4'}])
+    assert rule.matches == []
+    # A new composite term is persisted with lists in match_body
+    rule.add_data([{'@timestamp': ts_now(), 'a': 'key1', 'b': 'other'}])
+    assert len(rule.matches) == 1
+    assert instance.index.call_args[1]['body']['match_body'] == {'field': ['a', 'b'], 'value': ['key1', 'other']}
+
+
+def test_new_term_persist_es_errors_ignored():
+    with mock.patch('elastalert.ruletypes.elasticsearch_client') as mock_es:
+        instance = new_term_persist_mock_es(mock_es)
+
+        def search(*args, **kwargs):
+            if 'aggs' in kwargs.get('body', {}):
+                return {'aggregations': {'filtered': {'values': {'buckets': [{'key': 'key1', 'doc_count': 1}]}}}}
+            raise Exception('es down')
+        instance.search.side_effect = search
+        instance.index.side_effect = Exception('es down')
+        # Load failure at startup falls back to the aggregation baseline
+        rule = NewTermsRule(new_term_persist_rules())
+    assert rule.seen_values['a'] == ['key1']
+    # Write failure neither raises nor loses the match
+    rule.add_data([{'@timestamp': ts_now(), 'a': 'key2'}])
+    assert len(rule.matches) == 1
+    assert 'key2' in rule.seen_values['a']
+
+
 def test_flatline():
     events = hits(40)
     rules = {

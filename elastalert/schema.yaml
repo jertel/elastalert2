@@ -197,6 +197,7 @@ oneOf:
       terms_size: {type: integer}
       window_step_size: *timeframe
       use_keyword_postfix: {type: boolean}
+      persist_new_terms: {type: boolean}
 
   - title: Cardinality
     required: [cardinality_field, timeframe]
