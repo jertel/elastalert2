@@ -909,7 +909,7 @@ def test_new_term_persist_load_merges_terms():
     # The load query targets the persist index, filtered by rule name
     load_call = [c for c in instance.search.call_args_list if c[1].get('index') == 'wb_past']
     assert len(load_call) == 1
-    assert load_call[0][1]['body']['query']['bool']['filter'] == [{'term': {'rule_name': 'test-persist'}}]
+    assert load_call[0][1]['body']['query'] == {'term': {'rule_name': 'test-persist'}}
 
 
 def test_new_term_persist_composite_roundtrip():

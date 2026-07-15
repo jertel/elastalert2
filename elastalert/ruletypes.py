@@ -929,7 +929,7 @@ class NewTermsRule(RuleType):
     def load_persisted_terms(self):
         """ Merges terms persisted by persist_term into the baseline built by get_all_terms.
         On failure the in-memory baseline is used as-is. """
-        query = {'query': {'bool': {'filter': [{'term': {'rule_name': self.rules['name']}}]}}, 'size': 10000}
+        query = {'query': {'term': {'rule_name': self.rules['name']}}, 'size': 10000}
         try:
             hits = self.es.search(index=self.persist_index, body=query, ignore_unavailable=True)['hits']['hits']
         except Exception as e:
