@@ -91,6 +91,97 @@ def test_format_results_fallback_id():
     assert hit['_source']['message'] == 'Hello'
 
 
+def test_format_source_uses_metadata_source():
+    col_names = ['_id', '_index', '_source']
+    val_row = ['id-1', 'logs-1', {'process': {'name': 'cmd.exe'}, 'host': {'name': 'ws1'}}]
+    assert esql.format_source(col_names, val_row) == {
+        'process': {'name': 'cmd.exe'},
+        'host': {'name': 'ws1'},
+        '_id': 'id-1',
+        '_index': 'logs-1'
+    }
+
+
+def test_format_source_falls_back_when_metadata_source_null():
+    col_names = ['_source', 'message']
+    val_row = [None, 'Hello']
+    assert esql.format_source(col_names, val_row) == {'message': 'Hello'}
+
+
+def test_format_source_nests_dotted_columns():
+    col_names = ['process.name', 'process.pid', 'host.name']
+    val_row = ['cmd.exe', 42, 'ws1']
+    assert esql.format_source(col_names, val_row) == {
+        'process': {'name': 'cmd.exe', 'pid': 42},
+        'host': {'name': 'ws1'}
+    }
+
+
+def test_format_source_drops_null_columns():
+    col_names = ['process.name', 'process.pid', 'host.name']
+    val_row = ['cmd.exe', None, None]
+    assert esql.format_source(col_names, val_row) == {'process': {'name': 'cmd.exe'}}
+
+
+def test_format_source_multi_field_does_not_displace_scalar_parent():
+    col_names = ['process.command_line.caseless', 'process.command_line']
+    val_row = ['whoami', 'WHOAMI']
+    assert esql.format_source(col_names, val_row) == {'process': {'command_line': 'WHOAMI'}}
+
+
+def test_format_source_multi_field_with_null_parent():
+    # ignore_above spares .text but not the parent or .caseless.
+    col_names = ['process.command_line', 'process.command_line.caseless',
+                 'process.command_line.text']
+    val_row = [None, None, 'x' * 2000]
+    assert esql.format_source(col_names, val_row) == {}
+
+
+def test_format_source_keeps_nested_field_that_is_not_a_multi_field():
+    # process.io is an object, not a scalar, so process.io.text is a real field.
+    col_names = ['process.io.text', 'process.name']
+    val_row = ['captured output', 'cmd.exe']
+    assert esql.format_source(col_names, val_row) == {
+        'process': {'io': {'text': 'captured output'}, 'name': 'cmd.exe'}
+    }
+
+
+def test_format_source_realistic_row():
+    col_names = [
+        '@timestamp', 'host.name', 'process.name', 'process.name.caseless',
+        'process.pid', 'user.name', 'event.code',
+        'process.command_line', 'process.command_line.caseless'
+    ]
+    val_row = [
+        '2026-06-05T09:00:00Z', 'ws1', 'cmd.exe', 'cmd.exe',
+        None, None, '4688',
+        'WHOAMI /priv', 'whoami /priv'
+    ]
+    assert esql.format_source(col_names, val_row) == {
+        '@timestamp': '2026-06-05T09:00:00Z',
+        'host': {'name': 'ws1'},
+        'process': {'name': 'cmd.exe', 'command_line': 'WHOAMI /priv'},
+        'event': {'code': '4688'}
+    }
+
+
+def test_format_results_uses_metadata_source():
+    results = {
+        'columns': [
+            {'name': '_id', 'type': 'keyword'},
+            {'name': '_index', 'type': 'keyword'},
+            {'name': '_source', 'type': '_source'}
+        ],
+        'values': [
+            ['id-1', 'logs-1', {'process': {'name': 'cmd.exe'}}]
+        ]
+    }
+    hit = esql.format_results(results)['hits']['hits'][0]
+    assert hit['_id'] == 'id-1'
+    assert hit['_index'] == 'logs-1'
+    assert hit['_source']['process']['name'] == 'cmd.exe'
+
+
 def init_client():
     conn = {
         'es_host': '',
