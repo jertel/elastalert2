@@ -41,10 +41,9 @@ def format_request(body):
 def format_source(col_names, val_row):
     """ Build a document body from one ES|QL result row.
 
-    METADATA _source is used verbatim. A flat row instead carries nulls and
-    multi-field columns (process.command_line.text) whose dots Elasticsearch
-    expands into an object, failing with document_parsing_exception; both are
-    dropped.
+    Returns _source verbatim when the query carries it. Otherwise nests the flat
+    columns into a document, dropping the nulls and multi-field columns that would
+    make Elasticsearch fail with document_parsing_exception.
     """
     if '_source' in col_names:
         doc = val_row[col_names.index('_source')]
@@ -65,8 +64,8 @@ def format_source(col_names, val_row):
             continue
 
         keys = name.split('.')
-        # Multi-field: an ancestor path is itself a column. It may be null
-        # (ignore_above spares .text but not the parent), so there is no collision.
+        # Skip a multi-field: some ancestor path is itself a column. That ancestor
+        # may be null, since ignore_above spares .text but not the parent.
         if any('.'.join(keys[:i]) in names for i in range(1, len(keys))):
             continue
 
