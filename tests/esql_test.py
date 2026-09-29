@@ -207,7 +207,7 @@ def test_search_with_esql():
 
     expected_params = {'format': 'json'}
     expected_headers = {}
-    expected_body = {'filter': {'bool': {'must': [{'other': 'other filter'}]}}, 'query': 'FROM logs-* | WHERE status == 500'}
+    expected_body = {'filter': {'bool': {'must': [{'other': 'other filter'}]}}, 'query': 'FROM logs-* | WHERE status == 500\n| limit 12'}
 
     # Mock return value with ES|QL format
     results = {
@@ -243,3 +243,65 @@ def test_process_hits_missing_timestamp():
     with pytest.raises(EAException) as excinfo:
         ElastAlerter.process_hits(rule, hits)
     assert "The configured timestamp_field '@timestamp' was not found" in str(excinfo.value)
+
+
+def test_apply_limit_appends_a_limit():
+    assert esql.apply_limit('FROM logs-* | WHERE a == 1', 5000) == 'FROM logs-* | WHERE a == 1\n| limit 5000'
+
+
+def test_apply_limit_leaves_an_existing_limit_alone():
+    query = 'FROM logs-* | WHERE a == 1 | LIMIT 10'
+    assert esql.apply_limit(query, 5000) == query
+
+    query = 'FROM logs-* | WHERE a == 1\n| limit 10\n'
+    assert esql.apply_limit(query, 5000) == query
+
+
+def test_apply_limit_without_a_size():
+    query = 'FROM logs-* | WHERE a == 1'
+    assert esql.apply_limit(query, None) == query
+    assert esql.apply_limit(query, 0) == query
+
+
+def test_apply_limit_only_matches_a_trailing_limit():
+    # Only a trailing LIMIT bounds the result.
+    query = 'FROM logs-* | LIMIT 10 | STATS c = count() BY host'
+    assert esql.apply_limit(query, 5000) == query + '\n| limit 5000'
+
+
+def test_format_request_applies_the_size():
+    body = esql_body()
+    formatted = esql.format_request(body, size=5000)
+    assert formatted['query'] == 'FROM logs-* | WHERE status == 500\n| limit 5000'
+
+
+def test_format_request_without_a_size_is_unchanged():
+    body = esql_body()
+    formatted = esql.format_request(body)
+    assert formatted['query'] == 'FROM logs-* | WHERE status == 500'
+
+
+def test_truncation_warning_when_at_the_limit():
+    msg = esql.truncation_warning({'documents_found': 105498}, 1000, 1000)
+    assert msg is not None
+    assert '1000 row limit' in msg
+    assert 'at least 105498 documents matched' in msg
+
+
+def test_truncation_warning_below_the_limit():
+    assert esql.truncation_warning({}, 999, 1000) is None
+
+
+def test_truncation_warning_without_a_limit():
+    assert esql.truncation_warning({}, 5000, None) is None
+    assert esql.truncation_warning({}, 5000, 0) is None
+
+
+def test_truncation_warning_omits_the_scanned_note_when_unhelpful():
+    msg = esql.truncation_warning({'documents_found': 1000}, 1000, 1000)
+    assert msg is not None
+    assert 'documents matched' not in msg
+
+    msg = esql.truncation_warning({}, 1000, 1000)
+    assert msg is not None
+    assert 'documents matched' not in msg

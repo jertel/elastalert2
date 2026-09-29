@@ -28,6 +28,7 @@ from elasticsearch.exceptions import ElasticsearchException
 from elasticsearch.exceptions import NotFoundError
 from elasticsearch.exceptions import TransportError
 
+import elastalert.esql as esql
 from elastalert.alerters.debug import DebugAlerter
 from elastalert.config import load_conf
 from elastalert.enhancements import DropMatchException
@@ -387,6 +388,7 @@ class ElastAlerter(object):
         if rule.get('include_fields', None) is not None:
             query['fields'] = rule['include_fields']
 
+        max_query_size = rule.get('max_query_size', self.max_query_size)
         try:
             if scroll:
                 res = self.thread_data.current_es.scroll(scroll_id=rule['scroll_id'], scroll=scroll_keepalive)
@@ -394,7 +396,7 @@ class ElastAlerter(object):
                 res = self.thread_data.current_es.search(
                     scroll=scroll_keepalive,
                     index=index,
-                    size=rule.get('max_query_size', self.max_query_size),
+                    size=max_query_size,
                     body=query,
                     ignore_unavailable=True,
                     **extra_args
@@ -422,6 +424,12 @@ class ElastAlerter(object):
             self.handle_error('Error running query: %s' % (e), {'rule': rule['name'], 'query': query})
             return None
         hits = res['hits']['hits']
+
+        if res.get('esql'):
+            warning = esql.truncation_warning(res, len(hits), max_query_size)
+            if warning:
+                elastalert_logger.warning('Rule %s: %s' % (rule['name'], warning))
+
         self.thread_data.num_hits += len(hits)
         lt = rule.get('use_local_time')
         status_log = "Queried rule %s from %s to %s: %s / %s hits" % (
