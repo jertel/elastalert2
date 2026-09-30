@@ -7,7 +7,7 @@
 - [PagerDuty] Add NTLM authentication support for HTTPS proxies - [#1772](https://github.com/jertel/elastalert2/pull/1772) - @sauravnz
 
 ## Other changes
-- [ES|QL] Apply max_query_size as a LIMIT and warn when results are truncated
+- For ES|QL filters, apply max_query_size as a LIMIT and warn when results are truncated - [#1774](https://github.com/jertel/elastalert2/pull/1774) - @defensivedepth
 
 # 2.31.0
 
