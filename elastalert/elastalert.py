@@ -404,14 +404,18 @@ class ElastAlerter(object):
 
                 self.thread_data.total_hits = int(res['hits']['total']['value'])
 
-            if len(res.get('_shards', {}).get('failures', [])) > 0:
-                try:
-                    errs = [e['reason']['reason'] for e in res['_shards']['failures'] if 'Failed to parse' in e['reason']['reason']]
-                    if len(errs):
-                        raise ElasticsearchException(errs)
-                except (TypeError, KeyError):
-                    # Different versions of ES have this formatted in different ways. Fallback to str-ing the whole thing
-                    raise ElasticsearchException(str(res['_shards']['failures']))
+            # Handles shard failures
+            shard_failures = res.get('_shards', {}).get('failures', [])
+            if shard_failures:
+                reasons = [str((f.get('reason') or {}).get('reason')) for f in shard_failures]
+                # Trigger Exception only if Elasticsearch query failed to parse
+                parse_errs = [r for r in reasons if 'Failed to parse' in r]
+                if parse_errs:
+                    raise ElasticsearchException(parse_errs)
+                # If query still worked but returns some errors, continue...
+                elastalert_logger.warning(
+                    'Rule %s: %d shard(s) failed, continuing with partial results: %s',
+                    rule['name'], len(shard_failures), shard_failures)
 
             elastalert_logger.debug(str(res))
         except ElasticsearchException as e:
