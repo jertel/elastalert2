@@ -406,7 +406,7 @@ class ElastAlerter(object):
 
             # Handles shard failures
             shard_failures = res.get('_shards', {}).get('failures', [])
-            if shard_failures:
+            if len(shard_failures) > 0:
                 reasons = [str((f.get('reason') or {}).get('reason')) for f in shard_failures]
                 # Trigger Exception only if Elasticsearch query failed to parse
                 parse_errs = [r for r in reasons if 'Failed to parse' in r]
