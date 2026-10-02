@@ -410,15 +410,16 @@ class ElastAlerter(object):
                 # Allow queries on degraded data streams
                 shard_failures = res.get('_shards', {}).get('failures', [])
                 if len(shard_failures) > 0:
-                    reasons = [str((f.get('reason') or {}).get('reason')) for f in shard_failures]
+                    reasons = [str(f) for f in shard_failures]
                     # Trigger Exception only if Elasticsearch query failed to parse
                     parse_errs = [r for r in reasons if 'Failed to parse' in r]
                     if parse_errs:
                         raise ElasticsearchException(parse_errs)
                     # If query still worked but returns some errors, continue...
+                    failed_indices = sorted({str(f.get('index')) for f in shard_failures if isinstance(f, dict)})
                     elastalert_logger.warning(
                         'Rule %s: %d shard(s) failed, continuing with partial results: %s',
-                        rule['name'], len(shard_failures), shard_failures)
+                        rule['name'], len(shard_failures), ', '.join(failed_indices))
             else:
                 # Stop rule if any error with at least one shard of a data stream
                 if len(res.get('_shards', {}).get('failures', [])) > 0:

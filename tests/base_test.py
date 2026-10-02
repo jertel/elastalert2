@@ -161,6 +161,26 @@ def test_no_hits(ea):
     assert ea.rules[0]['type'].add_data.call_count == 0
 
 
+@pytest.mark.parametrize('allow_degraded, failures, expected_success', [
+    # All shards working: the option changes nothing
+    (False, [], True),
+    (True, [], True),
+    # Default: an unavailable shard stops the run
+    (False, [{'index': '.ds-index-test-00001', 'reason': {'type': 'no_shard_available_action_exception', 'reason': None}}], False),
+    # Option on: the run continues with the hits from the working shards
+    (True, [{'index': '.ds-index-test-00001', 'reason': {'type': 'no_shard_available_action_exception', 'reason': None}}], True),
+    (True, [{'index': '.ds-index-test-00001', 'reason': 'No shard available'}], True),
+    # Option on: a query that fails to parse stops the run (same behavior as default)
+    (True, [{'index': '.ds-index-test-00001', 'reason': {'type': 'query_shard_exception', 'reason': 'Failed to parse query'}}], False),
+])
+def test_query_with_shard_failures(ea, allow_degraded, failures, expected_success):
+    ea.allow_queries_on_degraded_indices = allow_degraded
+    response = generate_hits([START_TIMESTAMP, END_TIMESTAMP])
+    response['_shards'] = {'failures': failures}
+    ea.thread_data.current_es.search.return_value = response
+    assert ea.run_query(ea.rules[0], START, END) == expected_success
+
+
 def test_no_terms_hits(ea):
     ea.rules[0]['use_terms_query'] = True
     ea.rules[0]['query_key'] = 'QWERTY'
