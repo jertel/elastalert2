@@ -145,6 +145,7 @@ class ElastAlerter(object):
         self.alert_time_limit = self.conf['alert_time_limit']
         self.old_query_limit = self.conf['old_query_limit']
         self.disable_rules_on_error = self.conf['disable_rules_on_error']
+        self.allow_queries_on_degraded_indices = self.conf['allow_queries_on_degraded_indices']
         self.notify_email = self.conf.get('notify_email', [])
         self.notify_all_errors = self.conf.get('notify_all_errors', False)
         self.notify_alert = self.conf.get('notify_alert', [])
@@ -405,17 +406,29 @@ class ElastAlerter(object):
                 self.thread_data.total_hits = int(res['hits']['total']['value'])
 
             # Handles shard failures
-            shard_failures = res.get('_shards', {}).get('failures', [])
-            if len(shard_failures) > 0:
-                reasons = [str((f.get('reason') or {}).get('reason')) for f in shard_failures]
-                # Trigger Exception only if Elasticsearch query failed to parse
-                parse_errs = [r for r in reasons if 'Failed to parse' in r]
-                if parse_errs:
-                    raise ElasticsearchException(parse_errs)
-                # If query still worked but returns some errors, continue...
-                elastalert_logger.warning(
-                    'Rule %s: %d shard(s) failed, continuing with partial results: %s',
-                    rule['name'], len(shard_failures), shard_failures)
+            if self.allow_queries_on_degraded_indices:
+                # Allow queries on degraded data streams
+                shard_failures = res.get('_shards', {}).get('failures', [])
+                if len(shard_failures) > 0:
+                    reasons = [str((f.get('reason') or {}).get('reason')) for f in shard_failures]
+                    # Trigger Exception only if Elasticsearch query failed to parse
+                    parse_errs = [r for r in reasons if 'Failed to parse' in r]
+                    if parse_errs:
+                        raise ElasticsearchException(parse_errs)
+                    # If query still worked but returns some errors, continue...
+                    elastalert_logger.warning(
+                        'Rule %s: %d shard(s) failed, continuing with partial results: %s',
+                        rule['name'], len(shard_failures), shard_failures)
+            else:
+                # Stop rule if any error with at least one shard of a data stream
+                if len(res.get('_shards', {}).get('failures', [])) > 0:
+                    try:
+                        errs = [e['reason']['reason'] for e in res['_shards']['failures'] if 'Failed to parse' in e['reason']['reason']]
+                        if len(errs):
+                            raise ElasticsearchException(errs)
+                    except (TypeError, KeyError):
+                        # Different versions of ES have this formatted in different ways. Fallback to str-ing the whole thing
+                        raise ElasticsearchException(str(res['_shards']['failures']))
 
             elastalert_logger.debug(str(res))
         except ElasticsearchException as e:

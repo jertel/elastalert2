@@ -91,6 +91,9 @@ rule will no longer be run until either ElastAlert 2 restarts or the rule file h
 
 ``show_disabled_rules``: If true, ElastAlert 2 show the disable rules' list when finishes the execution. This defaults to True.
 
+``allow_queries_on_degraded_indices``: If true, Elastalert 2 will still query Elasticsearch when some shards of the 
+data stream are unavailable. The default is ``false``.
+
 ``notify_alert``: List of alerters to execute upon encountering a system error. System errors occur when an unexpected exception is thrown during rule processing. For additional notifications, such as when ElastAlert 2 background tests encounter problems, or when connectivity to the data storage system is lost, enable ``notify_all_errors``. 
 
 See the :ref:`Alerts` section for the list of available alerters and their parameters.
