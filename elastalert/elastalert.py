@@ -416,10 +416,12 @@ class ElastAlerter(object):
                     if parse_errs:
                         raise ElasticsearchException(parse_errs)
                     # If query still worked but returns some errors, continue...
-                    failed_indices = sorted({str(f.get('index')) for f in shard_failures if isinstance(f, dict)})
+                    failed_indices = ', '.join(sorted({str(f.get('index')) for f in shard_failures if isinstance(f, dict)}))
+                    if len(failed_indices) > 1024:
+                        failed_indices = failed_indices[:1024] + '... (%d characters removed)' % (len(failed_indices) - 1024)
                     elastalert_logger.warning(
-                        'Rule %s: %d shard(s) failed, continuing with partial results: %s',
-                        rule['name'], len(shard_failures), ', '.join(failed_indices))
+                        'Rule %s: %d shard(s) failed, continuing with partial results. Affected indices: %s',
+                        rule['name'], res['_shards'].get('failed', len(shard_failures)), failed_indices)
             else:
                 # Stop rule if any error with at least one shard of a data stream
                 if len(res.get('_shards', {}).get('failures', [])) > 0:
