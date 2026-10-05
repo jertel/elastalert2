@@ -406,7 +406,7 @@ class ElastAlerter(object):
                 self.thread_data.total_hits = int(res['hits']['total']['value'])
 
             # Handles shard failures
-            if self.allow_queries_on_degraded_indices:
+            if rule.get('allow_queries_on_degraded_indices', self.allow_queries_on_degraded_indices):
                 # Allow queries on degraded data streams
                 shard_failures = res.get('_shards', {}).get('failures', [])
                 if len(shard_failures) > 0:

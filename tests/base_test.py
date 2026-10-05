@@ -161,6 +161,7 @@ def test_no_hits(ea):
     assert ea.rules[0]['type'].add_data.call_count == 0
 
 
+@pytest.mark.parametrize('set_in_rule', [False, True])
 @pytest.mark.parametrize('allow_degraded, failures, expected_success', [
     # All shards working: the option changes nothing
     (False, [], True),
@@ -171,10 +172,14 @@ def test_no_hits(ea):
     (True, [{'index': '.ds-index-test-00001', 'reason': {'type': 'no_shard_available_action_exception', 'reason': None}}], True),
     (True, [{'index': '.ds-index-test-00001', 'reason': 'No shard available'}], True),
     # Option on: a query that fails to parse stops the run (same behavior as default)
-    (True, [{'index': '.ds-index-test-00001', 'reason': {'type': 'query_shard_exception', 'reason': 'Failed to parse query'}}], False),
-])
-def test_query_with_shard_failures(ea, allow_degraded, failures, expected_success):
-    ea.allow_queries_on_degraded_indices = allow_degraded
+    (True, [{'index': '.ds-index-test-00001', 'reason': {'type': 'query_shard_exception', 'reason': 'Failed to parse query'}}], False)])
+def test_query_with_shard_failures(ea, set_in_rule, allow_degraded, failures, expected_success):
+    if set_in_rule:
+        # The rule's value must win over the global one, so give the global the opposite value
+        ea.allow_queries_on_degraded_indices = not allow_degraded
+        ea.rules[0]['allow_queries_on_degraded_indices'] = allow_degraded
+    else:
+        ea.allow_queries_on_degraded_indices = allow_degraded
     response = generate_hits([START_TIMESTAMP, END_TIMESTAMP])
     response['_shards'] = {'failures': failures}
     ea.thread_data.current_es.search.return_value = response
