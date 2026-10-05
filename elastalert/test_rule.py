@@ -449,6 +449,7 @@ class MockElastAlerter(object):
             'old_query_limit': {'weeks': 1},
             'run_every': {'minutes': 5},
             'disable_rules_on_error': False,
+            'allow_queries_on_degraded_indices': False,
             'buffer_time': {'minutes': 45},
             'scroll_keepalive': '30s'
         }

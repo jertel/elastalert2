@@ -35,6 +35,7 @@ def test_config_loads():
     assert conf['writeback_index'] == 'elastalert_status'
 
     assert conf['alert_time_limit'] == datetime.timedelta(days=2)
+    assert conf['allow_queries_on_degraded_indices'] is False
 
 
 def test_config_defaults():
