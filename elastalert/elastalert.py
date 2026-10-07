@@ -28,7 +28,6 @@ from elasticsearch.exceptions import ElasticsearchException
 from elasticsearch.exceptions import NotFoundError
 from elasticsearch.exceptions import TransportError
 
-import elastalert.esql as esql
 from elastalert.alerters.debug import DebugAlerter
 from elastalert.config import load_conf
 from elastalert.enhancements import DropMatchException
@@ -424,12 +423,6 @@ class ElastAlerter(object):
             self.handle_error('Error running query: %s' % (e), {'rule': rule['name'], 'query': query})
             return None
         hits = res['hits']['hits']
-
-        if res.get('esql'):
-            warning = esql.truncation_warning(res, len(hits), max_query_size)
-            if warning:
-                elastalert_logger.warning('Rule %s: %s' % (rule['name'], warning))
-
         self.thread_data.num_hits += len(hits)
         lt = rule.get('use_local_time')
         status_log = "Queried rule %s from %s to %s: %s / %s hits" % (
@@ -441,6 +434,9 @@ class ElastAlerter(object):
         )
         if self.thread_data.total_hits > rule.get('max_query_size', self.max_query_size):
             elastalert_logger.info("%s (scrolling..)" % status_log)
+        elif res.get('esql') and max_query_size and len(hits) >= max_query_size:
+            # ES|QL has no scroll, so rows past the limit are dropped
+            elastalert_logger.warning("%s (truncated results)" % status_log)
         else:
             elastalert_logger.info(status_log)
 

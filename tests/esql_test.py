@@ -279,29 +279,3 @@ def test_format_request_without_a_size_is_unchanged():
     body = esql_body()
     formatted = esql.format_request(body)
     assert formatted['query'] == 'FROM logs-* | WHERE status == 500'
-
-
-def test_truncation_warning_when_at_the_limit():
-    msg = esql.truncation_warning({'documents_found': 105498}, 1000, 1000)
-    assert msg is not None
-    assert '1000 row limit' in msg
-    assert 'at least 105498 documents matched' in msg
-
-
-def test_truncation_warning_below_the_limit():
-    assert esql.truncation_warning({}, 999, 1000) is None
-
-
-def test_truncation_warning_without_a_limit():
-    assert esql.truncation_warning({}, 5000, None) is None
-    assert esql.truncation_warning({}, 5000, 0) is None
-
-
-def test_truncation_warning_omits_the_scanned_note_when_unhelpful():
-    msg = esql.truncation_warning({'documents_found': 1000}, 1000, 1000)
-    assert msg is not None
-    assert 'documents matched' not in msg
-
-    msg = esql.truncation_warning({}, 1000, 1000)
-    assert msg is not None
-    assert 'documents matched' not in msg

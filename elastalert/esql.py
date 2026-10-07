@@ -14,22 +14,6 @@ def apply_limit(query, size):
     return '%s\n| limit %d' % (query.rstrip(), int(size))
 
 
-def truncation_warning(results, hit_count, limit):
-    """ Return a warning if the results filled the row limit, else None. """
-    if not limit or hit_count < int(limit):
-        return None
-
-    # documents_found is a lower bound on the total
-    scanned = results.get('documents_found')
-    scanned_note = ''
-    if isinstance(scanned, int) and scanned > hit_count:
-        scanned_note = ' (at least %d documents matched)' % scanned
-
-    return ('ES|QL results were truncated at the %d row limit%s, so the dropped matches '
-            'will not alert. Raise max_query_size, shorten buffer_time, or narrow the '
-            'rule.' % (hit_count, scanned_note))
-
-
 def format_request(body, size=None):
     query = body.get('query')
     if not query:
