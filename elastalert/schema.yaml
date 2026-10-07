@@ -302,6 +302,7 @@ properties:
   query_key: *arrayOfString
   replace_dots_in_field_names: {type: boolean}
   scan_entire_timeframe: {type: boolean}
+  allow_queries_on_degraded_indices: {type: boolean}
   
   ## System Error Notifications
   notify_alert: *stringOrArrayOfStringsOrObjects

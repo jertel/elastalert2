@@ -5,8 +5,10 @@
 
 ## New features
 - [PagerDuty] Add NTLM authentication support for HTTPS proxies - [#1772](https://github.com/jertel/elastalert2/pull/1772) - @sauravnz
+- [Elasticsearch] Add opt-in flag to allow queries on degraded Elasticsearch indices - [#1777](https://github.com/jertel/elastalert2/pull/1777) - @fhaldi
 
 ## Other changes
+- [Helm] Omit enabled flag in probe definitions - [#1775](https://github.com/jertel/elastalert2/pull/1775) - @jim-barber-he
 - For ES|QL filters, apply max_query_size as a LIMIT and warn when results are truncated - [#1774](https://github.com/jertel/elastalert2/pull/1774) - @defensivedepth
 
 # 2.31.0

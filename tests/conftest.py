@@ -134,6 +134,7 @@ def ea():
             'max_query_size': 10000,
             'old_query_limit': datetime.timedelta(weeks=1),
             'disable_rules_on_error': False,
+            'allow_queries_on_degraded_indices': False,
             'scroll_keepalive': '30s',
             'custom_pretty_ts_format': '%Y-%m-%d %H:%M'}
     elastalert.util.elasticsearch_client = mock_es_client

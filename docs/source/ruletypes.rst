@@ -379,13 +379,18 @@ ca_certs
 
 ``ca_certs``: Path to a CA cert bundle to use to verify SSL connections (Optional, string, no default)
 
-
 disable_rules_on_error
 ^^^^^^^^^^^^^^^^^^^^^^
 
 ``disable_rules_on_error``: If true, ElastAlert 2 will disable rules which throw uncaught (not EAException) exceptions. It
 will upload a traceback message to ``elastalert_metadata`` and if ``notify_email`` is set, send an email notification. The
 rule will no longer be run until either ElastAlert 2 restarts or the rule file has been modified. This defaults to ``True``.
+
+allow_queries_on_degraded_indices
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+``allow_queries_on_degraded_indices``: If true, Elastalert 2 will still query Elasticsearch when some shards of the 
+data stream are unavailable. The default is ``false``.
 
 es_conn_timeout
 ^^^^^^^^^^^^^^^
