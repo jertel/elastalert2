@@ -456,7 +456,7 @@ class ElastAlerter(object):
             elastalert_logger.info("%s (scrolling..)" % status_log)
         elif res.get('esql') and max_query_size and len(hits) >= max_query_size:
             # ES|QL has no scroll, so rows past the limit are dropped
-            elastalert_logger.warning("%s (truncated results)" % status_log)
+            elastalert_logger.warning("%s (results may be truncated)" % status_log)
         else:
             elastalert_logger.info(status_log)
 
