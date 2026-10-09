@@ -2,6 +2,15 @@ import hashlib
 import json
 
 
+def apply_limit(filters, size):
+    limited = []
+    for f in filters:
+        if isinstance(f.get('esql'), str):
+            f = dict(f, esql='%s\n| limit %d' % (f['esql'].rstrip(), int(size)))
+        limited.append(f)
+    return limited
+
+
 def format_request(body):
     query = body.get('query')
     if not query:
@@ -38,6 +47,45 @@ def format_request(body):
     return None
 
 
+def format_source(col_names, val_row):
+    """ Build a document body from one ES|QL result row.
+
+    Returns _source verbatim when the query carries it. Otherwise nests the flat
+    columns into a document, dropping the nulls and multi-field columns that would
+    make Elasticsearch fail with document_parsing_exception.
+    """
+    if '_source' in col_names:
+        doc = val_row[col_names.index('_source')]
+        if isinstance(doc, str):
+            doc = json.loads(doc)
+        if doc is not None:
+            doc = dict(doc)
+            # _id and _index arrive as their own columns, not inside _source.
+            for name in ('_id', '_index'):
+                if name in col_names and val_row[col_names.index(name)] is not None:
+                    doc.setdefault(name, val_row[col_names.index(name)])
+            return doc
+
+    names = set(col_names)
+    source = {}
+    for name, value in sorted(zip(col_names, val_row), key=lambda col: col[0].count('.')):
+        if value is None:
+            continue
+
+        keys = name.split('.')
+        # Skip a multi-field: some ancestor path is itself a column. That ancestor
+        # may be null, since ignore_above spares .text but not the parent.
+        if any('.'.join(keys[:i]) in names for i in range(1, len(keys))):
+            continue
+
+        node = source
+        for key in keys[:-1]:
+            node = node.setdefault(key, {})
+        node[keys[-1]] = value
+
+    return source
+
+
 def format_results(results, default_index=None):
     columns = results.pop('columns', None)
     values = results.pop('values', None)
@@ -47,7 +95,7 @@ def format_results(results, default_index=None):
     col_names = [col['name'] for col in columns]
     hits = []
     for val_row in values:
-        doc = dict(zip(col_names, val_row))
+        doc = format_source(col_names, val_row)
         
         # Pull metadata fields if present
         doc_id = doc.get('_id', None)

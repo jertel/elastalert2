@@ -751,3 +751,19 @@ def test_summary_table_fields_schema():
     assert errors_for([{'header': 'Hostname'}]) != []
     # Invalid: dict with unknown property
     assert errors_for([{'path': 'host.hostname', 'foo': 'bar'}]) != []
+
+
+@pytest.mark.parametrize('rule_limit, conf_limit, expected', [
+    (None, None, 'FROM logs-*'),
+    (None, 5000, 'FROM logs-*\n| limit 5000'),
+    (100, 5000, 'FROM logs-*\n| limit 100'),
+])
+def test_load_options_esql_limit(rule_limit, conf_limit, expected):
+    test_config_copy = dict(test_config, max_query_size=10000, esql_limit=conf_limit)
+    rules_loader = FileRulesLoader(test_config_copy)
+    test_rule_copy = copy.deepcopy(test_rule)
+    test_rule_copy['filter'] = [{'esql': 'FROM logs-*'}, {'term': {'key': 'value'}}]
+    if rule_limit:
+        test_rule_copy['max_query_size'] = rule_limit
+    rules_loader.load_options(test_rule_copy, test_config_copy, 'filename.yaml')
+    assert test_rule_copy['filter'] == [{'esql': expected}, {'term': {'key': 'value'}}]

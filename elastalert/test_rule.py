@@ -444,7 +444,6 @@ class MockElastAlerter(object):
             'es_host': 'localhost',
             'es_port': 14900,
             'writeback_index': 'wb',
-            'max_query_size': 10000,
             'alert_time_limit': {'hours': 24},
             'old_query_limit': {'weeks': 1},
             'run_every': {'minutes': 5},
