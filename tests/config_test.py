@@ -38,6 +38,23 @@ def test_config_loads():
     assert conf['allow_queries_on_degraded_indices'] is False
 
 
+def test_config_esql_limit():
+    dir_path = os.path.dirname(os.path.realpath(__file__))
+
+    test_args = mock.Mock()
+    test_args.config = dir_path + '/example.config.yaml'
+    test_args.rule = None
+    test_args.debug = False
+    test_args.es_debug_trace = None
+
+    conf = load_conf(test_args)
+    assert conf['max_query_size'] == 10000
+    assert conf['esql_limit'] is None
+
+    conf = load_conf(test_args, overrides={'max_query_size': 5000})
+    assert conf['esql_limit'] == 5000
+
+
 def test_config_defaults():
     dir_path = os.path.dirname(os.path.realpath(__file__))
 

@@ -41,6 +41,7 @@ import elastalert.alerters.webex_webhook
 import elastalert.alerters.workwechat
 from elastalert import alerts
 from elastalert import enhancements
+from elastalert import esql
 from elastalert import ruletypes
 from elastalert.alerters.alertmanager import AlertmanagerAlerter
 from elastalert.alerters.email import EmailAlerter
@@ -357,6 +358,11 @@ class RulesLoader(object):
                 rule['opensearch_discover_to_timedelta'] = datetime.timedelta(**rule['opensearch_discover_to_timedelta'])
         except (KeyError, TypeError) as e:
             raise EAException('Invalid time format used: %s' % e)
+
+        # Must run before the defaults below copy the global max_query_size into the rule
+        esql_limit = rule.get('max_query_size', conf.get('esql_limit'))
+        if esql_limit:
+            rule['filter'] = esql.apply_limit(rule.get('filter', []), esql_limit)
 
         # Set defaults, copy defaults from config.yaml
         for key, val in list(self.base_config.items()):

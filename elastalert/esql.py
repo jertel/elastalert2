@@ -1,20 +1,17 @@
 import hashlib
 import json
-import re
 
 
-TRAILING_LIMIT_RE = re.compile(r'\|\s*limit\s+\d+\s*$', re.IGNORECASE)
+def apply_limit(filters, size):
+    limited = []
+    for f in filters:
+        if isinstance(f.get('esql'), str):
+            f = dict(f, esql='%s\n| limit %d' % (f['esql'].rstrip(), int(size)))
+        limited.append(f)
+    return limited
 
 
-def apply_limit(query, size):
-    """ Append a LIMIT unless the query already ends with one. """
-    if not size or TRAILING_LIMIT_RE.search(query):
-        return query
-
-    return '%s\n| limit %d' % (query.rstrip(), int(size))
-
-
-def format_request(body, size=None):
+def format_request(body):
     query = body.get('query')
     if not query:
         return None
@@ -44,7 +41,7 @@ def format_request(body, size=None):
             other_filters.append(f)
 
     if esql:
-        new_body = {'filter': {'bool': {'must': other_filters}}, 'query': apply_limit(esql, size)}
+        new_body = {'filter': {'bool': {'must': other_filters}}, 'query': esql}
         return new_body
 
     return None

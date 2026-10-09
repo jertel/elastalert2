@@ -128,7 +128,6 @@ class ElasticSearchClient(Elasticsearch):
         # 3. The scroll and _source_includes params will be dropped if #1 is true, since the EQL API doesn't support them.
         # 4. The size param will be moved to a body parameter instead of a top-level param if #1 is true.
         # 5. The results will be converted from EQL API format into the standard search format.
-        # 6. If the request body contains an ES|QL query, it is sent to the _query API with size as a LIMIT and its results converted.
 
         # from is a reserved word so it cannot be used, use from_ instead
         if "from_" in params:
@@ -136,7 +135,7 @@ class ElasticSearchClient(Elasticsearch):
 
         path = _make_path(index, doc_type, "_search")
         eql_body = eql.format_request(body)
-        esql_body = esql.format_request(body, size=params.get('size'))
+        esql_body = esql.format_request(body)
         if eql_body is not None:
             path = path.replace('/_search', '/_eql/search')
             body = eql_body

@@ -9,7 +9,7 @@
 
 ## Other changes
 - [Helm] Omit enabled flag in probe definitions - [#1775](https://github.com/jertel/elastalert2/pull/1775) - @jim-barber-he
-- For ES|QL filters, apply max_query_size as a LIMIT and warn when results are truncated - [#1774](https://github.com/jertel/elastalert2/pull/1774) - @defensivedepth
+- For ES|QL filters, apply a configured max_query_size as a LIMIT and warn when results may be truncated - [#1774](https://github.com/jertel/elastalert2/pull/1774) - @defensivedepth
 
 # 2.31.0
 

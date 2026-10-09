@@ -207,7 +207,7 @@ def test_search_with_esql():
 
     expected_params = {'format': 'json'}
     expected_headers = {}
-    expected_body = {'filter': {'bool': {'must': [{'other': 'other filter'}]}}, 'query': 'FROM logs-* | WHERE status == 500\n| limit 12'}
+    expected_body = {'filter': {'bool': {'must': [{'other': 'other filter'}]}}, 'query': 'FROM logs-* | WHERE status == 500'}
 
     # Mock return value with ES|QL format
     results = {
@@ -246,36 +246,14 @@ def test_process_hits_missing_timestamp():
 
 
 def test_apply_limit_appends_a_limit():
-    assert esql.apply_limit('FROM logs-* | WHERE a == 1', 5000) == 'FROM logs-* | WHERE a == 1\n| limit 5000'
+    filters = [{'esql': 'FROM logs-* | WHERE a == 1'}, {'term': {'a': 1}}]
+    assert esql.apply_limit(filters, 5000) == [{'esql': 'FROM logs-* | WHERE a == 1\n| limit 5000'}, {'term': {'a': 1}}]
 
 
-def test_apply_limit_leaves_an_existing_limit_alone():
-    query = 'FROM logs-* | WHERE a == 1 | LIMIT 10'
-    assert esql.apply_limit(query, 5000) == query
-
-    query = 'FROM logs-* | WHERE a == 1\n| limit 10\n'
-    assert esql.apply_limit(query, 5000) == query
+def test_apply_limit_keeps_the_query_intact():
+    query = 'FROM logs-* | LIMIT 3 BY host.name // per host'
+    assert esql.apply_limit([{'esql': query + '\n'}], 5000) == [{'esql': query + '\n| limit 5000'}]
 
 
-def test_apply_limit_without_a_size():
-    query = 'FROM logs-* | WHERE a == 1'
-    assert esql.apply_limit(query, None) == query
-    assert esql.apply_limit(query, 0) == query
-
-
-def test_apply_limit_only_matches_a_trailing_limit():
-    # Only a trailing LIMIT bounds the result.
-    query = 'FROM logs-* | LIMIT 10 | STATS c = count() BY host'
-    assert esql.apply_limit(query, 5000) == query + '\n| limit 5000'
-
-
-def test_format_request_applies_the_size():
-    body = esql_body()
-    formatted = esql.format_request(body, size=5000)
-    assert formatted['query'] == 'FROM logs-* | WHERE status == 500\n| limit 5000'
-
-
-def test_format_request_without_a_size_is_unchanged():
-    body = esql_body()
-    formatted = esql.format_request(body)
-    assert formatted['query'] == 'FROM logs-* | WHERE status == 500'
+def test_apply_limit_skips_a_malformed_query():
+    assert esql.apply_limit([{'esql': 123}], 5000) == [{'esql': 123}]

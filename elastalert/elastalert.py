@@ -452,10 +452,10 @@ class ElastAlerter(object):
             self.thread_data.num_hits,
             len(hits)
         )
-        if self.thread_data.total_hits > rule.get('max_query_size', self.max_query_size):
+        if self.thread_data.total_hits > max_query_size:
             elastalert_logger.info("%s (scrolling..)" % status_log)
         elif res.get('esql') and max_query_size and len(hits) >= max_query_size:
-            # ES|QL has no scroll, so rows past the limit are dropped
+            # ES|QL cannot scroll
             elastalert_logger.warning("%s (results may be truncated)" % status_log)
         else:
             elastalert_logger.info(status_log)
