@@ -10,6 +10,29 @@
 ## Other changes
 - [Helm] Omit enabled flag in probe definitions - [#1775](https://github.com/jertel/elastalert2/pull/1775) - @jim-barber-he
 - For ES|QL filters, apply a configured max_query_size as a LIMIT and warn when results may be truncated - [#1774](https://github.com/jertel/elastalert2/pull/1774) - @defensivedepth
+- Upgrade dependency library apscheduler to 3.11.3 - [#1778](https://github.com/jertel/elastalert2/pull/1778) - @jertel
+- Upgrade dependency library boto3 to 1.43.115 - [#1778](https://github.com/jertel/elastalert2/pull/1778) - @jertel
+- Upgrade dependency library cffi to 2.1.1 - [#1778](https://github.com/jertel/elastalert2/pull/1778) - @jertel
+- Upgrade dependency library croniter to 6.2.4 - [#1778](https://github.com/jertel/elastalert2/pull/1778) - @jertel
+- Upgrade dependency library jsonpointer to 3.4 - [#1778](https://github.com/jertel/elastalert2/pull/1778) - @jertel
+- Upgrade dependency library prettytable to 3.18.0 - [#1778](https://github.com/jertel/elastalert2/pull/1778) - @jertel
+- Upgrade dependency library prometheus-client to 0.26.0 - [#1778](https://github.com/jertel/elastalert2/pull/1778) - @jertel
+- Upgrade dependency library python-dateutil to 2.9.0 - [#1778](https://github.com/jertel/elastalert2/pull/1778) - @jertel
+- Upgrade dependency library pycryptodomex to 3.24.1 - [#1778](https://github.com/jertel/elastalert2/pull/1778) - @jertel
+- Upgrade dependency library requests to 2.34.2 - [#1778](https://github.com/jertel/elastalert2/pull/1778) - @jertel
+- Upgrade dependency library stomp.py to 9.0.0 - [#1778](https://github.com/jertel/elastalert2/pull/1778) - @jertel
+- Upgrade dependency library tencentcloud-sdk-python to 3.1.190 - [#1778](https://github.com/jertel/elastalert2/pull/1778) - @jertel
+- Upgrade dependency library texttable to 1.7.2 - [#1778](https://github.com/jertel/elastalert2/pull/1778) - @jertel
+- Upgrade dependency library twilio to 9.12.0 - [#1778](https://github.com/jertel/elastalert2/pull/1778) - @jertel
+- Upgrade dependency library flake8 to 7.4.1 - [#1778](https://github.com/jertel/elastalert2/pull/1778) - @jertel
+- Upgrade dependency library flake8-absolute-import to 1.0.0.3 - [#1778](https://github.com/jertel/elastalert2/pull/1778) - @jertel
+- Upgrade dependency library pre-commit to 4.7.0 - [#1778](https://github.com/jertel/elastalert2/pull/1778) - @jertel
+- Upgrade dependency library pylint to 4.1.3 - [#1778](https://github.com/jertel/elastalert2/pull/1778) - @jertel
+- Upgrade dependency library pytest to 9.1.1 - [#1778](https://github.com/jertel/elastalert2/pull/1778) - @jertel
+- Upgrade dependency library setuptools to 84.2.0 - [#1778](https://github.com/jertel/elastalert2/pull/1778) - @jertel
+- Upgrade dependency library sphinx to 9.1.1 - [#1778](https://github.com/jertel/elastalert2/pull/1778) - @jertel
+- Upgrade dependency library tox to 4.67.1 - [#1778](https://github.com/jertel/elastalert2/pull/1778) - @jertel
+- Force upgrade transitive dependency library certifi to 2026.10.19 - [#1778](https://github.com/jertel/elastalert2/pull/1778) - @jertel
 
 # 2.31.0
 
