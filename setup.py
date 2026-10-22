@@ -54,6 +54,7 @@ setup(
         'pytz>=2026.2',
         'pycryptodomex>=3.24.1',
         'PyYAML>=6.0.3',
+        'certifi>=2026.10.19',
         'zabbix-utils>=2.0.4',
         'requests>=2.34.2',
         'requests-ntlm2>=6.6.0',
