@@ -33,6 +33,7 @@
 - Upgrade dependency library sphinx to 9.1.1 - [#1778](https://github.com/jertel/elastalert2/pull/1778) - @jertel
 - Upgrade dependency library tox to 4.67.1 - [#1778](https://github.com/jertel/elastalert2/pull/1778) - @jertel
 - Force upgrade transitive dependency library certifi to 2026.10.19 - [#1778](https://github.com/jertel/elastalert2/pull/1778) - @jertel
+- Support python 3.15 - [#1779](https://github.com/jertel/elastalert2/pull/1779) - @nsano-rururu
 
 # 2.31.0
 
