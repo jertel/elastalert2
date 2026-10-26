@@ -1,7 +1,7 @@
 # 2.TBD.TBD
 
 ## Breaking changes
-- TBD
+- Support python 3.15 (possible breaking change, but not yet observed) - [#1779](https://github.com/jertel/elastalert2/pull/1779) - @nsano-rururu
 
 ## New features
 - [PagerDuty] Add NTLM authentication support for HTTPS proxies - [#1772](https://github.com/jertel/elastalert2/pull/1772) - @sauravnz
