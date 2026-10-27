@@ -1,4 +1,4 @@
-FROM python:3.15.1-slim
+FROM python:3.15.2-slim
 
 RUN apt update && apt upgrade -y
 RUN apt install -y gcc libffi-dev
