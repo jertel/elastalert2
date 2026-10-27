@@ -1,5 +1,5 @@
 apiVersion: v1
-description: Automated rule-based alerting for Elasticsearch
+description: Kubernetes Helm Chart for ElastAlert2, an automated rule-based alerting engine for Elasticsearch.
 name: elastalert2
 version: 2.32.0
 appVersion: 2.32.0

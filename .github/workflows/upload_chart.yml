@@ -34,3 +34,4 @@ jobs:
           CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
         with:
           charts_dir: chart
+          mark_as_latest: false
