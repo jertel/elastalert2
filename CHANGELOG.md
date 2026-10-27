@@ -1,6 +1,17 @@
 # 2.TBD.TBD
 
 ## Breaking changes
+- None
+
+## New features
+- None
+
+## Other changes
+- None
+
+# 2.32.0
+
+## Breaking changes
 - Support python 3.15 (possible breaking change, but not yet observed) - [#1779](https://github.com/jertel/elastalert2/pull/1779) - @nsano-rururu
 
 ## New features
