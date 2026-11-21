@@ -866,6 +866,11 @@ properties:
   smseagle_duration: {type: integer}
   smseagle_voice_id: {type: integer}
 
+  ### SMSTunnel
+  smstunnel_api_key: {type: string}
+  smstunnel_to: {} # checked by the alerter, because a schema error would print the number in the log
+  smstunnel_device_id: {type: string}
+
   ### Splunk On-Call (Formerly VictorOps)
   victorops_api_key: {type: string}
   victorops_routing_key: {type: string}

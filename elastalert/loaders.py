@@ -52,6 +52,7 @@ from elastalert.alerters.opsgenie import OpsGenieAlerter
 from elastalert.alerters.pagerduty import PagerDutyAlerter
 from elastalert.alerters.slack import SlackAlerter
 from elastalert.alerters.smseagle import SMSEagleAlerter
+from elastalert.alerters.smstunnel import SMSTunnelAlerter
 from elastalert.alerters.sns import SnsAlerter
 from elastalert.alerters.sqs import SqsAlerter
 from elastalert.alerters.powerautomate import MsPowerAutomateAlerter
@@ -150,6 +151,7 @@ class RulesLoader(object):
         'matrixhookshot': MatrixHookshotAlerter,
         'yzj': YzjAlerter,
         'flashduty': FlashdutyAlerter,
+        'smstunnel': SMSTunnelAlerter,
         'smseagle': SMSEagleAlerter
     }
 
