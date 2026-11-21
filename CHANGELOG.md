@@ -4,7 +4,7 @@
 - None
 
 ## New features
-- [SMSTunnel] New SMSTunnel alerter - [#TBD](https://github.com/jertel/elastalert2/pull/TBD) - @narcisbodea
+- [SMSTunnel] New SMSTunnel alerter - [#1782](https://github.com/jertel/elastalert2/pull/1782) - @narcisbodea
 
 ## Other changes
 - None
