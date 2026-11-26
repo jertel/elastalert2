@@ -4,7 +4,7 @@
 - None
 
 ## New features
-- None
+- [SMSTunnel] New SMSTunnel alerter - [#1782](https://github.com/jertel/elastalert2/pull/1782) - @narcisbodea
 
 ## Other changes
 - [PagerDuty] Pinned requests-ntlm2 to 6.6.0 since 7.x has breaking changes - [#1783](https://github.com/jertel/elastalert2/pull/1783) - @jertel

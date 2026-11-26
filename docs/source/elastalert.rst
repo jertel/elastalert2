@@ -63,6 +63,7 @@ Currently, we have support built in for these alert types:
 - ServiceNow
 - Slack
 - SMSEagle
+- SMSTunnel
 - Splunk On-Call (Formerly VictorOps)
 - Stomp
 - Telegram

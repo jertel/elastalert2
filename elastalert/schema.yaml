@@ -866,6 +866,14 @@ properties:
   smseagle_duration: {type: integer}
   smseagle_voice_id: {type: integer}
 
+  ### SMSTunnel
+  smstunnel_api_key: {type: string}
+  smstunnel_to: {type: string}
+  smstunnel_device_id: {type: string}
+  smstunnel_proxy: {type: string}
+  smstunnel_timeout: {type: integer}
+  smstunnel_max_length: {type: integer, minimum: 1}
+
   ### Splunk On-Call (Formerly VictorOps)
   victorops_api_key: {type: string}
   victorops_routing_key: {type: string}
