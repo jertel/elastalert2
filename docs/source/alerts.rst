@@ -2276,15 +2276,21 @@ The alerter requires the following options:
 
 ``smstunnel_api_key``: API key of the SMSTunnel account.
 
-``smstunnel_to``: The one number to text, as a quoted string in international format, e.g. ``"+14155550123"``. A list, or a number without the leading ``+``, is refused when the rule is loaded.
+``smstunnel_to``: The number to text, as a quoted string in international format, e.g. ``"+14155550123"``.
 
 Optional:
 
 ``smstunnel_device_id``: Which of the account's phones sends the text. By default, the account's main phone.
 
-A text can be up to 1600 characters (an emoji counts as two), and a longer alert is cropped to fit. To keep texts short and few, use ``alert_text`` with ``alert_text_type: alert_text_only``, and a ``realert`` that suits your phone plan.
+``smstunnel_proxy``: By default ElastAlert 2 will not use a network proxy to send notifications to SMSTunnel. Set this option using ``hostname:port`` if you need to use a proxy. only supports https.
 
-When the API can't be reached or its answer is lost, the alert fails and ElastAlert 2 may retry it later (see ``alert_time_limit``). Every attempt carries the same ``Idempotency-Key``, so a retry gets the first answer back and doesn't send a second text. The API remembers that key for 24 hours, so an alert older than 23 hours is not sent.
+``smstunnel_timeout``: How many seconds to wait for the API to answer. Default: 10.
+
+``smstunnel_max_length``: The longest text to send, counted the way a phone counts it (an emoji counts as two). A longer alert is cropped to fit. Default: 1600, which is at most 24 SMS parts.
+
+To keep texts short and few, use ``alert_text`` with ``alert_text_type: alert_text_only``, and a ``realert`` that suits your phone plan.
+
+When the API can't be reached or its answer is lost, the alert fails and ElastAlert 2 may retry it later (see ``alert_time_limit``). Every attempt carries the same ``Idempotency-Key``, so a retry within 24 hours gets the first answer back instead of sending a second text.
 
 Example usage::
 

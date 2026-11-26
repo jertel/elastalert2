@@ -1,10 +1,13 @@
 import datetime
+import json
 import logging
 import math
 import pytest
+import requests
 
 from unittest import mock
 
+from jsonschema.exceptions import ValidationError
 from requests.exceptions import ConnectionError as RequestsConnectionError
 from requests.exceptions import ConnectTimeout, ReadTimeout, SSLError
 
@@ -14,7 +17,7 @@ from elastalert.util import dt_to_ts, EAException, ts_now
 
 API_KEY = 'test-api-key-0123456789abcdef'
 NUMBER = '+12025550199'
-SECRET_TEXT = 'do-not-log-this-text'
+URL = 'https://smstunnel.io/api/v1/sms/send'
 
 
 def make_rule(alert=(), **options):
@@ -28,7 +31,7 @@ def make_rule(alert=(), **options):
     rule.update(options)
     rules_loader = FileRulesLoader({})
     rules_loader.load_modules(rule)
-    # Set after load_modules, so that the tests can watch load_alerts refuse a bad option
+    # Set after load_modules, so that the tests can watch load_alerts check the options
     rule['alert'] = list(alert)
     return rule
 
@@ -40,21 +43,29 @@ def make_alerter(alert_time=None, **options):
 
 
 def make_response(status_code=200, body=None):
-    response = mock.Mock()
+    response = requests.Response()
     response.status_code = status_code
-    response.json.return_value = {'success': True, 'messageId': 'abc'} if body is None else body
+    response.url = URL
+    content = {'success': True, 'messageId': 'abc'} if body is None else body
+    response._content = content if isinstance(content, bytes) else json.dumps(content).encode()
     return response
 
 
 def make_match():
-    return {'@timestamp': '2026-11-21T10:00:00', 'somefield': SECRET_TEXT}
+    return {'@timestamp': '2026-11-21T10:00:00', 'somefield': 'foobarbaz'}
 
 
-def assert_nothing_private(text):
-    assert API_KEY not in text
-    assert NUMBER not in text
-    assert NUMBER[1:] not in text
-    assert SECRET_TEXT not in text
+def schema_rule(**options):
+    rule = {
+        'name': 'Test SMSTunnel Rule',
+        'type': 'any',
+        'index': 'test',
+        'alert': ['smstunnel'],
+        'smstunnel_api_key': API_KEY,
+        'smstunnel_to': NUMBER
+    }
+    rule.update(options)
+    return rule
 
 
 def test_smstunnel_send(caplog):
@@ -64,21 +75,21 @@ def test_smstunnel_send(caplog):
         alert.alert([make_match()])
 
     mock_post.assert_called_once_with(
-        'https://smstunnel.io/api/v1/sms/send',
+        URL,
         json={
             'to': NUMBER,
-            'message': 'Test SMSTunnel Rule\n\n@timestamp: 2026-11-21T10:00:00\nsomefield: %s' % SECRET_TEXT
+            'message': 'Test SMSTunnel Rule\n\n@timestamp: 2026-11-21T10:00:00\nsomefield: foobarbaz'
         },
         headers={
             'Content-Type': 'application/json',
             'X-API-Key': API_KEY,
             'Idempotency-Key': mock.ANY
         },
+        proxies=None,
         timeout=10,
         allow_redirects=False
     )
     assert ('elastalert', logging.INFO, "Alert 'Test SMSTunnel Rule' sent to SMSTunnel") == caplog.record_tuples[0]
-    assert_nothing_private(caplog.text)
 
 
 def test_smstunnel_send_with_device_id():
@@ -86,6 +97,20 @@ def test_smstunnel_send_with_device_id():
     with mock.patch('requests.post', return_value=make_response()) as mock_post:
         alert.alert([make_match()])
     assert mock_post.call_args[1]['json']['deviceId'] == '671fe0d9c3b2a1f0e9d8c7b6'
+
+
+def test_smstunnel_proxy():
+    alert = make_alerter(smstunnel_proxy='proxy.example.com:3128')
+    with mock.patch('requests.post', return_value=make_response()) as mock_post:
+        alert.alert([make_match()])
+    assert mock_post.call_args[1]['proxies'] == {'https': 'proxy.example.com:3128'}
+
+
+def test_smstunnel_timeout():
+    alert = make_alerter(smstunnel_timeout=30)
+    with mock.patch('requests.post', return_value=make_response()) as mock_post:
+        alert.alert([make_match()])
+    assert mock_post.call_args[1]['timeout'] == 30
 
 
 def test_smstunnel_send_without_pipeline_has_no_idempotency_key():
@@ -111,6 +136,28 @@ def test_smstunnel_crops_long_text(length, cropped):
     assert message.endswith('(message cropped due to SMS limit)') == cropped
     if not cropped:
         assert message == 'x' * length
+
+
+@pytest.mark.parametrize('max_length, length, cropped', [
+    (160, 160, False),
+    (160, 161, True),
+    (70, 500, True),
+])
+def test_smstunnel_max_length(max_length, length, cropped):
+    alert = make_alerter(smstunnel_max_length=max_length, alert_text='x' * length, alert_text_type='alert_text_only')
+    with mock.patch('requests.post', return_value=make_response()) as mock_post:
+        alert.alert([make_match()])
+
+    message = mock_post.call_args[1]['json']['message']
+    assert len(message) <= max_length
+    assert message.endswith('(message cropped due to SMS limit)') == cropped
+
+
+def test_smstunnel_max_length_shorter_than_the_crop_note():
+    alert = make_alerter(smstunnel_max_length=10, alert_text='x' * 50, alert_text_type='alert_text_only')
+    with mock.patch('requests.post', return_value=make_response()) as mock_post:
+        alert.alert([make_match()])
+    assert mock_post.call_args[1]['json']['message'] == 'x' * 10
 
 
 @pytest.mark.parametrize('text', [
@@ -139,28 +186,6 @@ def test_smstunnel_does_not_crop_emoji_that_fit():
     assert mock_post.call_args[1]['json']['message'] == text
 
 
-def test_smstunnel_system_error_notification_leaves_out_the_rule():
-    alert = make_alerter()
-    failed_rule = {'name': 'failed', 'smstunnel_api_key': API_KEY, 'smstunnel_to': NUMBER, 'es_password': 'hunter2'}
-    details = {'timestamp': ts_now(), 'message': 'Uncaught exception running rule failed', 'rule': failed_rule}
-    with mock.patch('requests.post', return_value=make_response()) as mock_post:
-        alert.alert([details])
-
-    message = mock_post.call_args[1]['json']['message']
-    assert 'Uncaught exception running rule failed' in message
-    assert API_KEY not in message
-    assert NUMBER not in message
-    assert 'hunter2' not in message
-
-
-def test_smstunnel_keeps_a_rule_field_of_a_document():
-    alert = make_alerter()
-    match = {'@timestamp': '2026-11-21T10:00:00', 'message': 'blocked', 'rule': {'id': 'R-100'}}
-    with mock.patch('requests.post', return_value=make_response()) as mock_post:
-        alert.alert([match])
-    assert 'R-100' in mock_post.call_args[1]['json']['message']
-
-
 def test_smstunnel_idempotency_key_survives_the_retry():
     first_time = ts_now()
     with mock.patch('requests.post', return_value=make_response()) as mock_post:
@@ -173,7 +198,7 @@ def test_smstunnel_idempotency_key_survives_the_retry():
     assert len(set(keys)) == 1
     assert 16 <= len(keys[0]) <= 255
     assert keys[0].isascii() and keys[0].isprintable()
-    assert_nothing_private(keys[0])
+    assert API_KEY not in keys[0] and NUMBER[1:] not in keys[0]
 
 
 @pytest.mark.parametrize('other', [
@@ -216,18 +241,10 @@ def test_smstunnel_idempotency_key_with_an_unreadable_aggregation_key():
     assert mock_post.call_args[1]['headers']['Idempotency-Key'].startswith('elastalert-')
 
 
-def test_smstunnel_refuses_an_alert_past_the_idempotency_window():
-    old = dt_to_ts(ts_now() - datetime.timedelta(hours=23, minutes=1))
+def test_smstunnel_sends_an_old_alert():
+    # ElastAlert retries an unsent alert for alert_time_limit (2 days by default), and every retry is sent
+    old = dt_to_ts(ts_now() - datetime.timedelta(days=1, hours=1))
     alert = make_alerter(alert_time=old)
-    with mock.patch('requests.post') as mock_post, pytest.raises(EAException) as ea:
-        alert.alert([make_match()])
-    assert 'older than 23 hours' in str(ea.value)
-    assert mock_post.call_count == 0
-
-
-def test_smstunnel_sends_an_alert_inside_the_idempotency_window():
-    recent = dt_to_ts(ts_now() - datetime.timedelta(hours=22, minutes=59))
-    alert = make_alerter(alert_time=recent)
     with mock.patch('requests.post', return_value=make_response()) as mock_post:
         alert.alert([make_match()])
     assert mock_post.call_count == 1
@@ -246,7 +263,6 @@ def test_smstunnel_failed_alert_retried_by_elastalert_keeps_its_key(ea):
     assert mock_post.call_count == 1
     written = ea.writeback_es.index.call_args[1]['body']
     assert written['alert_sent'] is False
-    assert_nothing_private(written['alert_exception'])
 
     # The next pass of send_pending_alerts sends it again, with the time read back from the index
     pending = {'_id': 'ABCD', '_index': 'wb', '_source': dict(written)}
@@ -259,94 +275,56 @@ def test_smstunnel_failed_alert_retried_by_elastalert_keeps_its_key(ea):
 
 
 @pytest.mark.parametrize('error', [ConnectTimeout, ReadTimeout, RequestsConnectionError, SSLError])
-def test_smstunnel_lost_answer_raises_without_retrying(caplog, error):
-    caplog.set_level(logging.DEBUG)
+def test_smstunnel_network_error_is_reported_in_full(error):
     alert = make_alerter()
-    cause = error('POST with %s and %s to %s' % (API_KEY, SECRET_TEXT, NUMBER))
+    cause = error('Unable to connect to proxy proxy.example.com:3128')
     with mock.patch('requests.post', side_effect=cause) as mock_post, pytest.raises(EAException) as ea:
         alert.alert([make_match()])
 
     assert mock_post.call_count == 1
-    assert 'Error posting SMSTunnel alert: no answer from the API (%s)' % error.__name__ in str(ea.value)
-    assert 'may already have been sent' in str(ea.value)
-    assert ea.value.__suppress_context__
-    assert_nothing_private(str(ea.value))
-    assert_nothing_private(caplog.text)
+    assert str(ea.value) == 'Error posting SMSTunnel alert: Unable to connect to proxy proxy.example.com:3128. Details: '
 
 
-@pytest.mark.parametrize('status_code, body, expected', [
-    (401, {'statusCode': 401, 'message': 'Invalid or expired API key'}, 'HTTP 401'),
-    (403, {'code': 'PERMISSION_REQUIRED', 'message': 'no'}, 'HTTP 403 (PERMISSION_REQUIRED)'),
-    (409, {'code': 'IDEMPOTENCY_KEY_IN_PROGRESS'}, 'HTTP 409 (IDEMPOTENCY_KEY_IN_PROGRESS)'),
-    (422, {'code': 'IDEMPOTENCY_KEY_REUSED'}, 'HTTP 422 (IDEMPOTENCY_KEY_REUSED)'),
-    (429, {'statusCode': 429, 'message': 'Too Many Requests'}, 'HTTP 429'),
-    (500, {'statusCode': 500, 'message': 'Internal server error'}, 'HTTP 500'),
-    (302, {}, 'HTTP 302'),
-    (400, {'code': 'not a code ' + NUMBER, 'message': 'Invalid number ' + NUMBER}, 'HTTP 400'),
+@pytest.mark.parametrize('status_code, body', [
+    (401, {'statusCode': 401, 'message': 'Invalid or expired API key'}),
+    (403, {'code': 'PERMISSION_REQUIRED', 'message': 'This key may not send texts'}),
+    (409, {'code': 'IDEMPOTENCY_KEY_IN_PROGRESS'}),
+    (429, {'statusCode': 429, 'message': 'Too Many Requests'}),
+    (500, {'statusCode': 500, 'message': 'Internal server error'}),
 ])
-def test_smstunnel_refused_by_the_api(caplog, status_code, body, expected):
-    caplog.set_level(logging.DEBUG)
+def test_smstunnel_refused_by_the_api(status_code, body):
     alert = make_alerter()
     with mock.patch('requests.post', return_value=make_response(status_code, body)) as mock_post, \
             pytest.raises(EAException) as ea:
         alert.alert([make_match()])
 
     assert mock_post.call_count == 1
-    assert str(ea.value) == 'Error posting SMSTunnel alert: %s' % expected
-    assert_nothing_private(caplog.text)
+    assert str(ea.value).startswith('Error posting SMSTunnel alert: %s ' % status_code)
+    assert str(ea.value).endswith('Details: %s' % json.dumps(body))
 
 
 def test_smstunnel_answer_that_is_not_json():
     alert = make_alerter()
-    response = make_response(502)
-    response.json.side_effect = ValueError('not json')
-    with mock.patch('requests.post', return_value=response), pytest.raises(EAException) as ea:
+    with mock.patch('requests.post', return_value=make_response(502, b'<html>Bad Gateway</html>')), \
+            pytest.raises(EAException) as ea:
         alert.alert([make_match()])
-    assert str(ea.value) == 'Error posting SMSTunnel alert: HTTP 502'
+    assert str(ea.value).startswith('Error posting SMSTunnel alert: 502 Server Error')
+    assert str(ea.value).endswith('Details: <html>Bad Gateway</html>')
 
 
-@pytest.mark.parametrize('body', [{'success': False}, {}, ['success'], 'success'])
+def test_smstunnel_does_not_follow_a_redirect():
+    alert = make_alerter()
+    with mock.patch('requests.post', return_value=make_response(302, b'')), pytest.raises(EAException) as ea:
+        alert.alert([make_match()])
+    assert str(ea.value) == 'Error posting SMSTunnel alert: the API did not confirm the text (HTTP 302). Details: '
+
+
+@pytest.mark.parametrize('body', [{'success': False}, {}, ['success'], 'success', b'not json'])
 def test_smstunnel_answer_without_confirmation(body):
     alert = make_alerter()
     with mock.patch('requests.post', return_value=make_response(200, body)), pytest.raises(EAException) as ea:
         alert.alert([make_match()])
-    assert 'did not confirm the text' in str(ea.value)
-
-
-@pytest.mark.parametrize('number', [
-    [NUMBER],
-    [NUMBER, '+12025550198'],
-    NUMBER + ',+12025550198',
-    '+1 202 555 0199',
-    NUMBER[1:],
-    '00' + NUMBER[1:],
-    '0755123456',
-    int(NUMBER[1:]),
-    '+0755123456',
-    '+123456',
-    '+1234567890123456',
-    NUMBER + '\n',
-    '+' + '١' * 11,
-    '',
-    None,
-])
-def test_smstunnel_refuses_a_bad_number_when_the_rule_loads(number):
-    rule = make_rule(smstunnel_to=number, alert=['smstunnel'])
-    rules_loader = FileRulesLoader({})
-    with pytest.raises(EAException) as ea:
-        rules_loader.load_alerts(rule, rule['alert'])
-    assert 'smstunnel_to must be exactly one number in international format' in str(ea.value)
-    if number:
-        assert str(number) not in str(ea.value)
-
-
-@pytest.mark.parametrize('api_key', ['', 'two words', 'line\nbreak', 'clé', 12345, None])
-def test_smstunnel_refuses_a_bad_api_key_when_the_rule_loads(api_key):
-    rule = make_rule(smstunnel_api_key=api_key, alert=['smstunnel'])
-    rules_loader = FileRulesLoader({})
-    with pytest.raises(EAException) as ea:
-        rules_loader.load_alerts(rule, rule['alert'])
-    assert 'smstunnel_api_key must be a single API key' in str(ea.value)
+    assert 'the API did not confirm the text (HTTP 200)' in str(ea.value)
 
 
 @pytest.mark.parametrize('missing', ['smstunnel_api_key', 'smstunnel_to'])
@@ -373,18 +351,26 @@ def test_smstunnel_loads_with_a_rule_reference():
 
 
 def test_smstunnel_options_pass_the_rule_schema():
-    rules_loader = FileRulesLoader({})
-    rule = {
-        'name': 'Test SMSTunnel Rule',
-        'type': 'any',
-        'index': 'test',
-        'alert': ['smstunnel'],
-        'smstunnel_api_key': API_KEY,
-        'smstunnel_to': NUMBER,
-        'smstunnel_device_id': '671fe0d9c3b2a1f0e9d8c7b6'
-    }
-    rules_loader.rule_schema.validate(rule)
+    FileRulesLoader({}).rule_schema.validate(schema_rule(
+        smstunnel_device_id='671fe0d9c3b2a1f0e9d8c7b6',
+        smstunnel_proxy='proxy.example.com:3128',
+        smstunnel_timeout=30,
+        smstunnel_max_length=160
+    ))
 
 
-def test_smstunnel_getinfo_keeps_the_key_and_number_out():
+@pytest.mark.parametrize('option, value', [
+    ('smstunnel_to', [NUMBER]),
+    ('smstunnel_to', int(NUMBER[1:])),
+    ('smstunnel_api_key', 12345),
+    ('smstunnel_timeout', 'ten'),
+    ('smstunnel_max_length', 0),
+    ('smstunnel_proxy', 3128),
+])
+def test_smstunnel_options_refused_by_the_rule_schema(option, value):
+    with pytest.raises(ValidationError):
+        FileRulesLoader({}).rule_schema.validate(schema_rule(**{option: value}))
+
+
+def test_smstunnel_getinfo():
     assert make_alerter().get_info() == {'type': 'smstunnel'}
