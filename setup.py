@@ -58,7 +58,7 @@ setup(
         'certifi>=2026.10.19',
         'zabbix-utils>=2.0.4',
         'requests>=2.34.2',
-        'requests-ntlm2>=6.6.0',
+        'requests-ntlm2==6.6.0',
         'sortedcontainers>=2.4.0',
         'statsd-tags==3.2.1.post1',
         'stomp.py>=9.0.0',
